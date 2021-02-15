@@ -31,7 +31,7 @@ export default {
       type: String, required: true
     },
     title: {
-      type: String, required: true
+      type: String, required: false
     },
     store_namespace: {
       type: String, required: false
