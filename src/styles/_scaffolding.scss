@@ -27,6 +27,13 @@ body.scroll-disabled {
 }
 
 #map {
-  width: 100%;
-  height: 100%;
+  flex-grow: 1;
+}
+
+.sidebar-left-open .leaflet-left {
+  margin-left: 550px;
+}
+
+.sidebar-right-open .leaflet-right {
+  margin-right: 550px;
 }
