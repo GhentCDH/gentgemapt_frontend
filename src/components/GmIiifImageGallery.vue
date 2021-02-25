@@ -1,12 +1,40 @@
 <template>
-  <div class="iiif-gallery"></div>
+  <div class="image-grid">
+    <div class="image-grid-item" v-if="canvases && canvases.length" v-for="canvas in canvases" @click="handleClick(canvas)">
+      <div class="cropped-image">
+        <b-img fluid thumbnail :src="canvas.getCanonicalImageUri(thumbnailWidth)"></b-img>
+      </div>
+      <h5 v-show="false">Title</h5>
+    </div>
+  </div>
 </template>
 
 <script>
+const manifesto = require('manifesto.js/dist-commonjs/');
+import GmIiifManifestViewer from "./GmIiifManifestViewer";
+import { ModalBus } from "../eventbus"
+
 export default {
-  name: "GmImageGallery",
+  name: "GmIiifImageGallery",
+  components: {
+    GmIiifManifestViewer,
+    ModalBus
+  },
+  data() {
+    return {
+      manifest: null,
+    }
+  },
+  computed: {
+    canvases() {
+      if ( this.manifest ) {
+        return this.manifest.getSequenceByIndex(0).getCanvases();
+      }
+      return [];
+    }
+  },
   props: {
-    manifest: {
+    manifestUri: {
       type: String,
       required: true
     },
@@ -16,13 +44,24 @@ export default {
       default: 150
     }
   },
-  mounted() {
-    const manifesto = require('manifesto.js/dist-commonjs/');
+  methods: {
+    handleClick(canvas) {
+      console.log('click');
+      ModalBus.$emit('open', {
+        component: GmIiifManifestViewer,
+        props: {
+          manifestUri: this.manifestUri
+        }
+      });
+    }
+  },
+  async created() {
+    console.log(this.manifestUri)
+    const {data} = await this.axios.get(this.manifestUri);
+    const manifest = manifesto.parseManifest(data);
+    this.manifest = manifest;
 
-    manifesto.loadManifest('https://iiif.ghentcdh.ugent.be/iiif/manifests/pmfu:example1').then((data) => {
-      const manifest = manifesto.parseManifest(data);
-      const sequence = manifest.getSequenceByIndex(0);
-      const canvases = sequence.getCanvases();
+      /*
       canvases.forEach( function(canvas) {
         const images = canvas.getImages();
         if ( images && images.length ) {
@@ -33,11 +72,29 @@ export default {
           console.log(resource.getWidth());
         }
       });
-    });
+       */
   }
 }
 </script>
 
 <style scoped>
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
 
+.image-grid-item {
+  dispay: flex;
+}
+
+.cropped-image {
+  width: 150px;
+  height: 150px;
+}
+
+.cropped-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 </style>
