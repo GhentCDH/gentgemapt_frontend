@@ -1,11 +1,14 @@
 <template>
-    <l-map ref="GmMap" v-bind="map" :center="center" :zoom="zoom" @update:zoom="updateZoom" @update:center="updateCenter" @ready="onMapReady">
+  <div id="map" class="map" v-bind:class="{ 'sidebar-left-open': !this.$store.state.sidebar_search.collapsed, 'sidebar-right-open': !this.$store.state.sidebar_info.collapsed }">
+    <l-map ref="GmMap" v-bind="map" :center="center" :zoom="zoom" :bounds="bounds" @update:zoom="updateZoom" @update:center="updateCenter" @update:bounds="updateBounds" @ready="onMapReady">
+      <l-control-layers position="topright"  ></l-control-layers>
       <l-tile-layer v-for="layer in tileLayers" :key="layer.id"
-          v-bind="layer.options"
+                    v-bind="layer.options"
       />
-      <l-
-      <l-geo-json refs="layer.id" v-for="layer in geojsonLayers" :key="layer.id" v-bind="layer.options"></l-geo-json>
+      <l-wms-tile-layer v-for="layer in wmsLayers" :key="layer.id" v-bind="layer.options" layer-type="overlay"></l-wms-tile-layer>
+      <l-geo-json :ref="layer.id" v-for="layer in geojsonLayers" :key="layer.id" v-bind="layer.options"></l-geo-json>
     </l-map>
+  </div>
 </template>
 
 <script>
@@ -13,13 +16,14 @@
 // https://stackoverflow.com/questions/32195267/how-to-parse-geojson-file-into-leaflet-layers
 
 
-
-import { LMap, LTileLayer, LMarker, LGeoJson } from 'vue2-leaflet';
+import {LControl, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer, LControlLayers} from 'vue2-leaflet';
 import 'leaflet.snogylop'
 import 'leaflet/dist/leaflet.css';
 
 // icon fix
-import { Icon } from 'leaflet';
+import {Icon} from 'leaflet';
+// add ghent overlay
+import ghent from '@/js/ghent.json'
 
 delete Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -28,12 +32,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 })
 
-// add ghent overlay
-import ghent from '@/js/ghent.json'
-
-import PlaceService from "@/services/PlaceService";
-import {mapActions} from "vuex";
-
 
 export default {
   name: "AppMap",
@@ -41,13 +39,20 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LGeoJson
+    LGeoJson,
+    LControl,
+    LControlLayers,
+    'l-wms-tile-layer': LWMSTileLayer
   },
   data() {
     return {
       mapObject: null,
       map: {
         minZoom: 1,
+        options: {
+          attributionControl: false,
+          zoomControl: true
+        }
         /* preferCanvas: true */
       },
       tileLayers: [
@@ -56,7 +61,46 @@ export default {
           options: {
             url: 'https://api.mapbox.com/styles/v1/sysadmin-ghentcdh/ckk5uzofh03s517pd44ucjk61/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic3lzYWRtaW4tZ2hlbnRjZGgiLCJhIjoiY2trNXR3ZW55MGFxYTJ3bndiZDE0czNpOSJ9.b7hzKcWY7vIOdWNgBl6Wkw',
             attribution: 'mapbox',
-            maxZoom: 18
+            maxZoom: 18,
+            name: 'MapBox'
+          }
+        }
+      ],
+      wmsLayers: [
+        {
+          id: 'ferraris',
+          options: {
+            'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
+            layers: 'ferraris',
+            transparent: true,
+            opacity: 0.5,
+            format: 'image/png',
+            name: 'Ferraris kaart - Kabinetskaart der Oostenrijkse Nederlanden en het Prinsbisdom Luik, 1771 - 1778',
+            visible: false,
+          }
+        },
+        {
+          id: 'popp',
+          options: {
+            'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
+            layers: 'popp',
+            transparent: true,
+            opacity: 0.5,
+            format: 'image/png',
+            name: 'Popp, Atlas cadastrale parcellaire de la Belgique, 1842 - 1879',
+            visible: false
+          }
+        },
+        {
+          id: 'vandermaelen',
+          options: {
+            'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
+            layers: 'vandermaelen',
+            transparent: true,
+            opacity: 0.5,
+            format: 'image/png',
+            name: 'Topografische kaart Vandermaelen (1846-1854), Vlaanderen',
+            visible: false
           }
         }
       ],
@@ -66,7 +110,7 @@ export default {
           options: {
             optionsStyle: {
               "color": "#093549",
-              "weight": 0,
+              "weight": 1,
               "fillOpacity": .6
             },
             geojson: ghent,
@@ -74,66 +118,116 @@ export default {
               invert: true,
             }
           }
-        }
+        },
       ]
     }
   },
   computed: {
     center() {
-      return this.$store.state.map.center
+      return this.$store.getters['map/getCenter'];
     },
     zoom() {
       return this.$store.state.map.zoom
-    }
+    },
+    bounds() {
+      return this.$store.state.map.bounds
+    },
+    getHighlightedFeatures() {
+      return this.$store.getters['map/getHighlightedFeatures']
+    },
+    getGeoJSONData() {
+      return this.$store.getters['map/getGeoJSONData']
+    },
+/*
+    ...mapGetters([
+        'map/getGeoJSONData'
+    ])*/
   },
-  async created() {
-    const data = await PlaceService.list();
-    this.geojsonLayers.push(
-        {
-          id: 'markers',
-          options: {
-            geojson: data,
-            options: {
-              onEachFeature: this.onEachFeature,
-              style: this.styleFeature
-            }
-          }
-        }
-    )
+  watch: {
+    getHighlightedFeatures() {
+      this.updateFeatureStyles()
+    },
+    zoom() {
+      this.updateFeatureStyles()
+    }
   },
   methods: {
     updateZoom(payload) {
-      this.$store.dispatch('map/updateZoom', payload)
-      console.log(this.$refs);
-      /*
-      this.$refs.markers.setStyle( {
-        color: 'red'
-      })
-      */
+      this.$store.dispatch('map/setZoom', payload)
     },
     updateCenter(payload) {
-      this.$store.dispatch('map/updateCenter', payload)
+      this.$store.dispatch('map/setCenter', payload)
+    },
+    updateBounds(payload) {
+      this.$store.dispatch('map/setBounds', payload)
     },
     onMapReady() {
       this.mapObject = this.$refs.GmMap.mapObject
     },
     onEachFeature(feature, layer) {
       const that = this
+      // init highlight property
+      feature.highlight = false;
+
       layer.on('click', function (e) {
-        console.log('clicked')
-        that.$store.dispatch( 'map/setFeature', feature )
+        that.$store.dispatch( 'map/selectFeature', { feature: feature } )
         that.$store.dispatch('sidebar_info/collapse', false)
+        // todo: positie berekenen
+        const containerWidth = document.getElementsByClassName('leaflet-container')[0].offsetWidth;
+        const sidebarWidth = 550;
+        const markerXPos = e.containerPoint.x;
+        if ( markerXPos > containerWidth - sidebarWidth ) {
+          that.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) + 200,0]);
+        }
       })
     },
     styleFeature(feature) {
       return {
-        color: 'red'
-      }
+        color: feature.highlight ? 'rgb(0 123 255 / 80%)' : 'rgb(0 123 255 / 15%)',
+        weight: feature.highlight ? 8 : ( this.zoom / 16 * 8 ),
+        stroke: this.highlight || this.zoom > 14
+      };
+    },
+    updateFeatureStyles() {
+      console.log('update styles');
+      this.$nextTick(() => {
+        if ( _.has(this.$refs, 'markers' ) ) {
+          this.$refs.markers[0].mapObject.eachLayer((layer) => {
+            if ( layer.feature.geometry.type !== 'Point' ) {
+              layer.setStyle( this.styleFeature(layer.feature) );
+            }
+          })
+        }
+      })
+    },
+    showAlert() {
+      console.log(this.$refs.markers);
     }
-  }
+  },
+
+  async created() {
+    // load geojson data
+    await this.$store.dispatch('map/loadGeoJSONData');
+
+    // add geojson layer
+    this.geojsonLayers.push(
+        {
+          id: 'markers',
+          options: {
+            geojson: this.getGeoJSONData,
+            options: {
+              onEachFeature: this.onEachFeature,
+              style: this.styleFeature,
+            }
+          }
+        }
+    )
+  },
 }
 </script>
 
 <style scoped>
-
+.gm-map {
+  width: 100%;
+}
 </style>
