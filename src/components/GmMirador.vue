@@ -1,77 +1,46 @@
 <template>
-  <div class="place-info" v-if="placeId">
-    <div class="place-info-title">
-      <h2>{{ data['dcterms:title'][0]['@value'] }}</h2>
-    </div>
-    <div class="place-info-content">
-      <div class="description">{{ data['dcterms:description'][0]['@value'] }}</div>
-      <gm-iiif-image-gallery :manifest_url="'https://iiif.ghentcdh.ugent.be/iiif/manifests/zichtenopgent:' + data['dcterms:identifier'][0]['@value'].replace('http://www.gentgemapt.be/place/','') "></gm-iiif-image-gallery>
-    </div>
+  <div :id="id">
   </div>
 </template>
 
 <script>
-import PlaceService from "@/services/PlaceService";
-
-import GmIiifImageGallery from "@/components/GmIiifImageGallery";
+import Mirador from 'mirador/dist/es/src/index';
 
 export default {
-  name: "GmPlaceInfo",
-  components: {
-    'gm-iiif-image-gallery': GmIiifImageGallery
+  name: "GmMirador",
+  props: {
+    id: {
+      type: String,
+      default: 'vue-mirador'
+    },
+    options: {
+      type: Object
+    }
   },
   data() {
     return {
-      data: null
-    }
-  },
-  computed: {
-    placeId() {
-      if (this.$store.state.map.selectFeature) {
-        return this.$store.state.map.selectFeature.properties.id;
-      } else {
-        return null
-      }
+      viewer: null
     }
   },
   methods: {
-    async loadPlaceData(id) {
-      const data = await PlaceService.get(id)
-      this.data = data;
+    setup() {
+
+      if( !this.viewer && this.options ) {
+        const config = {
+          ...this.options,
+          id: this.id,
+        }
+        this.viewer = Mirador.viewer(config, [
+        ]);
+      }
     }
   },
-  watch: {
-    async placeId(newId, oldId) {
-      await this.loadPlaceData(newId)
-      this.$store.dispatch('sidebar_info/collapse', false)
-    }
-  }
+  mounted: function () {
+    console.log('mirador setup')
+    this.setup()
+  },
 }
 </script>
 
 <style scoped lang="scss">
-.place-info {
-  display: flex;
-  flex-direction: column;
-
-  &-title {
-    margin-bottom: 1rem;
-  }
-
-  &-content {
-    flex-grow: 1;
-    overflow-y: auto;
-
-    & > div {
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-.place-info-title {
-}
-
-.place-info-content > div {
-  margin-bottom: 1rem;
-}
 </style>
