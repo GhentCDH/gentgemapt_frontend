@@ -3,32 +3,24 @@
 
     <gm-navbar :title="title"></gm-navbar>
 
-    <div class="content flex-grow-1">
-      <div id="map" class="map">
-        <gm-map></gm-map>
-      </div>
+    <div class="content d-flex flex-grow-1">
 
-      <div class="map-overlay">
-        <span @click="$store.dispatch('sidebar_info/collapse', false)">open</span>
-        <span @click="$store.dispatch('sidebar_info/collapse', true)">open</span>
-      </div>
+      <gm-map></gm-map>
 
-      <gm-sidebar title="Zoeken" position="left" collapsible expandable store_namespace="sidebar_search">
+      <gm-sidebar title="Zoeken" position="left" collapsible store_namespace="sidebar_search">
         <gm-search-places></gm-search-places>
       </gm-sidebar>
-      <gm-sidebar title="Info" position="right" collapsible expandable store_namespace="sidebar_info">
-          Right content
+      <gm-sidebar position="right" collapsible expandable store_namespace="sidebar_info">
+        <gm-place-info></gm-place-info>
       </gm-sidebar>
     </div>
+
+    <gm-modal-root />
 
   </div>
 </template>
 
 <script>
-// bootstrap
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
-
 // open-sans
 import '@fontsource/open-sans'
 
@@ -39,12 +31,11 @@ import GmNavbar from "./components/GmNavbar";
 import GmSidebar from "./components/GmSidebar";
 import GmSearchPlaces from "./components/GmSearchPlaces";
 import GmMap from "./components/GmMap";
-
-import store from "./store"
+import GmPlaceInfo from "./components/GmPlaceInfo";
+import GmModalRoot from "./components/GmModalRoot";
 
 export default {
   name: "App",
-  store: store,
   data() {
     return {
       title: 'Gent Gemapt'
@@ -54,7 +45,9 @@ export default {
       'gm-navbar' : GmNavbar,
       'gm-sidebar': GmSidebar,
       'gm-search-places': GmSearchPlaces,
-      'gm-map': GmMap
+      'gm-place-info': GmPlaceInfo,
+      'gm-map': GmMap,
+      'gm-modal-root': GmModalRoot
   },
   created() {
     this.$store.dispatch('sidebar_info/collapse')
@@ -62,6 +55,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>
