@@ -154,6 +154,7 @@ export default {
 
     &-expand {
       width: 80%;
+      max-width: 1100px;
     }
   }
 
