@@ -1,44 +1,124 @@
+import PlaceService from "@/services/PlaceService";
+import _ from 'lodash';
+
 export default {
     namespaced: true,
     state: () => ( {
-        center: [51.0526147, 3.7149632],
+        center: {
+            lat: 51.0526147,
+            lng: 3.7149632
+        },
+        bounds: null,
         zoom: 14,
-        feature: null
+        selectFeature: null,
+        highlightFeatures: [],
+        geojson: null,
     }),
+    async mounted() {
+        await this.$store.dispatch('loadGeoJSONData');
+    },
+    getters: {
+        getGeoJSONData: state => state.geojson,
+        getFeatureById: state => id => {
+            return state.geojson.features.find(feature => feature.properties.id === id);
+        },
+        getZoom: state => state.zoom,
+        getCenter: state => state.center,
+        getBounds: state => state.bounds,
+        getSelectedFeature: state => state.selectFeature,
+        getHighlightedFeatures: state => state.selectFeature ? _.union(state.highlightFeatures, [state.selectFeature]) : state.highlightFeatures
+    },
     mutations: {
-        updateCenter(state, payload) {
+        setCenter(state, payload) {
             state.center = [ payload.lat, payload.lng ]
         },
-        updateZoom(state, payload) {
+        setZoom(state, payload) {
             state.zoom = payload
         },
-        setFeature(state, feature) {
-            state.feature = feature
+        selectFeature(state, feature) {
+            feature.highlight = true
+            state.selectFeature = feature
         },
-        clearFeature(state) {
-            state.feature = null
+        highlightFeature(state, feature) {
+            feature.highlight = true;
+            state.highlightFeatures.push(feature);
+        },
+        unhighlightFeature(state, feature) {
+            if ( !state.selectFeature || state.selectFeature !== feature ) {
+                feature.highlight = false;
+            }
+            _.remove(state.highlightFeatures, item => item.properties.id === feature.properties.id)
+        },
+        setBounds(state, bounds) {
+            state.bounds = bounds
+        },
+        clearSelection(state) {
+            if ( state.selectFeature ) {
+                state.selectFeature.highlight = false;
+            }
+            state.selectFeature = null
+        },
+        setGeoJSONData(state, payload) {
+            state.geojson = payload
         }
     },
     actions: {
-        updateCenter(context, payload) {
+        setCenter(context, payload) {
             // update if different
-            if ( JSON.stringify([ payload.lat, payload.lng]) != JSON.stringify(context.state.center) ) {
-                context.commit('updateCenter', payload)
+            if ( JSON.stringify(payload) != JSON.stringify(context.state.center) ) {
+                context.commit('setCenter', payload)
             }
         },
-        updateZoom(context, payload) {
+        setZoom(context, payload) {
             // update if different
             if ( payload !== context.state.zoom ) {
-                context.commit('updateZoom', payload)
+                context.commit('setZoom', payload)
             }
         },
-        setFeature(context, feature) {
-            if ( context.state.feature !== feature ) {
-                context.commit('setFeature', feature)
+        setBounds(context, payload) {
+            // update if different
+            if ( JSON.stringify(payload) != JSON.stringify(context.state.bounds) ) {
+                console.log('set bounds');
+                console.log(payload);
+                context.commit('setBounds', payload)
             }
         },
-        clearFeature(context) {
-            context.commit('clearFeature')
+        selectFeature(context, payload) {
+            context.commit('clearSelection');
+            if ( _.has(payload, 'id') ) {
+                const feature = context.getters.getFeatureById(payload.id);
+                if ( feature ) {
+                    context.commit('selectFeature', feature);
+                }
+            }
+            if ( _.has(payload, 'feature') ) {
+                context.commit('selectFeature', payload.feature)
+            }
+        },
+        clearSelection(context) {
+            context.commit('clearSelection')
+        },
+        highlightFeature(context, payload) {
+            if ( _.has(payload,'id') ) {
+                const feature = context.getters.getFeatureById(payload.id);
+                context.commit('highlightFeature', feature);
+            }
+            if ( _.has(payload, 'feature') ) {
+                context.commit('highlightFeature', payload.feature);
+            }
+        },
+        unhighlightFeature(context, payload) {
+            if ( _.has(payload,'id') ) {
+                const feature = context.getters.getFeatureById(payload.id);
+                context.commit('unhighlightFeature', feature);
+            }
+            if ( _.has(payload, 'feature') ) {
+                context.commit('unhighlightFeature', payload.feature);
+            }
+        },
+        async loadGeoJSONData(context) {
+            const geojson = await PlaceService.list();
+            context.commit('setGeoJSONData', geojson);
         }
     }
 }
