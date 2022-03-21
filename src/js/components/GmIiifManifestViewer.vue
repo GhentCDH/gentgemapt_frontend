@@ -1,5 +1,5 @@
 <template>
-  <GmMirador :options="options()"></GmMirador>
+  <GmMirador v-if="manifestUrl" :options="options()" :key="manifestUrl"></GmMirador>
 </template>
 
 <script>
@@ -11,9 +11,8 @@ export default {
     GmMirador
   },
   props: {
-    manifestUri: {
+    manifestUrl: {
       type: String,
-      required: true
     },
     canvasIndex: {
       type: Number,
@@ -25,9 +24,9 @@ export default {
   methods: {
     options() {
       const miradorWindow = {
-        manifestId: this.manifestUri,
+        manifestId: this.manifestUrl,
         view: 'single',
-        thumbnailNavigationPosition: 'far-bottom',
+        thumbnailNavigationPosition: 'off',
       }
       Object.assign(miradorWindow,
         this.canvasIndex === null ? null : { canvasIndex: this.canvasIndex },
@@ -39,7 +38,7 @@ export default {
         windows: [ { ...miradorWindow } ],
         window: {
           allowClose: false, // Prevent the user from closing this window
-          allowMaximize: false,
+          allowMaximize: true,
           defaultSideBarPanel: 'info',
           sideBarOpenByDefault: true,
           hideWindowTitle: true,
