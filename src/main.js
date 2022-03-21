@@ -6,13 +6,15 @@ import axios from "axios";
 
 Vue.use(VueAxios, axios)
 
-import store from "./store"
+import store from "./js/store"
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
-// Import Bootstrap an BootstrapVue CSS files (order is important)
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+// import styles
+import './scss/index.scss'
+
+import 'vue-slider-component/theme/antd.css'
+
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)

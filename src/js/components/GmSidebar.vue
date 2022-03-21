@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar"
-       v-bind:class="{ 'sidebar-left': left, 'sidebar-right': right , 'sidebar-collapse': collapsible & collapsed, 'sidebar-expand': expandable && expanded }"
+       v-bind:class="{ 'sidebar-left': left, 'sidebar-right': right , 'sidebar-collapse': collapsible && collapsed, 'sidebar-expand': expandable && expanded }"
   >
     <div class="sidebar-header">
       <div class="sidebar-header-buttons">
@@ -22,10 +22,10 @@ export default {
   name: "AppSidebar",
   props: {
     expandable: {
-      type: Boolean, default: true
+      type: Boolean, default: false
     },
     collapsible: {
-      type: Boolean, default: true
+      type: Boolean, default: false
     },
     position: {
       type: String, required: true
@@ -56,9 +56,6 @@ export default {
         'collapse', 'expand', 'toggle'
     ])
   },
-  activated() {
-
-  }
 }
 </script>
 
@@ -75,6 +72,8 @@ export default {
   transition: all 0.3s ease;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.20);
   transform: none;
+
+  padding: 15px;
 
   z-index: 1001;
 
@@ -127,7 +126,6 @@ export default {
 
   &-right {
     right: 0;
-    padding: 15px 5px 15px 15px;
   }
 
   &-right.sidebar-collapse {
@@ -136,7 +134,7 @@ export default {
 
   &-left {
     left: 0;
-    padding: 15px;
+    width: 350px;
   }
 
   &-left.sidebar-collapse {
@@ -151,15 +149,15 @@ export default {
 @media (min-width: 768px) {
   .sidebar {
     width: 550px;
+    max-width: 1100px;
+
+    &-left {
+      width: 350px;
+    }
 
     &-expand {
       width: 80%;
-      max-width: 1100px;
     }
-  }
-
-  .sidebar-left {
-    width: 350px;
   }
 }
 </style>

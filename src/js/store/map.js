@@ -1,15 +1,15 @@
-import PlaceService from "@/services/PlaceService";
-import _ from 'lodash';
+import PlaceService from "../services/PlaceService";
+import union from 'lodash/union';
 
 export default {
     namespaced: true,
     state: () => ( {
         center: {
-            lat: 51.0526147,
-            lng: 3.7149632
+            lat: 51.04616333992028,
+            lng: 3.724030495213811
         },
         bounds: null,
-        zoom: 14,
+        zoom: 16,
         selectFeature: null,
         highlightFeatures: [],
         geojson: null,
@@ -26,7 +26,7 @@ export default {
         getCenter: state => state.center,
         getBounds: state => state.bounds,
         getSelectedFeature: state => state.selectFeature,
-        getHighlightedFeatures: state => state.selectFeature ? _.union(state.highlightFeatures, [state.selectFeature]) : state.highlightFeatures
+        getHighlightedFeatures: state => state.selectFeature ? union(state.highlightFeatures, [state.selectFeature]) : state.highlightFeatures
     },
     mutations: {
         setCenter(state, payload) {
@@ -47,7 +47,7 @@ export default {
             if ( !state.selectFeature || state.selectFeature !== feature ) {
                 feature.highlight = false;
             }
-            _.remove(state.highlightFeatures, item => item.properties.id === feature.properties.id)
+            state.highlightFeatures = state.highlightFeatures.filter(item => item.properties.id !== feature.properties.id)
         },
         setBounds(state, bounds) {
             state.bounds = bounds
@@ -78,20 +78,20 @@ export default {
         setBounds(context, payload) {
             // update if different
             if ( JSON.stringify(payload) != JSON.stringify(context.state.bounds) ) {
-                console.log('set bounds');
-                console.log(payload);
+                // console.log('set bounds');
+                // console.log(payload);
                 context.commit('setBounds', payload)
             }
         },
         selectFeature(context, payload) {
             context.commit('clearSelection');
-            if ( _.has(payload, 'id') ) {
+            if ( payload?.id ) {
                 const feature = context.getters.getFeatureById(payload.id);
                 if ( feature ) {
                     context.commit('selectFeature', feature);
                 }
             }
-            if ( _.has(payload, 'feature') ) {
+            if ( payload?.feature ) {
                 context.commit('selectFeature', payload.feature)
             }
         },
@@ -99,20 +99,20 @@ export default {
             context.commit('clearSelection')
         },
         highlightFeature(context, payload) {
-            if ( _.has(payload,'id') ) {
+            if ( payload?.id ) {
                 const feature = context.getters.getFeatureById(payload.id);
                 context.commit('highlightFeature', feature);
             }
-            if ( _.has(payload, 'feature') ) {
+            if ( payload?.feature ) {
                 context.commit('highlightFeature', payload.feature);
             }
         },
         unhighlightFeature(context, payload) {
-            if ( _.has(payload,'id') ) {
+            if ( payload?.id ) {
                 const feature = context.getters.getFeatureById(payload.id);
                 context.commit('unhighlightFeature', feature);
             }
-            if ( _.has(payload, 'feature') ) {
+            if ( payload?.feature ) {
                 context.commit('unhighlightFeature', payload.feature);
             }
         },
