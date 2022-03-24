@@ -32,7 +32,7 @@ delete Icon.Default.prototype._getIconUrl;
 
 let iconDefaults = {
     iconSize: [40, 40],
-    iconAnchor: [40, 40],
+    iconAnchor: [20, 40],
     popupAnchor: [1, -34],
     tooltipAnchor: [20, -28],
     shadowSize: [40, 40],
