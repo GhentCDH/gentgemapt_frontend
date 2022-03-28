@@ -23,12 +23,10 @@
 
         <div class="app__filters d-flex bg-dark">
             <div class="row">
-                <div class="col-md-4">
-                    <vue-slider v-model="filters.year" width="100%" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)"></vue-slider>
+                <div class="filter--timeslider col-md-4">
+                    <vue-slider v-model="filters.year" width="100%" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
                 </div>
             </div>
-
-
         </div>
 
         <gm-modal-root/>
@@ -64,7 +62,7 @@ export default {
     },
     data() {
         return {
-            title: 'Gent Gemapt',
+            title: process.env.TITLE,
             layers: [
                 {
                     id: 'mapbox-v1',
@@ -103,6 +101,19 @@ export default {
                     }
                 },
                 {
+                    id: 'Gent_Horenbault_1619',
+                    type: 'tileLayer',
+                    options: {
+                        url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Horenbault_1619/{z}/{x}/{y}.png',
+                        attribution: '',
+                        maxZoom: 18,
+                        tms: false,
+                        visible: false,
+                        layerType: 'overlay',
+                        name: 'Horenbault, 1619'
+                    }
+                },
+                {
                     id: 'popp',
                     type: 'wmsLayer',
                     options: {
@@ -129,6 +140,19 @@ export default {
                     }
                 },
                 {
+                    id: 'okzrgb79_90vl',
+                    type: 'wmsLayer',
+                    options: {
+                        'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/okz/wms',
+                        layers: 'okzrgb79_90vl',
+                        transparent: true,
+                        opacity: 0.5,
+                        format: 'image/png',
+                        name: 'Luchtfoto Vlaanderen, zomer 1979-1990 - kleur',
+                        visible: false,
+                    }
+                },
+                {
                     id: 'OrthofotoGent1955WebMercator',
                     type: 'wmsLayer',
                     copyright: 'Bron: © Vlaamse overheid, Departement Mobiliteit en Openbare Werken, afdeling Algemene Technische Ondersteuning',
@@ -142,6 +166,7 @@ export default {
                         visible: false
                     }
                 },
+
                 /*
                 [{'type':'WMS','url':'https://geoserver.gis.cloud.mow.vlaanderen.be/geoserver/wms?SERVICE=WMS&version=1.3.0&request=GetMap','layers':[{'id':'ato:topokaarten','title':'WMS-map Topografische kaarten Ministerie van Openbare Werken en Wederopbouw, opname 1950 - 1970'}]}]
                  */
@@ -186,9 +211,12 @@ export default {
     created() {
         // collapse info window
         this.$store.dispatch('sidebarInfo/collapse')
+        this.$store.dispatch('sidebarViewer/collapse')
 
         // load geojson data
         this.$store.dispatch('map/loadGeoJSONData');
+
+        console.log(process.env.MAP_LAT)
     },
 }
 </script>
