@@ -61,12 +61,7 @@ export default {
         },
         handleClick(manifest) {
             this.$store.dispatch('iiifViewer/loadManifest', manifest.id)
-            // ModalBus.$emit('open', {
-            //     component: GmIiifManifestViewer,
-            //     props: {
-            //         manifestUri: manifest.id
-            //     }
-            // });
+            this.$store.dispatch('sidebarViewer/collapse', false)
         },
         async loadManifest(url) {
             // console.log(url)
@@ -92,10 +87,11 @@ export default {
 }
 
 .image-grid-item {
-    dispay: flex;
+    display: flex;
     margin: 6px;
     border: 2px solid #aaa;
     padding: 2px;
+    cursor: pointer;
 }
 
 .cropped-image {
