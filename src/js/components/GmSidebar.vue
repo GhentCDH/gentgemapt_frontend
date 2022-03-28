@@ -81,19 +81,20 @@ export default {
 
   &-header {
     position: relative;
+    z-index: 1000;
 
     &-title {
     }
 
     &-buttons {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: -5px;
+      right: -5px;
 
       .button {
         display: inline-block;
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
         background: no-repeat;
         background-position: center;
         border-radius: 50%;
@@ -149,7 +150,7 @@ export default {
 @media (min-width: 768px) {
   .sidebar {
     width: 550px;
-    max-width: 1100px;
+    //max-width: 1100px;
 
     &-left {
       width: 350px;
