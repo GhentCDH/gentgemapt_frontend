@@ -12,6 +12,7 @@ export default new Vuex.Store({
         map: map,
         sidebarSearch: sidebar,
         sidebarInfo: sidebar,
+        sidebarViewer: sidebar,
         iiifViewer: iiifViewer
     }
 })
