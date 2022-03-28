@@ -5,8 +5,8 @@ export default {
     namespaced: true,
     state: () => ( {
         center: {
-            lat: 51.04616333992028,
-            lng: 3.724030495213811
+            lat: process.env.MAP_LAT,
+            lng: process.env.MAP_LNG
         },
         bounds: null,
         zoom: 16,
