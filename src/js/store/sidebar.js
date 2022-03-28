@@ -7,10 +7,10 @@ export default {
     }),
     mutations: {
         collapse(state, status = true) {
-            state.collapsed = true & status;
+            state.collapsed = status;
         },
         expand(state, status = true) {
-            state.expanded = true & status;
+            state.expanded = status;
         },
         toggle(state, payload) {
             if ( ['collapsed', 'expanded'].includes(payload.property) ) {
