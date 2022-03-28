@@ -12,7 +12,7 @@
             <gm-sidebar id="sidebar__search" position="left" collapsible store_namespace="sidebarSearch">
                 <gm-search-places></gm-search-places>
             </gm-sidebar>
-            <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="iiifViewer">
+            <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
                 <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
             </gm-sidebar>
             <gm-sidebar id="sidebar__place" position="right" collapsible store_namespace="sidebarInfo">
