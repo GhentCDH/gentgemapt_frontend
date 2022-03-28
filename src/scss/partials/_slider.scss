@@ -1,0 +1,29 @@
+.app__filters {
+  .row {
+    width: 100%;
+  }
+
+  .vue-slider {
+    margin-top: 40px;
+
+    .vue-slider-mark-label {
+      color: white;
+    }
+
+    .vue-slider-mark-step {
+      width: 1px;
+      border: 0;
+      height: 6px;
+    }
+
+    .vue-slider-dot-tooltip-inner {
+      background: $color-blue;
+      padding: 2px 6px;
+
+      &::after {
+        border-top-color: $color-blue;
+      }
+    }
+  }
+}
+
