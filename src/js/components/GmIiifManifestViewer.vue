@@ -1,71 +1,76 @@
 <template>
-  <GmMirador v-if="manifestUrl" :options="options()" :key="manifestUrl"></GmMirador>
+    <GmMirador v-if="manifestUrl" :options="options" :windows="windows"></GmMirador>
 </template>
 
 <script>
 import GmMirador from "./GmMirador";
 
 export default {
-  name: 'GmIiifManifestViewer',
-  components: {
-    GmMirador
-  },
-  props: {
-    manifestUrl: {
-      type: String,
+    name: 'GmIiifManifestViewer',
+    components: {
+        GmMirador
     },
-    canvasIndex: {
-      type: Number,
+    props: {
+        manifestUrl: {
+            type: String,
+        },
+        canvasIndex: {
+            type: Number,
+            default: null,
+        },
+        canvasId: {
+            type: String,
+            default: null,
+        }
     },
-    canvasId: {
-      type: String,
-    }
-  },
-  methods: {
-    options() {
-      const miradorWindow = {
-        manifestId: this.manifestUrl,
-        view: 'single',
-        thumbnailNavigationPosition: 'off',
-      }
-      Object.assign(miradorWindow,
-        this.canvasIndex === null ? null : { canvasIndex: this.canvasIndex },
-        this.canvasId === null ? null : { canvasId: this.canvasId }
-      );
-      return {
-        selectedTheme: 'light',
-        language: 'nl',
-        windows: [ { ...miradorWindow } ],
-        window: {
-          allowClose: false, // Prevent the user from closing this window
-          allowMaximize: true,
-          defaultSideBarPanel: 'info',
-          sideBarOpenByDefault: true,
-          hideWindowTitle: true,
-          views: [ // Only allow the user to select single and gallery view
-            {key: 'single'},
-            {key: 'gallery'},
-          ],
-          panels: { // Configure which panels are visible in WindowSideBarButtons
-            info: true,
-            attribution: true,
-            canvas: false,
-            annotations: true,
-            search: true,
-            layers: false,
-          },
+    computed: {
+        windows() {
+            if (!this.manifestUrl) return [];
+
+            return [{
+                id: 'default',
+                manifestId: this.manifestUrl,
+                view: 'single',
+                thumbnailNavigationPosition: 'off',
+                canvasIndex: this.canvasIndex,
+                canvasId: this.canvasId
+            }]
         },
-        workspace: {
-          showZoomControls: true,
-          type: 'mosaic',
-          allowNewWindows: true,
-        },
-        workspaceControlPanel: {
-          enabled: false,
-        },
-      }
-    }
-  }
+        options() {
+            return {
+                selectedTheme: 'light',
+                language: 'nl',
+                window: {
+                    allowClose: false, // Prevent the user from closing this window
+                    allowMaximize: false,
+                    allowFullscreen: true,
+                    defaultSideBarPanel: 'info',
+                    sideBarOpenByDefault: true,
+                    hideWindowTitle: true,
+                    views: [ // Only allow the user to select single and gallery view
+                        {key: 'single'},
+                        {key: 'gallery'},
+                    ],
+                    panels: { // Configure which panels are visible in WindowSideBarButtons
+                        info: true,
+                        attribution: true,
+                        canvas: false,
+                        annotations: true,
+                        search: true,
+                        layers: false,
+                    },
+                },
+                workspace: {
+                    showZoomControls: true,
+                    type: 'mosaic',
+                    allowNewWindows: true,
+                },
+                workspaceControlPanel: {
+                    enabled: false,
+                },
+            }
+        }
+    },
 }
 </script>
 
