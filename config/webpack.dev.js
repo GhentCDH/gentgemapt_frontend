@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const paths = require('./paths')
+const Dotenv = require("dotenv-webpack");
 
 module.exports = merge(common, {
   // Set the mode to development or production
@@ -38,5 +39,9 @@ module.exports = merge(common, {
   plugins: [
     // Only update what has changed on hot reload
     new webpack.HotModuleReplacementPlugin(),
+
+    new Dotenv({
+      defaults: true
+    }),
   ],
 })
