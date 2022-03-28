@@ -14,7 +14,12 @@ export default {
             default: 'vue-mirador'
         },
         options: {
-            type: Object
+            type: Object,
+            default: () => {}
+        },
+        windows: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -22,22 +27,35 @@ export default {
             viewer: null
         }
     },
+    computed: {
+        config() {
+            return {
+                ...this.options,
+                windows: this.windows,
+                id: this.id,
+            }
+        }
+    },
+    watch: {
+        windows: {
+            deep: true,
+            handler(windows, prevWindows) {
+                let that = this
+                windows.forEach( function(window) {
+                    let action = Mirador.actions.addWindow(windows[0])
+                    that.viewer.store.dispatch(action);
+                } )
+            }
+        }
+    },
     methods: {
-        // loadManifest(manifest) {
-        //     this.viewer.
-        // },
         setup() {
-            if (!this.viewer && this.options) {
-                const config = {
-                    ...this.options,
-                    id: this.id,
-                }
-                this.viewer = Mirador.viewer(config, []);
+            if (!this.viewer && this.config) {
+                this.viewer = Mirador.viewer(this.config, []);
             }
         }
     },
     mounted: function () {
-        // console.log('mirador setup')
         this.setup()
     },
 }
