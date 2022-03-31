@@ -11,7 +11,7 @@ export default {
             lng: process.env.MAP_LNG
         },
         bounds: null,
-        zoom: 16,
+        zoom: 15,
         selectFeature: null,
         highlightFeatures: [],
         geojson: null,
