@@ -1,0 +1,18 @@
+.layer-option {
+  display: flex;
+  padding: 4px 0;
+  border-top: 1px solid #ccc;
+
+  &:last-child {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .layer-option__title {
+    cursor: pointer;
+  }
+
+  .layer-option__details {
+    flex: 1;
+  }
+
+}
