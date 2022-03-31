@@ -2,14 +2,15 @@
     <div id="map" class="map">
         <l-map ref="GmMap" v-bind="map" :center="center" :zoom="zoom" :bounds="bounds" @update:zoom="updateZoom"
                @update:center="updateCenter" @update:bounds="updateBounds" @ready="onMapReady">
-            <l-control-layers position="topright"></l-control-layers>
             <l-tile-layer v-for="layer in tileLayers" :key="layer.id"
                           v-bind="layer.options"
             />
-            <l-wms-tile-layer v-for="layer in wmsLayers" :key="layer.id" v-bind="layer.options"
-                              layer-type="overlay"></l-wms-tile-layer>
+            <l-wms-tile-layer v-for="layer in wmsLayers" :key="layer.id" v-bind="layer.options"></l-wms-tile-layer>
             <l-geo-json :ref="layer.id" v-for="layer in geojsonLayers" :key="layer.id"
                         v-bind="layer.options"></l-geo-json>
+            <l-control class="map__control map__control--topleft" position="topleft">
+                <slot name="controls-topleft"></slot>
+            </l-control>
         </l-map>
     </div>
 </template>
@@ -26,7 +27,6 @@ import 'leaflet/dist/leaflet.css';
 // icon fix
 import {Icon} from 'leaflet';
 // add ghent overlay
-import ghent from '@/js/ghent.json'
 
 delete Icon.Default.prototype._getIconUrl;
 
@@ -408,9 +408,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-.gm-map {
-    width: 100%;
-}
-</style>
