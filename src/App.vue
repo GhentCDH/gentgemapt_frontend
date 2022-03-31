@@ -118,6 +118,16 @@ export default {
                     (item.properties?.startDate ?? 0) <= this.filters.year && (item.properties?.endDate ?? 10000) >= this.filters.year
                 )
             };
+        },
+        sidebarInfoCollapsed() {
+            return this.$store.getters["sidebarInfo/collapsed"]
+        }
+    },
+    watch: {
+        sidebarInfoCollapsed(newVal, oldVal) {
+            if ( newVal ) {
+                this.$store.dispatch('sidebarViewer/collapse')
+            }
         }
     },
     methods: {
