@@ -42,7 +42,7 @@
 
         </div>
 
-        <div class="app__filters d-flex bg-dark">
+        <div v-if="!isSAD" class="app__filters d-flex bg-dark">
             <div class="row">
                 <div class="filter--timeslider col-md-4">
                     <vue-slider v-model="filters.year" width="100%" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
@@ -73,7 +73,6 @@ import {faSearch} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSearch)
 
-
 import api from "./js/config/constants";
 
 export default {
@@ -99,12 +98,20 @@ export default {
         }
     },
     computed: {
+        isSAD() {
+            return process.env.IS_SAD === 'true'
+        },
         layersOverlay() {
             return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
         },
         geojson() {
             let geojson = this.$store.getters['map/getGeoJSONData']
             let features = geojson?.features ?? []
+
+            if ( process.env.IS_SAD === "true") {
+                return geojson
+            }
+
             return {
                 type: 'FeatureCollection',
                 features: features.filter( item =>

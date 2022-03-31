@@ -129,9 +129,11 @@ const layers = [
             geojson: ghent,
             options: {
                 invert: true,
-            }
+            },
+            visible: process.env.IS_SAD !== "true"
         }
     },
 ]
 
+console.log(process.env.IS_SAD)
 export default layers

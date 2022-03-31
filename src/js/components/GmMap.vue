@@ -161,7 +161,7 @@ export default {
         return {
             mapObject: null,
             map: {
-                minZoom: 14,
+                minZoom: 12,
                 options: {
                     attributionControl: false,
                     zoomControl: true
@@ -315,8 +315,8 @@ export default {
                 case 'Multipolygon':
 
                     return {
-                        fillOpacity: isHighlighted ? 0.4 : 0.1,
-                        fillColor: isHighlighted ? 'rgb(0 128 182)' : 'rgb(0 128 182)',
+                        fillOpacity: isHighlighted ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.3 ),
+                        fillColor: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
                         color: 'rgb(0 128 182)',
                         weight: 2,
                         stroke: isHighlighted,
@@ -326,10 +326,10 @@ export default {
                     break;
                 default:
                     return {
-                        color: isHighlighted ? 'rgb(0 128 182)' : 'rgb(0 0 0)',
-                        opacity: isHighlighted ? 0.7 : 0.05,
+                        color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
+                        opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
                         weight: 8,
-                        stroke: isHighlighted || this.zoom >= 16,
+                        stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
                         className: this.geometryClasses(feature).join(' ')
                     };
 
