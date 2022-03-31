@@ -5,6 +5,11 @@ export default {
         expanded: false,
         content: {}
     }),
+    getters: {
+        collapsed(state) {
+            return state.collapsed
+        }
+    },
     mutations: {
         collapse(state, status = true) {
             state.collapsed = status;
