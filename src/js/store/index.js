@@ -11,6 +11,8 @@ export default new Vuex.Store({
     modules: {
         map: map,
         sidebarSearch: sidebar,
+        sidebarMaps: sidebar,
+        sidebarFilters: sidebar,
         sidebarInfo: sidebar,
         sidebarViewer: sidebar,
         iiifViewer: iiifViewer

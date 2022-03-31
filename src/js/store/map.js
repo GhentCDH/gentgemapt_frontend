@@ -1,6 +1,8 @@
 import PlaceService from "../services/PlaceService";
 import union from 'lodash/union';
 
+import layers from '../data/layers'
+
 export default {
     namespaced: true,
     state: () => ( {
@@ -13,12 +15,20 @@ export default {
         selectFeature: null,
         highlightFeatures: [],
         geojson: null,
+        layers: layers,
+        layerOptions: {
+            'mapbox-v1' : {
+                visible: true,
+
+            }
+        }
     }),
     async mounted() {
         await this.$store.dispatch('loadGeoJSONData');
     },
     getters: {
         getGeoJSONData: state => state.geojson,
+        getLayers: state => state.layers,
         getFeatureById: state => id => {
             return state.geojson.features.find(feature => feature.properties.id === id);
         },
@@ -60,6 +70,17 @@ export default {
         },
         setGeoJSONData(state, payload) {
             state.geojson = payload
+        },
+        setLayerVisibility(state, payload) {
+            if ( payload?.id && payload?.visible !== undefined ) {
+                state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.visible = payload.visible )
+            }
+        },
+        setLayerOpacity(state, payload) {
+            if ( payload?.id && payload?.opacity !== undefined ) {
+                state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.opacity = payload.opacity )
+                console.log(payload)
+            }
         }
     },
     actions: {
