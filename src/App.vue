@@ -4,13 +4,34 @@
         <gm-navbar class="app__navbar" :title="title"></gm-navbar>
 
         <div class="app__main">
-            <gm-map :layers="layers"
+            <gm-map :layers="$store.getters['map/getLayers']"
                     :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
                     :geojson="geojson"
-            ></gm-map>
+            >
+                <template v-slot:controls-topleft>
+                        <button class="control__button" @click="$store.dispatch('sidebarSearch/toggle', { property: 'collapsed' })">
+                            <img :src="require('@/images/icons/search.svg')">
+                        </button>
+                        <button class="control__button" @click="$store.dispatch('sidebarMaps/toggle', { property: 'collapsed' })">
+                            <img :src="require('@/images/icons/layers.svg')">
+                        </button>
+                        <button class="control__button" @click="$store.dispatch('sidebarFilters/toggle', { property: 'collapsed' })">
+                            <img :src="require('@/images/icons/sliders-h.svg')">
+                        </button>
+                </template>
+            </gm-map>
 
             <gm-sidebar id="sidebar__search" position="left" collapsible store_namespace="sidebarSearch">
                 <gm-search-places></gm-search-places>
+            </gm-sidebar>
+            <gm-sidebar id="sidebar__maps" position="left" collapsible store_namespace="sidebarMaps" title="Kaart opties">
+                <h2>Kaartlagen</h2>
+                <template v-for="layer in layersOverlay">
+                    <gm-layer-option :layer="layer"></gm-layer-option>
+                </template>
+            </gm-sidebar>
+            <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters">
+
             </gm-sidebar>
             <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
                 <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
@@ -30,7 +51,6 @@
         </div>
 
         <gm-modal-root/>
-
     </div>
 </template>
 
@@ -42,8 +62,16 @@ import GmMap from "./js/components/GmMap";
 import GmPlaceInfo from "./js/components/GmPlaceInfo";
 import GmModalRoot from "./js/components/GmModalRoot";
 import GmIiifManifestViewer from "./js/components/GmIiifManifestViewer";
+import GmLayerOption from "./js/components/GmLayerOption";
 
 import VueSlider from 'vue-slider-component';
+
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {faSearch} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faSearch)
 
 
 import api from "./js/config/constants";
@@ -57,8 +85,10 @@ export default {
         'gm-place-info': GmPlaceInfo,
         'gm-map': GmMap,
         'gm-modal-root': GmModalRoot,
+        'gm-layer-option': GmLayerOption,
         GmIiifManifestViewer,
         VueSlider,
+        'font-awesome-icon': FontAwesomeIcon
     },
     data() {
         return {
@@ -69,6 +99,9 @@ export default {
         }
     },
     computed: {
+        layersOverlay() {
+            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
+        },
         geojson() {
             let geojson = this.$store.getters['map/getGeoJSONData']
             let features = geojson?.features ?? []
@@ -89,11 +122,12 @@ export default {
         // collapse info window
         this.$store.dispatch('sidebarInfo/collapse')
         this.$store.dispatch('sidebarViewer/collapse')
+        this.$store.dispatch('sidebarSearch/collapse')
+        this.$store.dispatch('sidebarMaps/collapse')
+        this.$store.dispatch('sidebarFilters/collapse')
 
         // load geojson data
         this.$store.dispatch('map/loadGeoJSONData');
-
-        console.log(process.env.MAP_LAT)
     },
 }
 </script>
