@@ -1,12 +1,12 @@
 <template>
     <div class="layer-option">
         <div class="layer-option__visibility">
-            <b-checkbox :value="true" :unchecked-value="false" :checked="isVisible" @change="toggleVisible">
-            </b-checkbox>
+            <b-form-checkbox :value="true" :unchecked-value="false" :checked="isVisible" @change="toggleVisible">
+            </b-form-checkbox>
         </div>
         <div class="layer-option__details">
             <span class="layer-option__title" @click="toggleVisible(!isVisible)">{{ layer.options.name }}</span>
-            <div v-if="isVisible" class="layer-option__opacity">
+            <div v-if="isVisible && isOverlay" class="layer-option__opacity">
                 <vue-slider :value="opacity" width="100%" :min="0" :max="1" :interval="0.01" :process="false" :tooltip="'none'" :silent="true" @change="setOpacity"></vue-slider>
             </div>
         </div>
@@ -21,6 +21,11 @@ export default {
     components: {
         VueSlider
     },
+    data() {
+        return {
+            selected: ''
+        }
+    },
     props: {
         layer: {
             type: Object,
@@ -30,6 +35,12 @@ export default {
     computed: {
         isVisible() {
             return this.layer.options?.visible ?? false
+        },
+        isOverlay() {
+            return this.layer.options?.layerType === "overlay"
+        },
+        isBaseLayer() {
+            return this.layer.options?.layerType === "base"
         },
         opacity() {
             return this.layer.options?.opacity ?? 0
