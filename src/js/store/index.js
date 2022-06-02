@@ -13,6 +13,7 @@ export default new Vuex.Store({
         sidebarSearch: sidebar,
         sidebarMaps: sidebar,
         sidebarFilters: sidebar,
+        sidebarTimeline: sidebar,
         sidebarInfo: sidebar,
         sidebarViewer: sidebar,
         iiifViewer: iiifViewer
