@@ -31,3 +31,5 @@ https://vue2-leaflet.netlify.app/examples/feature-showcase.html
 
 https://jsfiddle.net/Boumi/k04zpLx9/
 
+https://stackoverflow.com/questions/32195267/how-to-parse-geojson-file-into-leaflet-layers
+
