@@ -17,7 +17,7 @@
 
 <script>
 // create layer groups
-// https://stackoverflow.com/questions/32195267/how-to-parse-geojson-file-into-leaflet-layers
+
 
 
 import {LControl, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer, LControlLayers} from 'vue2-leaflet';
@@ -55,7 +55,8 @@ let featureConfigs = [
         textColor: '',
     },
     {
-        features: ['katoenfabrieken', 'opslagplaatsen', 'vlasfabrieken', 'spinnerijen', 'kantoorgebouwen'],
+        features: ['katoenfabrieken', 'opslagplaatsen', 'vlasfabrieken', 'spinnerijen', 'kantoorgebouwen',
+            'gasfabrieken','administratiegebouwen'],
         markerIcon: L.icon({
             ...iconDefaults,
             iconRetinaUrl: require('@/images/markers/gebouw.svg'),
@@ -65,7 +66,7 @@ let featureConfigs = [
         textColor: '',
     },
     {
-        features: ['theaters'],
+        features: ['theaters', 'feestzalen'],
         markerIcon: L.icon({
             ...iconDefaults,
             iconRetinaUrl: require('@/images/markers/theatre.svg'),
@@ -124,6 +125,52 @@ let featureConfigs = [
         fillColor: '',
         textColor: '',
     },
+    {
+        features: ['kleuterscholen', 'lagere scholen', 'onderwijsgebouwen'],
+        markerIcon: L.icon({
+            ...iconDefaults,
+            iconRetinaUrl: require('@/images/markers/school.svg'),
+            iconUrl: require('@/images/markers/school.svg')
+        }),
+        fillColor: '',
+        textColor: '',
+    },
+    {
+        features: ['openbare pleinen'],
+        markerIcon: L.icon({
+            ...iconDefaults,
+            iconRetinaUrl: require('@/images/markers/public_square.svg'),
+            iconUrl: require('@/images/markers/public_square.svg')
+        }),
+        fillColor: '',
+        textColor: '',
+    },
+    /*
+    {
+        features: ['stationsgebouwen'],
+        markerIcon: L.icon({
+            ...iconDefaults,
+            iconRetinaUrl: require('@/images/markers/public_square.svg'),
+            iconUrl: require('@/images/markers/public_square.svg')
+        }),
+        fillColor: '',
+        textColor: '',
+    },
+    {
+        features: ['woningen', 'landhuizen', 'beluiken'],
+        markerIcon: L.icon({
+            ...iconDefaults,
+            iconRetinaUrl: require('@/images/markers/public_square.svg'),
+            iconUrl: require('@/images/markers/public_square.svg')
+        }),
+        fillColor: '',
+        textColor: '',
+    },
+
+
+
+
+     */
 
 ];
 
@@ -164,7 +211,7 @@ export default {
                 minZoom: 12,
                 options: {
                     attributionControl: false,
-                    zoomControl: true
+                    zoomControl: false
                 }
                 /* preferCanvas: true */
             },
@@ -312,10 +359,10 @@ export default {
 
             switch (feature.geometry.type) {
                 case 'Polygon':
-                case 'Multipolygon':
+                case 'MultiPolygon':
 
                     return {
-                        fillOpacity: isHighlighted ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.3 ),
+                        fillOpacity: isHighlighted ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.0 ),
                         fillColor: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
                         color: 'rgb(0 128 182)',
                         weight: 2,
@@ -325,10 +372,11 @@ export default {
 
                     break;
                 default:
+                    // console.log(Math.ceil(2 ^ (this.zoom - 16) ) )
                     return {
                         color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
                         opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
-                        weight: 8,
+                        weight: this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
                         stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
                         className: this.geometryClasses(feature).join(' ')
                     };
@@ -365,6 +413,7 @@ export default {
             {
                 id: 'geometries',
                 type: 'geojsonLayer',
+                zIndex: 1000,
                 options: {
                     geojson: this.geometries,
                     options: {
@@ -382,6 +431,7 @@ export default {
                 type: 'geojsonLayer',
                 options: {
                     geojson: this.points,
+                    zIndex: 1000,
                     options: {
                         onEachFeature: this.onEachFeature,
                         // style: this.styleGeometry,
