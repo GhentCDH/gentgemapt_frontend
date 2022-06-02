@@ -8,10 +8,25 @@ const layers = [
             url: 'https://api.mapbox.com/styles/v1/sysadmin-ghentcdh/ckk5uzofh03s517pd44ucjk61/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic3lzYWRtaW4tZ2hlbnRjZGgiLCJhIjoiY2trNXR3ZW55MGFxYTJ3bndiZDE0czNpOSJ9.b7hzKcWY7vIOdWNgBl6Wkw',
             attribution: 'mapbox',
             maxZoom: 18,
-            name: 'MapBox',
+            name: 'Gent Gemapt basiskaart',
             visible: true,
             opacity: 1,
-            layerType: 'base'
+            layerType: 'base',
+            zIndex: 10,
+        }
+    },
+    {
+        id: 'google-satellite',
+        type: 'tileLayer',
+        options: {
+            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+            attribution: 'Google',
+            maxZoom: 18,
+            name: 'Google satelliet',
+            visible: false,
+            opacity: 1,
+            layerType: 'base',
+            zIndex: 10,
         }
     },
     {
@@ -23,9 +38,10 @@ const layers = [
             maxZoom: 18,
             tms: false,
             visible: false,
-            opacity: 0.5,
+            opacity: 1,
             layerType: 'overlay',
-            name: 'Compyn, Soenen & Piscador, 1912'
+            name: 'Compyn, Soenen & Piscador, 1912',
+            zIndex: 100,
         }
     },
     {
@@ -35,11 +51,12 @@ const layers = [
             'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
             layers: 'ferraris',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
             format: 'image/png',
             name: 'Ferraris kaart - Kabinetskaart der Oostenrijkse Nederlanden en het Prinsbisdom Luik, 1771 - 1778',
             visible: false,
             layerType: 'overlay',
+            zIndex: 100,
         }
     },
     {
@@ -51,9 +68,10 @@ const layers = [
             maxZoom: 18,
             tms: false,
             visible: false,
-            opacity: 0.5,
+            opacity: 1,
             layerType: 'overlay',
             name: 'Horenbault, 1619',
+            zIndex: 100,
         }
     },
     {
@@ -63,11 +81,12 @@ const layers = [
             'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
             layers: 'popp',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
             format: 'image/png',
             name: 'Popp, Atlas cadastrale parcellaire de la Belgique, 1842 - 1879',
             visible: false,
             layerType: 'overlay',
+            zIndex: 100,
         }
     },
     {
@@ -77,11 +96,12 @@ const layers = [
             'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
             layers: 'vandermaelen',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
             format: 'image/png',
             name: 'Topografische kaart Vandermaelen (1846-1854), Vlaanderen',
             visible: false,
             layerType: 'overlay',
+            zIndex: 100,
         }
     },
     {
@@ -91,11 +111,12 @@ const layers = [
             'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/okz/wms',
             layers: 'okzrgb79_90vl',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
             format: 'image/png',
             name: 'Luchtfoto Vlaanderen, zomer 1979-1990 - kleur',
             visible: false,
             layerType: 'overlay',
+            zIndex: 100,
         }
     },
     {
@@ -106,11 +127,12 @@ const layers = [
             'base-url': 'https://geo.gent.be/geoserver/gwc/service/wms',
             layers: 'SG-E-BasislagenLuchtfotos:OrthofotoGent1955WebMercator',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
             format: 'image/png',
             name: 'Luchtfoto Gent 1954-1961',
             visible: false,
             layerType: 'overlay',
+            zIndex: 100,
         }
     },
 
@@ -130,10 +152,10 @@ const layers = [
             options: {
                 invert: true,
             },
-            visible: process.env.IS_SAD !== "true"
+            visible: process.env.IS_SAD !== "true",
+            zIndex: 200,
         }
     },
 ]
 
-console.log(process.env.IS_SAD)
 export default layers
