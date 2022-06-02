@@ -1,3 +1,12 @@
+.vue-slider-btt {
+  .vue-slider-mark-step {
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-top: 1px solid  #ccc;
+  }
+}
+
 .app__filters {
   .row {
     width: 100%;
