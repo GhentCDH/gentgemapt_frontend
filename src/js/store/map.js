@@ -73,13 +73,17 @@ export default {
         },
         setLayerVisibility(state, payload) {
             if ( payload?.id && payload?.visible !== undefined ) {
+                // base layer? reset all layers first
+                if ( state.layers.filter( i => i.id === payload.id )[0].options?.layerType === "base" ) {
+                    state.layers.filter( i => i.options?.layerType === "base" ).forEach( i => i.options.visible = false )
+                }
                 state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.visible = payload.visible )
             }
         },
         setLayerOpacity(state, payload) {
             if ( payload?.id && payload?.opacity !== undefined ) {
                 state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.opacity = payload.opacity )
-                console.log(payload)
+                // console.log(payload)
             }
         }
     },
