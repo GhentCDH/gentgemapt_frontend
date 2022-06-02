@@ -18,6 +18,9 @@
                         <button class="control__button" @click="$store.dispatch('sidebarFilters/toggle', { property: 'collapsed' })">
                             <img :src="require('@/images/icons/sliders-h.svg')">
                         </button>
+                        <button class="control__button" @click="$store.dispatch('sidebarTimeline/toggle', { property: 'collapsed' })">
+                            <img :src="require('@/images/icons/calendar.svg')">
+                        </button>
                 </template>
             </gm-map>
 
@@ -25,13 +28,25 @@
                 <gm-search-places></gm-search-places>
             </gm-sidebar>
             <gm-sidebar id="sidebar__maps" position="left" collapsible store_namespace="sidebarMaps" title="Kaart opties">
-                <h2>Kaartlagen</h2>
-                <template v-for="layer in layersOverlay">
-                    <gm-layer-option :layer="layer"></gm-layer-option>
-                </template>
+                <div class="scrollable scrollable--vertical">
+                    <h2>Basiskaarten</h2>
+                    <div class="maplist maplist--base">
+                        <template v-for="layer in baseLayers">
+                            <gm-layer-option :layer="layer"></gm-layer-option>
+                        </template>
+                    </div>
+                    <h2>Kaartlagen</h2>
+                    <div class="maplist maplist--overlay">
+                        <template v-for="layer in overlayLayers">
+                            <gm-layer-option :layer="layer"></gm-layer-option>
+                        </template>
+                    </div>
+                </div>
             </gm-sidebar>
             <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters">
-
+            </gm-sidebar>
+            <gm-sidebar id="sidebar__timeline" position="left" collapsible store_namespace="sidebarTimeline">
+                <vue-slider v-model="filters.year" direction="btt" :width="20" :height="400" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
             </gm-sidebar>
             <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
                 <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
@@ -42,12 +57,7 @@
 
         </div>
 
-        <div v-if="!isSAD" class="app__filters d-flex bg-dark">
-            <div class="row">
-                <div class="filter--timeslider col-md-4">
-                    <vue-slider v-model="filters.year" width="100%" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
-                </div>
-            </div>
+        <div v-if="!isSAD" class="app__footer d-flex bg-dark">
         </div>
 
         <gm-modal-root/>
@@ -101,7 +111,10 @@ export default {
         isSAD() {
             return process.env.IS_SAD === 'true'
         },
-        layersOverlay() {
+        baseLayers() {
+            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'base' )
+        },
+        overlayLayers() {
             return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
         },
         geojson() {
@@ -142,6 +155,7 @@ export default {
         this.$store.dispatch('sidebarSearch/collapse')
         this.$store.dispatch('sidebarMaps/collapse')
         this.$store.dispatch('sidebarFilters/collapse')
+        this.$store.dispatch('sidebarTimeline/collapse')
 
         // load geojson data
         this.$store.dispatch('map/loadGeoJSONData');
