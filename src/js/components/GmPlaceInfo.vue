@@ -14,25 +14,26 @@
             </div>
         </div>
         <div class="place-info__content scrollable scrollable--vertical">
-
             <div class="features mbottom-default">
-                <span class="feature" v-for="feature in place.features">{{ feature }}</span>
+                <span class="feature" v-if="dating">{{ dating }}</span><span class="feature" v-for="feature in place.features">{{ feature }}</span>
             </div>
 
-            <div class="description" v-html="descriptionFormatted"></div>
+            <gm-show-more label-show-more="toon meer" label-show-less="toon minder">
+                <div class="description" v-html="descriptionFormatted"></div>
 
-            <div class="creators" v-if="place.creators.length">
-                <ul>
-                    <li v-for="(creator,index) in place.creators" :key="index">{{ creator }}</li>
-                </ul>
-            </div>
+                <div class="creators" v-if="place.creators.length">
+                    <ul>
+                        <li v-for="(creator,index) in place.creators" :key="index">{{ creator }}</li>
+                    </ul>
+                </div>
+            </gm-show-more>
 
-            <h3 v-if="place.refs.length && place.refs[0].count">Collectie</h3>
+            <h2 v-if="place.refs.length && place.refs[0].count">Collectie</h2>
             <gm-iiif-collection-gallery v-if="place.refs && place.refs.length" v-for="ref in place.refs" :key="ref.url"
                                         :collectionUrl="ref.url"></gm-iiif-collection-gallery>
 
             <div class="moreinfo" v-if="place.references.length">
-                <h3>Meer weten?</h3>
+                <h2>Meer weten?</h2>
                 <ul>
                     <li v-for="(reference,index) in place.references" :key="index">
                         <span v-if="!reference.url">{{ reference.label }}</span>
@@ -41,6 +42,15 @@
                 </ul>
             </div>
 
+            <div class="moreinfo" v-if="place.biblio.length">
+                <h2>Bibliografie</h2>
+                <ul>
+                    <li v-for="(reference,index) in place.biblio" :key="index">
+                        <span v-if="!reference.url">{{ reference.label }}</span>
+                        <a v-if="reference.url" href="reference.url">{{ reference.label }}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -49,44 +59,49 @@
 import PlaceService from "../services/PlaceService";
 
 import GmIiifCollectionGallery from "./GmIiifCollectionGallery";
+import GmShowMore from "./GmShowMore";
 
 export default {
-  name: "GmPlaceInfo",
-  components: {
-    GmIiifCollectionGallery
-  },
-  data() {
-    return {
-      place: null
-    }
-  },
-  computed: {
-    placeId() {
-      if (this.$store.state.map.selectFeature) {
-        return this.$store.state.map.selectFeature.properties.id;
-      } else {
-        return null
-      }
+    name: "GmPlaceInfo",
+    components: {
+        GmIiifCollectionGallery,
+        GmShowMore
     },
-      descriptionFormatted() {
-        return this.place.description
-            .replaceAll('h2>','h3>')
-            .replaceAll('h3>','h4>')
-            .replaceAll('<p><strong>','<h3>')
-            .replaceAll('</strong></p>','</h3>')
-      }
-  },
-  methods: {
-    async loadPlaceData(id) {
-      const place = await PlaceService.get(id)
-      this.place = place;
+    data() {
+        return {
+            place: null
+        }
+    },
+    computed: {
+        placeId() {
+            if (this.$store.state.map.selectFeature) {
+                return this.$store.state.map.selectFeature.properties.id;
+            } else {
+                return null
+            }
+        },
+        descriptionFormatted() {
+            return this.place.description
+                .replaceAll('h2>', 'h3>')
+                .replaceAll('h3>', 'h4>')
+                .replaceAll('<p><strong>', '<h3>')
+                .replaceAll('</strong></p>', '</h3>')
+        },
+        dating() {
+            return this.place?.startDate ? this.place.startDate + ( this.place?.endDate ? ' - ' + this.place.endDate : ' - heden' ) : null
+        }
+    },
+    methods: {
+        async loadPlaceData(id) {
+            const place = await PlaceService.get(id)
+            this.place = place;
+        }
+    },
+    watch: {
+        async placeId(newId, oldId) {
+            await this.loadPlaceData(newId)
+            this.$store.dispatch('sidebarInfo/collapse', false)
+        }
     }
-  },
-  watch: {
-    async placeId(newId, oldId) {
-      await this.loadPlaceData(newId)
-      this.$store.dispatch('sidebarInfo/collapse', false)
-    }
-  }
 }
 </script>
