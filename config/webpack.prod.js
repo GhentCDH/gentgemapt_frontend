@@ -11,7 +11,7 @@ module.exports = merge(common, {
   devtool: false,
   output: {
     path: paths.build,
-    publicPath: '/frontend/',
+    publicPath: '/',
     filename: 'js/[name].[contenthash].bundle.js',
   },
   module: {
@@ -24,12 +24,13 @@ module.exports = merge(common, {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
-              sourceMap: false,
+              sourceMap: true,
               modules: false, // css modules disabled
             },
           },
-          'postcss-loader',
-          'sass-loader',
+          {loader: 'postcss-loader', options: {sourceMap: true}},
+          {loader: 'resolve-url-loader'},
+          {loader: 'sass-loader', options: {sourceMap: true}},
         ],
       },
     ],

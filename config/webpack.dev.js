@@ -14,7 +14,7 @@ module.exports = merge(common, {
   // Spin up a server for quick development
   devServer: {
     historyApiFallback: true,
-    contentBase: paths.build,
+    static: paths.build,
     open: false,
     compress: true,
     hot: true,
@@ -27,9 +27,13 @@ module.exports = merge(common, {
       {
         test: /\.(scss|css)$/,
         use: [
+          // Creates `style` nodes from JS strings
           'style-loader',
+          // Translates CSS into CommonJS
           {loader: 'css-loader', options: {sourceMap: true, importLoaders: 1, modules: false }}, // css modules disabled
           {loader: 'postcss-loader', options: {sourceMap: true}},
+          {loader: 'resolve-url-loader'},
+          // Compiles Sass to CSS
           {loader: 'sass-loader', options: {sourceMap: true}},
         ],
       },

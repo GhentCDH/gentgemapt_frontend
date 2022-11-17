@@ -80,27 +80,36 @@ module.exports = {
     module: {
         rules: [
             // JavaScript: Use Babel to transpile JavaScript files
-            {test: /\.js$/, use: ['babel-loader']},
+            {
+                test: /\.js$/,
+                use: ['babel-loader']
+            },
 
             // Images: Copy image files to build folder
-            {test: /\.(?:ico|gif|png|jpg|jpeg|svg)$/i, type: 'asset/resource'},
+            {
+                test: /\.(?:ico|gif|png|jpg|jpeg|svg)$/i,
+                type: 'asset/resource'
+            },
 
             // Fonts: Inline files
-            {test: /\.(woff(2)?|eot|ttf|otf)$/, type: 'asset/inline'},
+            {
+                test: /\.(woff(2)?|eot|ttf|otf)$/,
+                type: 'asset/resource',
+                dependency: { not: ['url'] },
+                // use: {
+                //     loader: 'file-loader',
+                //     options: {
+                //         name: '[name].[ext]',
+                //         outputPath: 'fonts/'
+                //     }
+                // }
+            },
 
             // Vue js
-            {test: /\.vue$/, loader: "vue-loader"},
-
-            // jQuery: expose $ and jQuery
-            /*
             {
-              test: require.resolve("jquery"),
-              loader: "expose-loader",
-              options: {
-                exposes: ["$", "jQuery"],
-              },
+                test: /\.vue$/,
+                loader: "vue-loader"
             },
-             */
         ],
     },
 }
