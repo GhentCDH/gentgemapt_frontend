@@ -1,6 +1,6 @@
 <template>
     <div class="image-grid">
-        <div class="image-grid-item" v-if="manifests && manifests.length" v-for="manifest in manifests"
+        <div class="image-grid__item" v-if="manifests && manifests.length" v-for="manifest in manifests"
              @click="handleClick(manifest)">
             <div class="cropped-image">
                 <b-img fluid thumbnail :src="getThumbNailUrl(manifest)"></b-img>
@@ -86,11 +86,8 @@ export default {
     margin: -6px;
 }
 
-.image-grid-item {
+.image-grid__item {
     display: flex;
-    margin: 6px;
-    border: 2px solid #aaa;
-    padding: 2px;
     cursor: pointer;
 }
 

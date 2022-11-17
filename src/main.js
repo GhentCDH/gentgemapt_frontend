@@ -8,18 +8,19 @@ Vue.use(VueAxios, axios)
 
 import store from "./js/store"
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 
 // import styles
 import './scss/index.scss'
 
 import 'vue-slider-component/theme/antd.css'
 
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
+
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
 
 new Vue({
     el: '#app',

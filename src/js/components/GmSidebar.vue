@@ -1,15 +1,19 @@
 <template>
     <aside class="sidebar"
-           v-bind:class="{ 'sidebar-left': left, 'sidebar-right': right , 'sidebar-collapse': collapsible && collapsed, 'sidebar-expand': expandable && expanded }"
+           v-bind:class="{ 'sidebar--left': left, 'sidebar--right': right , 'sidebar--collapsed': collapsible && collapsed, 'sidebar--expanded': expandable && expanded }"
     >
-        <div class="sidebar-header">
-            <div class="sidebar-header-buttons">
-                <span v-if="expandable" class="button button-expand" @click="toggle({property: 'expanded'})"></span>
-                <span v-if="collapsible" class="button button-close" @click="toggle({property: 'collapsed'})"></span>
+        <div class="sidebar__header">
+            <div class="sidebar__header__buttons">
+                <span v-if="expandable" class="button button--expand" @click="toggle({property: 'expanded'})">
+                    <i class="bi bi-arrows-angle-expand"></i>
+                </span>
+                <span v-if="collapsible" class="button button--close" @click="toggle({property: 'collapsed'})">
+                    <i class="bi bi-x-lg"></i>
+                </span>
             </div>
-            <h1 v-if="title" class="sidebar-header-title">{{ title }}</h1>
+            <h1 v-if="title" class="sidebar__header__title">{{ title }}</h1>
         </div>
-        <div class="sidebar-content">
+        <div class="sidebar__content">
             <slot></slot>
         </div>
     </aside>
@@ -17,9 +21,14 @@
 
 <script>
 import {mapInstanceState, mapInstanceActions} from '@urbn/vuex-helpers';
+import { BIcon } from 'bootstrap-vue'
+
 
 export default {
     name: "AppSidebar",
+    components: {
+        BIcon,
+    },
     props: {
         expandable: {
             type: Boolean, default: false
@@ -71,7 +80,6 @@ export default {
   width: 100%;
 
   transition: all 0.3s ease;
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.20);
   transform: none;
 
   padding: 15px;
@@ -80,14 +88,14 @@ export default {
 
   background: white;
 
-  &-header {
+  &__header {
     position: relative;
     z-index: 1000;
 
-    &-title {
+    &__title {
     }
 
-    &-buttons {
+    &__buttons {
       position: absolute;
       top: -5px;
       right: -5px;
@@ -106,43 +114,35 @@ export default {
         &:hover {
           background-color: #ddd;
         }
-
-        &-close {
-          background: url('data:image/svg+xml;utf8,<svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-times fa-w-10 fa-3x"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>') no-repeat 50%/50%;
-        }
-
-        &-expand {
-          background: url('data:image/svg+xml;utf8,<svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="expand-wide" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-expand-wide fa-w-16 fa-3x"><path fill="currentColor" d="M0 212V88c0-13.3 10.7-24 24-24h124c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H32v116c0 6.6-5.4 12-12 12h-8c-6.6 0-12-5.4-12-12zM364 64h124c13.3 0 24 10.7 24 24v124c0 6.6-5.4 12-12 12h-8c-6.6 0-12-5.4-12-12V96H364c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12zm148 236v124c0 13.3-10.7 24-24 24H364c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h116V300c0-6.6 5.4-12 12-12h8c6.6 0 12 5.4 12 12zM148 448H24c-13.3 0-24-10.7-24-24V300c0-6.6 5.4-12 12-12h8c6.6 0 12 5.4 12 12v116h116c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12z" class=""></path></svg>') no-repeat 50%/65%;
-        }
       }
     }
   }
 
-  &-content {
+  &__content {
     flex-grow: 1;
     flex-direction: column;
     display: flex;
     overflow: hidden;
   }
 
-  &-right {
+  &--right {
     right: 0;
   }
 
-  &-right.sidebar-collapse {
+  &--right.sidebar--collapsed {
     transform: translateX(100%);
   }
 
-  &-left {
+  &--left {
     left: 0;
     width: 350px;
   }
 
-  &-left.sidebar-collapse {
+  &--left.sidebar--collapsed {
     transform: translateX(-100%);
   }
 
-  &-top {
+  &--top {
     z-index: 502;
   }
 }
@@ -152,11 +152,11 @@ export default {
     width: 550px;
     //max-width: 1100px;
 
-    &-left {
+    &--left {
       width: 350px;
     }
 
-    &-expand {
+    &--expanded {
       width: 80%;
     }
   }

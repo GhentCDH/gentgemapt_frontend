@@ -4,7 +4,7 @@
             <b-input-group>
                 <b-input-group-prepend>
                     <b-input-group-text class="bg-transparent border-right-0">
-                        <font-awesome-icon icon="search"></font-awesome-icon>
+                        <b-icon icon="search"></b-icon>
                     </b-input-group-text>
                 </b-input-group-prepend>
                 <b-form-input v-model="text" placeholder="" type="search" class="border-left-0" @keyup.enter="search"
@@ -46,17 +46,12 @@ import PlaceService from "../services/PlaceService";
 
 import debounce from 'debounce';
 
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSearch} from '@fortawesome/free-solid-svg-icons'
-
-library.add(faSearch)
+import { BIcon } from 'bootstrap-vue'
 
 export default {
     name: "AppSearchPlaces",
     components: {
-        'font-awesome-icon': FontAwesomeIcon
+        BIcon
     },
     data() {
         return {
