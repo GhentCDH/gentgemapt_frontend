@@ -43,14 +43,26 @@
                     </div>
                 </div>
             </gm-sidebar>
-            <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters">
+
+            <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters" title="Plaatstype">
+                <div class="scrollable scrollable--vertical">
+                    <div class="mbottom-small">
+                        <a @click="placesSelectAll" class="text-primary small">alles selecteren</a> | <a @click="placesSelectNone" class="text-primary small">niets selecteren</a>
+                    </div>
+                    <template v-for="filter in placeTypeFilters">
+                        <gm-filter-option :filter="filter"></gm-filter-option>
+                    </template>
+                </div>
             </gm-sidebar>
+
             <gm-sidebar id="sidebar__timeline" position="left" collapsible store_namespace="sidebarTimeline">
                 <vue-slider v-model="filters.year" direction="btt" :width="20" :height="400" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
             </gm-sidebar>
+
             <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
                 <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
             </gm-sidebar>
+
             <gm-sidebar id="sidebar__place" position="right" collapsible store_namespace="sidebarInfo">
                 <gm-place-info></gm-place-info>
             </gm-sidebar>
@@ -73,15 +85,9 @@ import GmPlaceInfo from "./js/components/GmPlaceInfo";
 import GmModalRoot from "./js/components/GmModalRoot";
 import GmIiifManifestViewer from "./js/components/GmIiifManifestViewer";
 import GmLayerOption from "./js/components/GmLayerOption";
+import GmFilterOption from "./js/components/GmFilterOption";
 
 import VueSlider from 'vue-slider-component';
-
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSearch} from '@fortawesome/free-solid-svg-icons'
-
-library.add(faSearch)
 
 import api from "./js/config/constants";
 
@@ -95,9 +101,9 @@ export default {
         'gm-map': GmMap,
         'gm-modal-root': GmModalRoot,
         'gm-layer-option': GmLayerOption,
+        'gm-filter-option': GmFilterOption,
         GmIiifManifestViewer,
         VueSlider,
-        'font-awesome-icon': FontAwesomeIcon
     },
     data() {
         return {
@@ -117,8 +123,14 @@ export default {
         overlayLayers() {
             return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
         },
+        placeTypeFilters() {
+            return this.$store.getters["placeTypeFilters/getFilters"]
+        },
         geojson() {
             let geojson = this.$store.getters['map/getGeoJSONData']
+            let placeTypeFilters = this.$store.getters['placeTypeFilters/getFilters']
+            let hiddenPlaceTypes = placeTypeFilters.filter( i => !i.active ).map( i => i.id )
+
             let features = geojson?.features ?? []
 
             if ( process.env.IS_SAD === "true") {
@@ -128,7 +140,8 @@ export default {
             return {
                 type: 'FeatureCollection',
                 features: features.filter( item =>
-                    (item.properties?.startDate ?? 0) <= this.filters.year && (item.properties?.endDate ?? 10000) >= this.filters.year
+                    ((item.properties?.startDate ?? 0) <= this.filters.year && (item.properties?.endDate ?? 10000) >= this.filters.year) &&
+                    (item.properties.placeType.length === 0 || hiddenPlaceTypes.length === 0 || item.properties.placeType.filter( type => !hiddenPlaceTypes.includes(type)).length )
                 )
             };
         },
@@ -146,6 +159,12 @@ export default {
     methods: {
         range(start, stop, step = 1) {
             return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
+        },
+        placesSelectAll() {
+            this.$store.dispatch('placeTypeFilters/activateAll')
+        },
+        placesSelectNone() {
+            this.$store.dispatch('placeTypeFilters/activateNone')
         }
     },
     created() {
