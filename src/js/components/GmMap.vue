@@ -1,7 +1,7 @@
 <template>
     <div id="map" class="map">
-        <l-map ref="GmMap" v-bind="map" :center="center" :zoom="zoom" :bounds="bounds" @update:zoom="updateZoom"
-               @update:center="updateCenter" @update:bounds="updateBounds" @ready="onMapReady">
+        <l-map ref="GmMap" v-bind="map" :center="center" :zoom="zoom" :bounds="bounds" @update:zoom="onUpdateZoom"
+               @update:center="onUpdateCenter" @update:bounds="onUpdateBounds" @ready="onMapReady">
             <l-tile-layer v-for="layer in tileLayers" :key="layer.id"
                           v-bind="layer.options"
             />
@@ -16,10 +16,6 @@
 </template>
 
 <script>
-// create layer groups
-
-
-
 import {LControl, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer, LControlLayers} from 'vue2-leaflet';
 import 'leaflet.snogylop'
 import 'leaflet/dist/leaflet.css';
@@ -31,150 +27,17 @@ import {Icon} from 'leaflet';
 delete Icon.Default.prototype._getIconUrl;
 
 let iconDefaults = {
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [28, 33],
+    iconAnchor: [14, 33],
     popupAnchor: [1, -34],
     tooltipAnchor: [20, -28],
-    shadowSize: [40, 40],
-    iconRetinaUrl: require('@/images/markers/default.svg'),
-    iconUrl: require('@/images/markers/default.svg'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+    shadowSize: [40, 54],
+    shadowAnchor: [40,54],
+    iconUrl: require('@/images/placetypes/bw/GentGemapt_Andere.svg'),
 }
 
 L.Icon.Default.mergeOptions(iconDefaults)
 
-let featureConfigs = [
-    {
-        features: ['abdijkerken', 'parochiekerken', 'kapellen (gebouwen en structuren)', 'kloosters', 'kerken'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/kerk.svg'),
-            iconUrl: require('@/images/markers/kerk.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['katoenfabrieken', 'opslagplaatsen', 'vlasfabrieken', 'spinnerijen', 'kantoorgebouwen',
-            'gasfabrieken','administratiegebouwen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/gebouw.svg'),
-            iconUrl: require('@/images/markers/gebouw.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['theaters', 'feestzalen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/theatre.svg'),
-            iconUrl: require('@/images/markers/theatre.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['bioscopen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/cinema.svg'),
-            iconUrl: require('@/images/markers/cinema.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['parken'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/park.svg'),
-            iconUrl: require('@/images/markers/park.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['universiteitsgebouwen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/university.svg'),
-            iconUrl: require('@/images/markers/university.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['bibliotheken'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/library.svg'),
-            iconUrl: require('@/images/markers/library.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['bruggen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/bridge.svg'),
-            iconUrl: require('@/images/markers/bridge.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['kleuterscholen', 'lagere scholen', 'onderwijsgebouwen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/school.svg'),
-            iconUrl: require('@/images/markers/school.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['openbare pleinen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/public_square.svg'),
-            iconUrl: require('@/images/markers/public_square.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    /*
-    {
-        features: ['stationsgebouwen'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/public_square.svg'),
-            iconUrl: require('@/images/markers/public_square.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-    {
-        features: ['woningen', 'landhuizen', 'beluiken'],
-        markerIcon: L.icon({
-            ...iconDefaults,
-            iconRetinaUrl: require('@/images/markers/public_square.svg'),
-            iconUrl: require('@/images/markers/public_square.svg')
-        }),
-        fillColor: '',
-        textColor: '',
-    },
-
-
-
-
-     */
-
-];
-
-// console.log(featureConfigs)
 
 export default {
     name: "AppMap",
@@ -213,11 +76,26 @@ export default {
                     attributionControl: false,
                     zoomControl: false
                 }
-                /* preferCanvas: true */
             },
         }
     },
     computed: {
+        icons() {
+            const icons = {}
+            const me = this
+
+            this.$store.getters["placeTypeFilters/getFilters"].forEach(
+                function (placeType) {
+                    icons[placeType.id] = L.divIcon({
+                        ...iconDefaults,
+                        className: me.iconClasses(placeType).join(' '),
+                        html: '<img src="' + placeType.icon + '">'
+                    })
+                },
+            )
+            return icons
+        },
+
         /* layers */
         wmsLayers() {
             return this.layers.filter( layer => layer.type === "wmsLayer" )
@@ -234,7 +112,7 @@ export default {
             return {
                 type: 'FeatureCollection',
                 features: features.filter(function (item) {
-                    return item.geometry.type === 'Point' && !item.properties.features.includes('wegen');
+                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat');
                 })
             };
         },
@@ -266,8 +144,9 @@ export default {
             ])*/
     },
     watch: {
-        highlightedFeatureIds() {
-            this.updateFeatureStyles()
+        highlightedFeatureIds(now, old) {
+            let placeIds = [...now, ...old]
+            this.updateFeatureStyles(placeIds)
         },
         zoom() {
             this.updateFeatureStyles()
@@ -280,18 +159,20 @@ export default {
         },
     },
     methods: {
-        updateZoom(payload) {
+        /* map events */
+        onUpdateZoom(payload) {
             this.$store.dispatch('map/setZoom', payload)
         },
-        updateCenter(payload) {
+        onUpdateCenter(payload) {
             this.$store.dispatch('map/setCenter', payload)
         },
-        updateBounds(payload) {
+        onUpdateBounds(payload) {
             this.$store.dispatch('map/setBounds', payload)
         },
         onMapReady() {
             this.mapObject = this.$refs.GmMap.mapObject
         },
+        /* feature events */
         onEachFeature(feature, layer) {
             const that = this
             // init highlight property
@@ -301,6 +182,7 @@ export default {
             layer.on('mouseout', e => this.onMarkerMouseOut(e, feature));
             layer.on('mouseover', e => this.onMarkerMouseOver(e, feature));
         },
+        /* marker events */
         onMarkerMouseOver(e, feature) {
             this.$store.dispatch('map/highlightFeature', {feature: feature})
         },
@@ -318,16 +200,7 @@ export default {
                 this.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) + 200, 0]);
             }
         },
-        geometryClasses(feature) {
-            let highlight = this.highlightedFeatureIds.includes(feature.properties.id);
-            let classes = feature.properties.features.map(i => 'geometry geometry--feature-' + i)
-            if (highlight) {
-                classes.push('geometry--highlight')
-            }
-            classes.push('geometry--type-' + feature.geometry.type)
 
-            return classes
-        },
         updateGeoJson(mapObject, json) {
             let new_ids = json.features.map( feature => feature.properties.id )
             let current_ids = []
@@ -354,13 +227,47 @@ export default {
                 this.updateGeoJson(this.$refs.points[0].mapObject, json)
             }
         },
-        styleGeometry(feature) {
+        updateFeatureStyles(placeIds = []) {
+            this.$nextTick(() => {
+                // update style of all geometries or selected placeIds only
+                if (this.$refs?.geometries) {
+                    this.$refs.geometries[0].mapObject.eachLayer((layer) => {
+                        if (placeIds.length && !placeIds.includes(layer.feature.properties.id)) {
+                            return
+                        }
+                        layer.setStyle(this.geometryStyle(layer.feature));
+                    })
+                }
+                // todo: update point styles (this is incorrect)
+                // if (this.$refs?.points) {
+                //     this.$refs.geometries[0].mapObject.eachLayer((layer) => {
+                //         if (layer.feature.geometry.type === 'Point') {
+                //             layer.setStyle(this.stylePoint(layer.feature));
+                //         }
+                //     })
+                // }
+            })
+        },
+        /* get geometry classes */
+        geometryClasses(feature) {
+            let highlight = this.highlightedFeatureIds.includes(feature.properties.id);
+            let classes = feature.properties.placeType.map(i => 'geometry geometry--' + i)
+            if (highlight) {
+                classes.push('geometry--highlight')
+            }
+            return classes
+        },
+        iconClasses(placeType) {
+            let classes = ['icon', 'icon--' + placeType.id]
+            return classes
+        },
+        /* get geometry style */
+        geometryStyle(feature) {
             let isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
 
             switch (feature.geometry.type) {
                 case 'Polygon':
                 case 'MultiPolygon':
-
                     return {
                         fillOpacity: isHighlighted ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.0 ),
                         fillColor: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
@@ -369,10 +276,7 @@ export default {
                         stroke: isHighlighted,
                         className: this.geometryClasses(feature).join(' ')
                     };
-
-                    break;
                 default:
-                    // console.log(Math.ceil(2 ^ (this.zoom - 16) ) )
                     return {
                         color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
                         opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
@@ -380,33 +284,22 @@ export default {
                         stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
                         className: this.geometryClasses(feature).join(' ')
                     };
-
-                    break;
             }
         },
-        updateFeatureStyles() {
-            this.$nextTick(() => {
-                // update geometry styles
-                if (this.$refs?.geometries) {
-                    this.$refs.geometries[0].mapObject.eachLayer((layer) => {
-                        if (layer.feature.geometry.type !== 'Point') {
-                            layer.setStyle(this.styleGeometry(layer.feature));
-                        }
-                    })
-                }
-                // todo: update point styles (this is incorrect)
-                if (this.$refs?.points) {
-                    this.$refs.geometries[0].mapObject.eachLayer((layer) => {
-                        if (layer.feature.geometry.type !== 'Point') {
-                            layer.setStyle(this.styleGeometry(layer.feature));
-                        }
-                    })
-                }
-            })
+        /* get point style */
+        pointStyle(feature) {
+            let isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
+
+            return {
+                size: isHighlighted ? [44,44] : [40,40]
+            }
         },
+
     },
 
     created() {
+
+        const me = this
 
         // add geojson point layer
         this.layers.push(
@@ -418,7 +311,7 @@ export default {
                     geojson: this.geometries,
                     options: {
                         onEachFeature: this.onEachFeature,
-                        style: this.styleGeometry,
+                        style: this.geometryStyle,
                     }
                 }
             }
@@ -436,14 +329,15 @@ export default {
                         onEachFeature: this.onEachFeature,
                         // style: this.styleGeometry,
                         pointToLayer: function (feature, latlng) {
-                            for (const featureConfig of featureConfigs) {
-                                if (featureConfig.features.filter(i => feature.properties.features.includes(i)).length) {
-                                    return L.marker(latlng, {
-                                        title: feature.properties.title,
-                                        icon: featureConfig.markerIcon
-                                    })
-                                }
+                            // known placeType? display custom icon
+                            if ( feature.properties.placeType?.length && me.icons[feature.properties.placeType[0]] )
+                            {
+                                return L.marker(latlng, {
+                                    title: feature.properties.title,
+                                    icon: me.icons[feature.properties.placeType[0]]
+                                })
                             }
+                            // placeType unknown, display default icon
                             return L.marker(latlng, {
                                 title: feature.properties.title,
                                 icon: L.icon(iconDefaults)
