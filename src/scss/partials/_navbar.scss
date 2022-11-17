@@ -1,11 +1,21 @@
+.navbar {
+  z-index: 1005;
 
+  .navbar-brand {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 75px;
+    padding: 7px 40px;
 
-.navbar-brand {
-  font-weight: 500;
-  font-size: 1.8rem;
-  font-variant: small-caps;
-  letter-spacing: .05rem;
-  padding-top: 0;
-  padding-bottom: 0;
+    background-color: #610345 !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    img {
+      height: 100%;
+    }
+  }
 }
 

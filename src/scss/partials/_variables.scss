@@ -2,8 +2,8 @@
 $background-color: white;
 $font-color: #333333;
 
-$font-family-sans-serif: 'Open Sans', sans-serif;
-$font-family-serif: 'Noto Serif', serif;
+$font-family-sans-serif: 'Graphik', sans-serif;
+$font-family-serif: 'BrightonBold', serif;
 
 $font-family: $font-family-sans-serif;
 
@@ -15,3 +15,16 @@ $h2-font-size: 1.6rem;
 $h3-font-size: 1.3rem;
 $h4-font-size: 1.1rem;
 $h5-font-size: 1.0rem;
+
+$headings-font-family: $font-family-sans-serif;
+
+$primary: #610345;
+$secondary: #ed474a;
+$tertiary: #909090;
+$black: #323232;
+
+$light: #e6e6e6;
+
+$dark: $primary;
+
+$light-gray: #aaa;

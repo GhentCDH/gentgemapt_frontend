@@ -7,6 +7,23 @@
   }
 }
 
+.vue-slider-btt {
+
+  .vue-slider-rail {
+    background: none;
+  }
+
+  .vue-slider-mark-step {
+    margin-top: 10px;
+    border-top: 2px solid black;
+  }
+
+  .vue-slider-mark-label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+}
+
 .app__filters {
   .row {
     width: 100%;

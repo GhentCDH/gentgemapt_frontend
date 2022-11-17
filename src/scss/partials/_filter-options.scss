@@ -1,0 +1,32 @@
+.filter-option {
+  display: flex;
+  align-items: center;
+
+  .filter-option__label {
+    padding: 4px 0;
+    flex: 1;
+    cursor: pointer;
+    user-select: none;
+    border-top: 1px solid #ccc;
+
+    span {
+      width: 100%;
+      display: inline-block;
+    }
+  }
+
+  .filter-option__icon {
+    padding: 4px 10px 4px 0;
+    border-top: 1px solid #ccc;
+
+    img {
+      width: 20px;
+    }
+  }
+
+  &:last-child {
+    .filter-option__icon, .filter-option__label {
+      border-bottom: 1px solid #ccc;
+    }
+  }
+}

@@ -1,5 +1,36 @@
+@font-face {
+  font-family: BrightonBold;
+  src: url("../../fonts/BrightonStd-Bold.otf") format("opentype");
+}
+
 body {
   p {
     line-height: 1.6rem;
   }
+}
+
+h1 {
+  font-family: $font-family-serif;
+  color: $primary;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: $font-family-serif;
+  color: $primary;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+
+h3 {
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+}
+
+h4 {
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
 }

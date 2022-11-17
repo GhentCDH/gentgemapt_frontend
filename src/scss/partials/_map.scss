@@ -11,3 +11,18 @@
     width: 100%;
   }
 }
+
+.leaflet-container .leaflet-marker-icon {
+  background: url(../../images/placetypes/GentGemapt_Marker.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(2px 2px 3px rgb(171,166,166));
+
+  img {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    left: 4px;
+    top: 4px;
+  }
+}
