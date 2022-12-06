@@ -1,17 +1,11 @@
 <template>
     <div class="place-search">
         <div class="place-search__form">
+
             <b-input-group>
-                <b-input-group-prepend>
-                    <b-input-group-text class="bg-transparent border-right-0">
-                        <b-icon icon="search"></b-icon>
-                    </b-input-group-text>
-                </b-input-group-prepend>
-                <b-form-input v-model="text" placeholder="" type="search" class="border-left-0" @keyup.enter="search"
-                              @input="debouncedSearch"></b-form-input>
+                <b-form-input v-model="text" type="search" @keyup.enter="search"
+                              @input="debouncedSearch" placeholder="Typ hier ..."></b-form-input>
             </b-input-group>
-            <b-form-group>
-            </b-form-group>
         </div>
         <div class="place-search__results flex-grow-1 scrollable scrollable--vertical">
             <ul class="list-unstyled">
@@ -25,7 +19,7 @@
                     </template>
                     <h5>{{ place.title }}</h5>
                     <div class="features">
-                        <span class="feature" v-for="feature in place.features">{{ feature }}</span>
+                        <span class="feature" v-for="type in place.placeType">{{ type }}</span>
                     </div>
                 </b-media>
             </ul>
@@ -84,8 +78,8 @@ export default {
             }
         },
         select: function (item) {
-            this.$store.dispatch('map/setCenter', item.coords)
             this.$store.dispatch('map/setZoom', 18)
+            this.$store.dispatch('map/setCenter', item.coords)
             this.$store.dispatch('map/selectFeature', {id: item.id})
         },
         highlight: function (item) {
@@ -111,9 +105,14 @@ export default {
   .place-search__results {
     flex-grow: 1;
     overflow-y: auto;
+    margin-top: 20px;
 
     .search-result {
       cursor: pointer;
+
+      h5 {
+        margin-bottom: 2px;
+      }
     }
   }
 }
