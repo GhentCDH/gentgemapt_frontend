@@ -9,15 +9,6 @@
                     :geojson="geojson"
             >
                 <template v-slot:controls-topleft>
-                        <button class="control__button" @click="$store.dispatch('sidebarSearch/toggle', { property: 'collapsed' })">
-                            <img :src="require('@/images/icons/search.svg')">
-                        </button>
-                        <button class="control__button" @click="$store.dispatch('sidebarMaps/toggle', { property: 'collapsed' })">
-                            <img :src="require('@/images/icons/layers.svg')">
-                        </button>
-                        <button class="control__button" @click="$store.dispatch('sidebarFilters/toggle', { property: 'collapsed' })">
-                            <img :src="require('@/images/icons/sliders-h.svg')">
-                        </button>
                         <button class="control__button" @click="$store.dispatch('sidebarTimeline/toggle', { property: 'collapsed' })">
                             <img :src="require('@/images/icons/calendar.svg')">
                         </button>
