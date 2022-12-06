@@ -18,6 +18,11 @@
   background-repeat: no-repeat;
   filter: drop-shadow(2px 2px 3px rgb(171,166,166));
 
+  &.icon--selected {
+    background: url(../../images/placetypes/GentGemapt_Marker_Selected.svg);
+    background-size: contain;
+  }
+
   img {
     width: 20px;
     height: 20px;
@@ -25,4 +30,5 @@
     left: 4px;
     top: 4px;
   }
+
 }

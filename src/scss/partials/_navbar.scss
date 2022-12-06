@@ -17,5 +17,12 @@
       height: 100%;
     }
   }
+
+  .nav-item {
+    img {
+      height: 40px;
+      filter: invert(100%);
+    }
+  }
 }
 
