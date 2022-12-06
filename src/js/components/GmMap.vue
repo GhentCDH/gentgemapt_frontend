@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {LControl, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer, LControlLayers} from 'vue2-leaflet';
+import {LControl, LControlLayers, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer} from 'vue2-leaflet';
 import 'leaflet.snogylop'
 import 'leaflet/dist/leaflet.css';
 
@@ -74,7 +74,7 @@ export default {
                 minZoom: 12,
                 options: {
                     attributionControl: false,
-                    zoomControl: false
+                    zoomControl: true
                 }
             },
         }
@@ -112,7 +112,7 @@ export default {
             return {
                 type: 'FeatureCollection',
                 features: features.filter(function (item) {
-                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat');
+                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat') && !item.properties.placeType.includes('water');
                 })
             };
         },
@@ -137,6 +137,9 @@ export default {
         highlightedFeatureIds() {
             return this.$store.getters['map/getHighlightedFeatures'].map(i => i.properties.id)
         },
+        filterSearchIds() {
+            return this.$store.getters['featureFilters/getSearch']
+        }
 
         /*
             ...mapGetters([
@@ -239,13 +242,19 @@ export default {
                     })
                 }
                 // todo: update point styles (this is incorrect)
-                // if (this.$refs?.points) {
-                //     this.$refs.geometries[0].mapObject.eachLayer((layer) => {
-                //         if (layer.feature.geometry.type === 'Point') {
-                //             layer.setStyle(this.stylePoint(layer.feature));
-                //         }
-                //     })
-                // }
+                if (this.$refs?.points) {
+                    this.$refs.points[0].mapObject.eachLayer((layer) => {
+                        if (placeIds.length && !placeIds.includes(layer.feature.properties.id)) {
+                            return
+                        }
+                        if ( this.highlightedFeatureIds.includes(layer.feature.properties.id) ) {
+                            layer._icon.classList.add('icon--selected')
+                        } else {
+                            layer._icon.classList.remove('icon--selected')
+                        }
+                        // layer.setStyle(this.pointStyle(layer.feature));
+                    })
+                }
             })
         },
         /* get geometry classes */
@@ -258,33 +267,73 @@ export default {
             return classes
         },
         iconClasses(placeType) {
-            let classes = ['icon', 'icon--' + placeType.id]
-            return classes
+            return ['icon', 'icon--' + placeType.id]
         },
         /* get geometry style */
         geometryStyle(feature) {
-            let isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
+            const isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
+            const isSearched = this.filterSearchIds.includes(feature.properties.id);
+            const isPolygon = ['Polygon', 'MultiPolygon'].includes(feature.geometry.type);
 
-            switch (feature.geometry.type) {
-                case 'Polygon':
-                case 'MultiPolygon':
-                    return {
-                        fillOpacity: isHighlighted ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.0 ),
-                        fillColor: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
-                        color: 'rgb(0 128 182)',
-                        weight: 2,
-                        stroke: isHighlighted,
-                        className: this.geometryClasses(feature).join(' ')
-                    };
-                default:
-                    return {
-                        color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
-                        opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
-                        weight: this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
-                        stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
-                        className: this.geometryClasses(feature).join(' ')
-                    };
+            const configs = {
+                default: {
+                    fillColor: 'rgb(0 0 0)',
+                    fillOpacity: 0,
+                    // color: 'rgb(0 128 182)',
+                    color: 'rgb(0 0 0)',
+                    opacity: 0.05,
+                    weight: isPolygon ? 2 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
+                    className: this.geometryClasses(feature).join(' '),
+                    stroke: isPolygon ? false : this.zoom >= 15
+                },
+                searched: {
+                    fillOpacity: 0.2,
+                    fillColor: 'rgb(237 71 74)',
+                    color: 'rgb(237 71 74)',
+                    opacity: 0.4,
+                    stroke: true,
+                    weight: isPolygon ? 1.5 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
+                },
+                highlighted: {
+                    fillColor: 'rgb(237 71 74)',
+                    fillOpacity: 0.4,
+                    color: 'rgb(237 71 74)',
+                    opacity: 0.7,
+                    stroke: true
+                }
             }
+
+            let config = configs.default;
+            if ( isSearched ) {
+                config = { ...config, ...configs.searched }
+            }
+            if ( isHighlighted ) {
+                config = { ...config, ...configs.highlighted }
+            }
+
+            return config;
+
+            // switch (feature.geometry.type) {
+            //     case 'Polygon':
+            //     case 'MultiPolygon':
+            //         return {
+            //             fillOpacity: isHighlighted || isSearched ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.0 ),
+            //             fillColor: isHighlighted || isSearched ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
+            //             color: 'rgb(0 128 182)',
+            //             weight: 2,
+            //             stroke: isHighlighted || isSearched,
+            //             className: this.geometryClasses(feature).join(' ')
+            //         };
+            //     default:
+            //         return config;
+            //         return {
+            //             color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
+            //             opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
+            //             weight: this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
+            //             stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
+            //             className: this.geometryClasses(feature).join(' ')
+            //         };
+            // }
         },
         /* get point style */
         pointStyle(feature) {
@@ -334,13 +383,15 @@ export default {
                             {
                                 return L.marker(latlng, {
                                     title: feature.properties.title,
-                                    icon: me.icons[feature.properties.placeType[0]]
+                                    icon: me.icons[feature.properties.placeType[0]],
+                                    riseOnHover: true
                                 })
                             }
                             // placeType unknown, display default icon
                             return L.marker(latlng, {
                                 title: feature.properties.title,
-                                icon: L.icon(iconDefaults)
+                                icon: L.icon(iconDefaults),
+                                riseOnHover: true
                             })
                         }
                     }
