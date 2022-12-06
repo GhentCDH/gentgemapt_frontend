@@ -19,7 +19,6 @@ export default {
         layerOptions: {
             'mapbox-v1' : {
                 visible: true,
-
             }
         }
     }),
@@ -31,6 +30,9 @@ export default {
         getLayers: state => state.layers,
         getFeatureById: state => id => {
             return state.geojson.features.find(feature => feature.properties.id === id);
+        },
+        getFeaturesByIds: state => ids => {
+            return state.geojson.features.find(feature => ids.includes(feature.properties.id))
         },
         getZoom: state => state.zoom,
         getCenter: state => state.center,
@@ -142,8 +144,10 @@ export default {
             }
         },
         async loadGeoJSONData(context) {
-            const geojson = await PlaceService.list();
-            context.commit('setGeoJSONData', geojson);
+            if ( !context.state.geojson ) {
+                const geojson = await PlaceService.list();
+                context.commit('setGeoJSONData', geojson);
+            }
         }
     }
 }

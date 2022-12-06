@@ -84,7 +84,7 @@ export default {
             const icons = {}
             const me = this
 
-            this.$store.getters["placeTypeFilters/getFilters"].forEach(
+            this.$store.getters["featureFilters/getPlaceTypes"].forEach(
                 function (placeType) {
                     icons[placeType.id] = L.divIcon({
                         ...iconDefaults,

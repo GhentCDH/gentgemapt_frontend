@@ -33,7 +33,7 @@ export default {
     },
     methods: {
         setFilterStatus(checked) {
-            this.$store.dispatch('placeTypeFilters/setFilterStatus', { id: this.filter.id, active: checked })
+            this.$store.dispatch('featureFilters/setPlaceTypeStatus', { id: this.filter.id, active: checked })
         },
     }
 }

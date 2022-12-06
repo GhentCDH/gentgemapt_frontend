@@ -24,7 +24,7 @@
                 </template>
             </gm-map>
 
-            <gm-sidebar id="sidebar__search" position="left" collapsible store_namespace="sidebarSearch">
+            <gm-sidebar id="sidebar__search" position="left" collapsible store_namespace="sidebarSearch" title="Zoeken">
                 <gm-search-places></gm-search-places>
             </gm-sidebar>
             <gm-sidebar id="sidebar__maps" position="left" collapsible store_namespace="sidebarMaps" title="Kaart opties">
@@ -56,7 +56,7 @@
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__timeline" position="left" collapsible store_namespace="sidebarTimeline">
-                <vue-slider v-model="filters.year" direction="btt" :width="20" :height="400" :min="600" :max="2022" :process="false" :tooltip="'always'" :marks="range(500, 2100, 100)" :silent="true"></vue-slider>
+                <vue-slider v-model="yearFilter" direction="btt" :width="20" :height="400" :min="yearFilterConfig.min" :max="yearFilterConfig.max" :process="false" :tooltip="'always'" :marks="yearFilterConfig.marks" :silent="true"></vue-slider>
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
@@ -124,12 +124,14 @@ export default {
             return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
         },
         placeTypeFilters() {
-            return this.$store.getters["placeTypeFilters/getFilters"]
+            return this.$store.getters["featureFilters/getPlaceTypes"]
         },
         geojson() {
-            let geojson = this.$store.getters['map/getGeoJSONData']
-            let placeTypeFilters = this.$store.getters['placeTypeFilters/getFilters']
-            let hiddenPlaceTypes = placeTypeFilters.filter( i => !i.active ).map( i => i.id )
+            const geojson = this.$store.getters['map/getGeoJSONData']
+            const year = this.$store.getters['featureFilters/getYear']
+            const placeTypes = this.$store.getters['featureFilters/getPlaceTypes']
+            const hiddenPlaceTypes = placeTypes.filter( i => !i.active ).map( i => i.id )
+            const search = this.$store.getters['featureFilters/getSearch']
 
             let features = geojson?.features ?? []
 
@@ -139,20 +141,48 @@ export default {
 
             return {
                 type: 'FeatureCollection',
-                features: features.filter( item =>
-                    ((item.properties?.startDate ?? 0) <= this.filters.year && (item.properties?.endDate ?? 10000) >= this.filters.year) &&
+                features: features.filter( function(item) {
+                    // search overrules all filters
+                    if ( search.length ) {
+                        return search.includes(item.properties.id)
+                    }
+                    // filter by year and placeType
+                    return ((item.properties?.startDate ?? 0) <= year && (item.properties?.endDate ?? 10000) >= year) &&
                     (item.properties.placeType.length === 0 || hiddenPlaceTypes.length === 0 || item.properties.placeType.filter( type => !hiddenPlaceTypes.includes(type)).length )
-                )
+                })
             };
         },
         sidebarInfoCollapsed() {
             return this.$store.getters["sidebarInfo/collapsed"]
+        },
+        sidebarSearchCollapsed() {
+            return this.$store.getters["sidebarSearch/collapsed"]
+        },
+        yearFilter: {
+            get () {
+                return this.$store.getters['featureFilters/getYear']
+            },
+            set (value) {
+                this.$store.commit('featureFilters/setYear', value)
+            }
+        },
+        yearFilterConfig() {
+            return {
+                min: 1400,
+                max: new Date().getFullYear(),
+                marks: this.range(1400, 2100, 100)
+            }
         }
     },
     watch: {
-        sidebarInfoCollapsed(newVal, oldVal) {
-            if ( newVal ) {
+        sidebarInfoCollapsed(isCollapsed) {
+            if ( isCollapsed ) {
                 this.$store.dispatch('sidebarViewer/collapse')
+            }
+        },
+        sidebarSearchCollapsed(isCollapsed) {
+            if ( isCollapsed ) {
+                this.$store.commit('featureFilters/resetSearch')
             }
         }
     },
@@ -161,10 +191,10 @@ export default {
             return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
         },
         placesSelectAll() {
-            this.$store.dispatch('placeTypeFilters/activateAll')
+            this.$store.dispatch('featureFilters/activateAllPlaceTypes')
         },
         placesSelectNone() {
-            this.$store.dispatch('placeTypeFilters/activateNone')
+            this.$store.dispatch('featureFilters/deactivateAllPlaceTypes')
         }
     },
     created() {
