@@ -32,7 +32,7 @@ const placeTypes = [
     {
         id: 'kunst_en_cultuur',
         label: 'Kunst en cultuur',
-        icon: require('@/images/placetypes/color/GentGemapt_Kunst_cultuur.svg'),
+        icon: require('@/images/placetypes/color/GentGemapt_Kunst_en_cultuur.svg'),
         active: true,
     },
     {
@@ -86,7 +86,7 @@ const placeTypes = [
     {
         id: 'water',
         label: 'Water',
-        icon: require('@/images/placetypes/color/GentGemapt_Rivier.svg'),
+        icon: require('@/images/placetypes/color/GentGemapt_Water.svg'),
         active: true,
     },
     {
