@@ -1,6 +1,6 @@
 <template>
     <div class="image-grid">
-        <div class="image-grid__item" v-if="manifests && manifests.length" v-for="manifest in manifests"
+        <div class="image-grid__item" v-if="manifests && manifests.length" v-for="manifest in manifests" :key="manifest.id"
              @click="handleClick(manifest)">
             <div class="cropped-image">
                 <b-img fluid thumbnail :src="getThumbNailUrl(manifest)"></b-img>
@@ -47,7 +47,9 @@ export default {
     watch: {
         collectionUrl: function(url) {
             // console.log(url)
-            this.loadManifest(url)
+            if (url) {
+                this.loadManifest(url)
+            }
         }
     },
     created() {
@@ -57,7 +59,8 @@ export default {
     },
     methods: {
         getThumbNailUrl(manifest) {
-            return manifest.getThumbnail().id
+            const thumb = manifest.getThumbnail()
+            return manifest.getThumbnail()?.id
         },
         handleClick(manifest) {
             this.$store.dispatch('iiifViewer/loadManifest', manifest.id)
