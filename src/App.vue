@@ -9,9 +9,6 @@
                     :geojson="geojson"
             >
                 <template v-slot:controls-topleft>
-                        <button class="control__button" @click="$store.dispatch('sidebarTimeline/toggle', { property: 'collapsed' })">
-                            <img :src="require('@/images/icons/calendar.svg')">
-                        </button>
                 </template>
             </gm-map>
 
@@ -44,10 +41,6 @@
                         <gm-filter-option :filter="filter"></gm-filter-option>
                     </template>
                 </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__timeline" position="left" collapsible store_namespace="sidebarTimeline">
-                <vue-slider v-model="yearFilter" direction="btt" :width="20" :height="400" :min="yearFilterConfig.min" :max="yearFilterConfig.max" :process="false" :tooltip="'always'" :marks="yearFilterConfig.marks" :silent="true"></vue-slider>
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
@@ -178,9 +171,6 @@ export default {
         }
     },
     methods: {
-        range(start, stop, step = 1) {
-            return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
-        },
         placesSelectAll() {
             this.$store.dispatch('featureFilters/activateAllPlaceTypes')
         },
