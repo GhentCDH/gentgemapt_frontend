@@ -41,6 +41,9 @@ export default {
 
 <style scoped lang="scss">
 .showmore {
+  .showmore__content {
+    margin-bottom: 20px;
+  }
 
   &.showmore--collapsed {
     .showmore__content {
@@ -61,6 +64,9 @@ export default {
         background: -o-linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 95%);
         background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 95%);
       }
+    }
+
+    .showmore__buttons {
     }
   }
 }
