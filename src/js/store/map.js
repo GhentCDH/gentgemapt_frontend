@@ -31,6 +31,9 @@ export default {
         getFeatureById: state => id => {
             return state.geojson.features.find(feature => feature.properties.id === id);
         },
+        getFeaturesById: state => id => {
+            return state.geojson.features.filter(feature => feature.properties.id === id);
+        },
         getFeaturesByIds: state => ids => {
             return state.geojson.features.find(feature => ids.includes(feature.properties.id))
         },
