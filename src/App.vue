@@ -17,29 +17,13 @@
             </gm-sidebar>
             <gm-sidebar id="sidebar__maps" position="left" collapsible store_namespace="sidebarMaps" title="Kaart opties">
                 <div class="scrollable scrollable--vertical">
-                    <h2>Basiskaarten</h2>
-                    <div class="maplist maplist--base">
-                        <template v-for="layer in baseLayers">
-                            <gm-layer-option :layer="layer"></gm-layer-option>
-                        </template>
-                    </div>
-                    <h2>Kaartlagen</h2>
-                    <div class="maplist maplist--overlay">
-                        <template v-for="layer in overlayLayers">
-                            <gm-layer-option :layer="layer"></gm-layer-option>
-                        </template>
-                    </div>
+                    <gm-layer-panel></gm-layer-panel>
                 </div>
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters" title="Plaatstype">
                 <div class="scrollable scrollable--vertical">
-                    <div class="mbottom-small">
-                        <a @click="placesSelectAll" class="text-primary small">alles selecteren</a> | <a @click="placesSelectNone" class="text-primary small">niets selecteren</a>
-                    </div>
-                    <template v-for="filter in placeTypeFilters">
-                        <gm-filter-option :filter="filter"></gm-filter-option>
-                    </template>
+                    <gm-place-type-filter></gm-place-type-filter>
                 </div>
             </gm-sidebar>
 
@@ -63,31 +47,29 @@
 <script>
 import GmNavbar from "./js/components/GmNavbar";
 import GmSidebar from "./js/components/GmSidebar";
-import GmSearchPlaces from "./js/components/GmSearchPlaces";
 import GmMap from "./js/components/GmMap";
 import GmPlaceInfo from "./js/components/GmPlaceInfo";
 import GmModalRoot from "./js/components/GmModalRoot";
 import GmIiifManifestViewer from "./js/components/GmIiifManifestViewer";
-import GmLayerOption from "./js/components/GmLayerOption";
-import GmFilterOption from "./js/components/GmFilterOption";
-
-import VueSlider from 'vue-slider-component';
 
 import api from "./js/config/constants";
+
+import GmSearchPlaces from "./js/components/search/GmSearchPlaces";
+import GmPlaceTypeFilter from "./js/components/filters/GmPlaceTypeFilter";
+import GmLayerPanel from "./js/components/layers/GmLayerPanel";
 
 export default {
     name: "App",
     components: {
+        GmPlaceTypeFilter,
         'gm-navbar': GmNavbar,
         'gm-sidebar': GmSidebar,
         'gm-search-places': GmSearchPlaces,
         'gm-place-info': GmPlaceInfo,
         'gm-map': GmMap,
         'gm-modal-root': GmModalRoot,
-        'gm-layer-option': GmLayerOption,
-        'gm-filter-option': GmFilterOption,
         GmIiifManifestViewer,
-        VueSlider,
+        GmLayerPanel,
     },
     data() {
         return {
@@ -100,15 +82,6 @@ export default {
     computed: {
         isSAD() {
             return process.env.IS_SAD === 'true'
-        },
-        baseLayers() {
-            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'base' )
-        },
-        overlayLayers() {
-            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
-        },
-        placeTypeFilters() {
-            return this.$store.getters["featureFilters/getPlaceTypes"]
         },
         geojson() {
             const geojson = this.$store.getters['map/getGeoJSONData']
@@ -130,7 +103,7 @@ export default {
                     if ( search.length ) {
                         return search.includes(item.properties.id)
                     }
-                    // filter by year and placeType
+                    // filters by year and placeType
                     return ((item.properties?.startDate ?? 0) <= year && (item.properties?.endDate ?? 10000) >= year) &&
                     (item.properties.placeType.length === 0 || hiddenPlaceTypes.length === 0 || item.properties.placeType.filter( type => !hiddenPlaceTypes.includes(type)).length )
                 })
@@ -142,21 +115,6 @@ export default {
         sidebarSearchCollapsed() {
             return this.$store.getters["sidebarSearch/collapsed"]
         },
-        yearFilter: {
-            get () {
-                return this.$store.getters['featureFilters/getYear']
-            },
-            set (value) {
-                this.$store.commit('featureFilters/setYear', value)
-            }
-        },
-        yearFilterConfig() {
-            return {
-                min: 1400,
-                max: new Date().getFullYear(),
-                marks: this.range(1400, 2100, 100)
-            }
-        }
     },
     watch: {
         sidebarInfoCollapsed(isCollapsed) {
@@ -168,14 +126,6 @@ export default {
             if ( isCollapsed ) {
                 this.$store.commit('featureFilters/resetSearch')
             }
-        }
-    },
-    methods: {
-        placesSelectAll() {
-            this.$store.dispatch('featureFilters/activateAllPlaceTypes')
-        },
-        placesSelectNone() {
-            this.$store.dispatch('featureFilters/deactivateAllPlaceTypes')
         }
     },
     created() {

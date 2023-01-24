@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import PlaceService from "../services/PlaceService";
+import PlaceService from "../../services/PlaceService";
 
 import debounce from 'debounce';
 
@@ -75,11 +75,15 @@ export default {
                     this.$store.commit('featureFilters/setSearchResult', data.items.map( i => i.id ))
                     this.$store.dispatch('map/setBounds', [[data.bbox.corner1.lat, data.bbox.corner1.lng], [data.bbox.corner2.lat, data.bbox.corner2.lng]]);
                 }
+            } else {
+                this.$store.commit('featureFilters/resetSearch')
             }
         },
         select: function (item) {
-            this.$store.dispatch('map/setZoom', 18)
-            this.$store.dispatch('map/setCenter', item.coords)
+            // todo: don't zoom/setcenter here, base on configuration
+
+            // this.$store.dispatch('map/setZoom', 18)
+            // this.$store.dispatch('map/setCenter', item.coords)
             this.$store.dispatch('map/selectFeature', {id: item.id})
         },
         highlight: function (item) {

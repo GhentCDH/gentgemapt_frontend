@@ -28,7 +28,7 @@
 
 <script>
 import VueSlider from 'vue-slider-component';
-import GmYearFilter from "./GmYearFilter";
+import GmYearFilter from "./filters/GmYearFilter";
 
 export default {
     name: "GmNavbar",
