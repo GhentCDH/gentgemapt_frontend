@@ -14,7 +14,7 @@ export default {
     },
     mutations: {
         reset(state) {
-            state.placeTypes.forEach( i => i.active = active)
+            state.placeTypes.forEach( i => i.active = true)
             state.year = new Date().getFullYear()
             state.search = []
         },
@@ -36,7 +36,7 @@ export default {
         setSearchResult(state, ids) {
             state.search = ids
         },
-        // set status of placeType filter
+        // set status of placeType filters
         // payload = { id: XX, active: true/false }
         setPlaceTypeStatus(state, payload) {
             if ( payload?.id && payload?.active !== undefined ) {
@@ -49,10 +49,10 @@ export default {
             context.commit('setPlaceTypeStatus', payload);
         },
         activateAllPlaceTypes(context) {
-            context.commit('reset', true)
+            context.commit('resetPlaceTypes', true)
         },
         deactivateAllPlaceTypes(context) {
-            context.commit('reset', false)
+            context.commit('resetPlaceTypes', false)
         }
     }
 }
