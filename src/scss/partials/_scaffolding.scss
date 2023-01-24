@@ -1,8 +1,11 @@
 html {
   background: $background-color;
+  overflow: hidden;
 }
 
 body {
+  overflow: hidden;
+
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -15,13 +18,6 @@ body {
   line-height: 1.4;
 }
 
-body.scroll-disabled {
-  overflow: hidden
-}
-
-.nav {
-}
-
 .content {
   position: relative;
 }
@@ -29,11 +25,3 @@ body.scroll-disabled {
 #map {
   flex-grow: 1;
 }
-
-//.sidebar-left-open .leaflet-left {
-//  margin-left: 350px;
-//}
-//
-//.sidebar-right-open .leaflet-right {
-//  margin-right: 550px;
-//}
