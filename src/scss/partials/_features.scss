@@ -1,21 +1,27 @@
-.feature {
-  display: inline-block;
-
+.features {
   font-weight: normal;
   color: $secondary;
-  font-size: 80%;
   text-transform: uppercase;
 
-  &::after {
-    content: '.';
-    padding-left: 4px;
-    padding-right: 4px;
+  &.features--smaller {
+    font-size: $font-size-smaller;
   }
 
-  &:last-child::after {
-    display: none;
+  .feature {
+    display: inline-block;
+
+    &::after {
+      content: '.';
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+
+    &.feature--date {
+      color: $primary;
+    }
   }
-
-
-
 }

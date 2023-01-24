@@ -14,30 +14,32 @@
             </div>
         </div>
         <div class="place-info__content scrollable scrollable--vertical">
-            <div class="features mbottom-default">
-                <span class="feature" v-if="dating">{{ dating }}</span><span class="feature" v-for="feature in place.features">{{ feature }}</span>
+            <div class="features features--smaller mbottom-default">
+                <span class="feature feature--date" v-if="dating">{{ dating }}</span>
+                <span class="feature" v-for="feature in place.features">{{ feature }}</span>
             </div>
 
             <gm-show-more label-show-more="toon meer" label-show-less="toon minder">
                 <div class="description" v-html="descriptionFormatted"></div>
 
                 <div class="creators" v-if="place.creators.length">
+                    Door
                     <ul>
                         <li v-for="(creator,index) in place.creators" :key="index">{{ creator }}</li>
                     </ul>
                 </div>
             </gm-show-more>
 
-            <h2 v-if="place.refs.length && place.refs[0].count">Collectie</h2>
-            <gm-iiif-collection-gallery v-if="place.refs && place.refs.length" v-for="ref in place.refs" :key="ref.url"
+            <h2 v-if="place.manifests.length && place.manifests[0].count">Collectie</h2>
+            <gm-iiif-collection-gallery v-if="place.manifests && place.manifests.length" v-for="ref in place.manifests" :key="ref.url"
                                         :collectionUrl="ref.url"></gm-iiif-collection-gallery>
 
             <div class="moreinfo" v-if="place.references.length">
-                <h2>Meer weten?</h2>
+                <h2>Meer weten</h2>
                 <ul>
                     <li v-for="(reference,index) in place.references" :key="index">
                         <span v-if="!reference.url">{{ reference.label }}</span>
-                        <a v-if="reference.url" href="reference.url">{{ reference.label }}</a>
+                        <a target="_blank" v-if="reference.url" :href="reference.url">{{ reference.label }}</a>
                     </li>
                 </ul>
             </div>
@@ -88,7 +90,7 @@ export default {
                 .replaceAll('</strong></p>', '</h3>')
         },
         dating() {
-            return this.place?.startDate ? this.place.startDate + ( this.place?.endDate ? ' - ' + this.place.endDate : ' - heden' ) : null
+            return this.place?.startDate ? this.place.startDate + ( this.place?.endDate ? ' – ' + this.place.endDate : ' – heden' ) : null
         }
     },
     methods: {
