@@ -2,9 +2,7 @@
     <div class="image-grid">
         <div class="image-grid__item" v-if="manifests && manifests.length" v-for="manifest in manifests" :key="manifest.id"
              @click="handleClick(manifest)">
-            <div class="cropped-image">
-                <b-img fluid thumbnail :src="getThumbNailUrl(manifest)"></b-img>
-            </div>
+            <b-img :src="getThumbNailUrl(manifest)"></b-img>
         </div>
     </div>
 </template>
@@ -83,28 +81,5 @@ export default {
 </script>
 
 <style scoped>
-.image-grid {
-    display: flex;
-    flex-wrap: wrap;
-    margin: -6px;
-}
 
-.image-grid__item {
-    display: flex;
-    cursor: pointer;
-}
-
-.cropped-image {
-    width: 145px;
-    height: 145px;
-}
-
-.cropped-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 0;
-    padding: 0;
-    border-radius: 0px;
-}
 </style>
