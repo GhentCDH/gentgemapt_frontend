@@ -13,8 +13,6 @@ import { BootstrapVue } from 'bootstrap-vue'
 // import styles
 import './scss/index.scss'
 
-import 'vue-slider-component/theme/antd.css'
-
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 
