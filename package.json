@@ -94,5 +94,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "dependencies": {
+    "url-pattern": "^1.0.3"
+  }
 }
