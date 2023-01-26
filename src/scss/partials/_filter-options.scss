@@ -1,13 +1,24 @@
+$filter-option-padding-top: 8px !default;
+$filter-option-border-color: $light;
+
+
 .filter-option {
   display: flex;
   align-items: center;
 
-  .filter-option__label {
-    padding: 4px 0;
+  & > div {
+    padding: $filter-option-padding-top 0;
+  }
+
+  .filter-option__select {
+    margin-right: 0.6rem;
+  }
+
+  .filter-option__details {
     flex: 1;
     cursor: pointer;
     user-select: none;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $filter-option-border-color;
 
     span {
       width: 100%;
@@ -16,8 +27,8 @@
   }
 
   .filter-option__icon {
-    padding: 4px 10px 4px 0;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $filter-option-border-color;
+    padding-left: 0.6rem;
 
     img {
       width: 20px;
@@ -25,8 +36,8 @@
   }
 
   &:last-child {
-    .filter-option__icon, .filter-option__label {
-      border-bottom: 1px solid #ccc;
+    .filter-option__icon, .filter-option__details {
+      border-bottom: 1px solid $filter-option-border-color;
     }
   }
 }

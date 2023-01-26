@@ -20,3 +20,8 @@
 @import 'partials/layer-options';
 @import 'partials/filter-options';
 @import 'partials/image_grid';
+
+
+@import 'vue-slider-component/lib/theme/antd.scss';
+
+$a: $custom-control-indicator-focus-border-color

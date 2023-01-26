@@ -1,19 +1,34 @@
+$layer-option-padding-top: 8px !default;
+$layer-option-border-color: $light;
+
 .layer-option {
   display: flex;
-  padding: 4px 0;
-  border-top: 1px solid #ccc;
 
-  &:last-child {
-    border-bottom: 1px solid #ccc;
+  & > div {
+    padding: $layer-option-padding-top 0;
   }
 
-  .layer-option__title {
+  .layer-option__visibility {
+    margin-right: 0.6rem;
+  }
+
+  .layer-option__details {
+    border-top: 1px solid $layer-option-border-color;
+    user-select: none;
     cursor: pointer;
+  }
+
+  &:last-child .layer-option__details {
+    border-bottom: 1px solid $layer-option-border-color;
   }
 
   .layer-option__details {
     flex: 1;
     padding-right: 10px;
+  }
+
+  .layer-option__opacity {
+    padding-left: 10px;
   }
 
 }
