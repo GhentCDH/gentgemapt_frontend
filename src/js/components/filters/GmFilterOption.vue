@@ -1,11 +1,11 @@
 <template>
     <div class="filter-option">
-        <div class="filter-option__status">
+        <div class="filter-option__select">
             <b-form-checkbox :value="true" :unchecked-value="false" :checked="isActive" @change="setFilterStatus">
             </b-form-checkbox>
         </div>
-        <div class="filter-option__label">
-            <span class="filter-option__title" @click="setFilterStatus(!isActive)">{{ filter.label }}</span>
+        <div class="filter-option__details">
+            <span class="filter-option__label" @click="setFilterStatus(!isActive)">{{ filter.label }}</span>
         </div>
         <div class="filter-option__icon">
             <img v-if="filter.icon" :src="filter.icon">
