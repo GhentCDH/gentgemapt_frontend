@@ -57,6 +57,7 @@ import api from "./js/config/constants";
 import GmSearchPlaces from "./js/components/search/GmSearchPlaces";
 import GmPlaceTypeFilter from "./js/components/filters/GmPlaceTypeFilter";
 import GmLayerPanel from "./js/components/layers/GmLayerPanel";
+import UrlPattern from "url-pattern";
 
 export default {
     name: "App",
@@ -138,7 +139,14 @@ export default {
         this.$store.dispatch('sidebarTimeline/collapse')
 
         // load geojson data
-        this.$store.dispatch('map/loadGeoJSONData');
+        this.$store.dispatch('map/loadGeoJSONData').then( (result) => {
+            // url refers to place id?
+            const PlaceUrlPattern = new UrlPattern('/plaats/:id')
+            const matchResult = PlaceUrlPattern.match(window.location.pathname)
+            if (matchResult) {
+                this.$store.dispatch('map/selectFeature', {id: matchResult.id})
+            }
+        });
     },
 }
 </script>
