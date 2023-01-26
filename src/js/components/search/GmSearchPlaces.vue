@@ -80,11 +80,8 @@ export default {
             }
         },
         select: function (item) {
-            // todo: don't zoom/setcenter here, base on configuration
-
-            // this.$store.dispatch('map/setZoom', 18)
-            // this.$store.dispatch('map/setCenter', item.coords)
             this.$store.dispatch('map/selectFeature', {id: item.id})
+            this.$store.dispatch('map/focusFeature', {id: item.id})
         },
         highlight: function (item) {
             this.$store.dispatch('map/highlightFeature', {id: item.id})
