@@ -3,6 +3,18 @@ import union from 'lodash/union';
 
 import layers from '../data/layers'
 
+function setPlaceUrl(id) {
+    console.log(typeof id)
+    if ( ['number', 'string'].includes(typeof id) ) {
+        const url = '/plaats/' + id
+        window.history.pushState({}, '', url)
+    }
+}
+
+function resetPlaceUrl() {
+    window.history.pushState({}, '', '/')
+}
+
 export default {
     namespaced: true,
     state: () => ( {
@@ -23,9 +35,6 @@ export default {
             }
         }
     }),
-    async mounted() {
-        await this.$store.dispatch('loadGeoJSONData');
-    },
     getters: {
         getGeoJSONData: state => state.geojson,
         getLayers: state => state.layers,
@@ -100,7 +109,7 @@ export default {
     actions: {
         setCenter(context, payload) {
             // update if different
-            if ( JSON.stringify(payload) != JSON.stringify(context.state.center) ) {
+            if ( JSON.stringify(payload) !== JSON.stringify(context.state.center) ) {
                 context.commit('setCenter', payload)
             }
         },
@@ -112,9 +121,7 @@ export default {
         },
         setBounds(context, payload) {
             // update if different
-            if ( JSON.stringify(payload) != JSON.stringify(context.state.bounds) ) {
-                // console.log('set bounds');
-                // console.log(payload);
+            if ( JSON.stringify(payload) !== JSON.stringify(context.state.bounds) ) {
                 context.commit('setBounds', payload)
             }
         },
@@ -124,10 +131,12 @@ export default {
                 const feature = context.getters.getFeatureById(payload.id);
                 if ( feature ) {
                     context.commit('selectFeature', feature);
+                    setPlaceUrl(feature.properties.id)
                 }
             }
             if ( payload?.feature ) {
                 context.commit('selectFeature', payload.feature)
+                setPlaceUrl(payload.feature.properties.id)
             }
         },
         focusFeature(context, payload) {
