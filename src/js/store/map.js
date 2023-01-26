@@ -13,6 +13,7 @@ export default {
         bounds: null,
         zoom: 15,
         selectFeature: null,
+        focusFeature: null,
         highlightFeatures: [],
         geojson: null,
         layers: layers,
@@ -41,6 +42,7 @@ export default {
         getCenter: state => state.center,
         getBounds: state => state.bounds,
         getSelectedFeature: state => state.selectFeature,
+        getFocusedFeature: state => state.focusFeature,
         getHighlightedFeatures: state => state.selectFeature ? union(state.highlightFeatures, [state.selectFeature]) : state.highlightFeatures
     },
     mutations: {
@@ -53,6 +55,9 @@ export default {
         selectFeature(state, feature) {
             feature.highlight = true
             state.selectFeature = feature
+        },
+        focusFeature(state, feature) {
+            state.focusFeature = feature
         },
         highlightFeature(state, feature) {
             feature.highlight = true;
@@ -123,6 +128,17 @@ export default {
             }
             if ( payload?.feature ) {
                 context.commit('selectFeature', payload.feature)
+            }
+        },
+        focusFeature(context, payload) {
+            if ( payload?.id ) {
+                const feature = context.getters.getFeatureById(payload.id);
+                if ( feature ) {
+                    context.commit('focusFeature', feature);
+                }
+            }
+            if ( payload?.feature ) {
+                context.commit('focusFeature', payload.feature)
             }
         },
         clearSelection(context) {
