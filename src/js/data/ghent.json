@@ -10,7 +10,7 @@
       "type": "Feature",
       "properties": {
         "Name": "Gent",
-        "descriptio": null,
+        "description": null,
         "timestamp": null,
         "begin": null,
         "end": null,
