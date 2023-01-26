@@ -135,7 +135,7 @@ export default {
 
   &--left {
     left: 0;
-    width: 350px;
+    width: 450px;
   }
 
   &--left.sidebar--collapsed {
@@ -153,7 +153,7 @@ export default {
     //max-width: 1100px;
 
     &--left {
-      width: 350px;
+      width: 450px;
     }
 
     &--expanded {
