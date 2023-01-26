@@ -1,7 +1,7 @@
 <template>
     <div class="layer-option">
         <div class="layer-option__visibility">
-            <b-form-checkbox :value="true" :unchecked-value="false" :checked="isVisible" @change="toggleVisible">
+            <b-form-checkbox :value="true" :unchecked-value="false" :checked="isVisible" @click.native="checkVisible" @change="toggleVisible">
             </b-form-checkbox>
         </div>
         <div class="layer-option__details">
@@ -30,6 +30,10 @@ export default {
         layer: {
             type: Object,
             required: true
+        },
+        radio: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -47,8 +51,16 @@ export default {
         }
     },
     methods: {
+        checkVisible(event) {
+            console.log(event)
+            if ( this.radio && this.isVisible ) {
+                event.preventDefault();
+            }
+        },
         toggleVisible(checked) {
-            this.$store.commit('map/setLayerVisibility', { id: this.layer.id, visible: checked })
+            if (!this.radio || (this.radio && checked) ) {
+                this.$store.commit('map/setLayerVisibility', { id: this.layer.id, visible: checked })
+            }
         },
         setOpacity(opacity) {
             this.$store.commit('map/setLayerOpacity', { id: this.layer.id, opacity: opacity })

@@ -3,7 +3,7 @@
         <h2>Basiskaarten</h2>
         <div class="maplist maplist--base">
             <template v-for="layer in baseLayers">
-                <gm-layer-option :layer="layer"></gm-layer-option>
+                <gm-layer-option :layer="layer" radio></gm-layer-option>
             </template>
         </div>
         <h2>Kaartlagen</h2>
