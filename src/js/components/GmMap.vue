@@ -88,7 +88,7 @@ export default {
                 function (placeType) {
                     icons[placeType.id] = L.divIcon({
                         ...iconDefaults,
-                        className: me.iconClasses(placeType).join(' '),
+                        className: me.getIconClasses(placeType).join(' '),
                         html: '<img src="' + placeType.icon + '">'
                     })
                 },
@@ -139,14 +139,17 @@ export default {
         },
         filterSearchIds() {
             return this.$store.getters['featureFilters/getSearch']
-        }
-
-        /*
-            ...mapGetters([
-                'map/getGeoJSONData'
-            ])*/
+        },
+        focusedFeature() {
+            return this.$store.getters['map/getFocusedFeature']
+        },
     },
     watch: {
+        focusedFeature(now, old) {
+            if ( now ) {
+                this.focusFeature(now)
+            }
+        },
         highlightedFeatureIds(now, old) {
             let placeIds = [...now, ...old]
             this.updateFeatureStyles(placeIds)
@@ -181,18 +184,17 @@ export default {
             // init highlight property
             feature.highlight = false;
 
-            layer.on('click', e => this.onMarkerClick(e, feature));
-            layer.on('mouseout', e => this.onMarkerMouseOut(e, feature));
-            layer.on('mouseover', e => this.onMarkerMouseOver(e, feature));
+            layer.on('click', e => this.onFeatureClick(e, feature));
+            layer.on('mouseout', e => this.onFeatureMouseOut(e, feature));
+            layer.on('mouseover', e => this.onFeatureMouseOver(e, feature));
         },
-        /* marker events */
-        onMarkerMouseOver(e, feature) {
+        onFeatureMouseOver(e, feature) {
             this.$store.dispatch('map/highlightFeature', {feature: feature})
         },
-        onMarkerMouseOut(e, feature) {
+        onFeatureMouseOut(e, feature) {
             this.$store.dispatch('map/unhighlightFeature', {feature: feature})
         },
-        onMarkerClick(e, feature) {
+        onFeatureClick(e, feature) {
             this.$store.dispatch('map/selectFeature', {feature: feature})
             this.$store.dispatch('sidebarInfo/collapse', false)
             // todo: positie berekenen
@@ -203,7 +205,49 @@ export default {
                 this.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) + 200, 0]);
             }
         },
+        // map methods
+        focusFeature(feature) {
+            // console.log( this.$store.getters['map/getFeaturesById'](feature.properties.id) )
+            const bounds = this.getFeatureBounds(this.$store.getters['map/getFeaturesById'](feature.properties.id))
+            const paddingBottomRight = [this.$store.getters['sidebarInfo/collapsed'] ? 0 : 550, 0 ]
+            const paddingTopLeft = [this.$store.getters['sidebarSearch/collapsed'] ? 0 : 350, 0 ]
 
+            // this.mapObject.fitBounds(bounds, {
+            this.mapObject.fitBounds(bounds, {
+                paddingTopLeft: paddingTopLeft,
+                paddingBottomRight: paddingBottomRight,
+                easeLinearity: 1,
+                maxZoom: 18,
+            });
+        },
+        getFeatureBounds(features) {
+            let latLngs = [];
+            let coords = [];
+
+            if ( Array.isArray(features) ) {
+                features.map( function(feature) {
+                    switch(feature.geometry.type) {
+                        case 'Point':
+                            coords = coords.concat([feature.geometry.coordinates])
+                            break
+                        case 'LineString':
+                            coords = coords.concat(feature.geometry.coordinates)
+                            break
+                        case 'Polygon':
+                        case 'MultiLineString':
+                            coords = coords.concat(feature.geometry.coordinates.flat())
+                            break
+                        case 'MultiPolygon':
+                            coords = coords.concat(feature.geometry.coordinates.flat(2))
+                    }
+                })
+                latLngs = L.GeoJSON.coordsToLatLngs(coords)
+            } else {
+                latLngs = features.geometry.type === 'Point' ? [ L.GeoJSON.coordsToLatLng(features.geometry.coordinates) ] : L.GeoJSON.coordsToLatLngs(features.geometry.coordinates.flat())
+            }
+            
+            return L.latLngBounds(latLngs)
+        },
         updateGeoJson(mapObject, json) {
             let new_ids = json.features.map( feature => feature.properties.id )
             let current_ids = []
@@ -238,7 +282,7 @@ export default {
                         if (placeIds.length && !placeIds.includes(layer.feature.properties.id)) {
                             return
                         }
-                        layer.setStyle(this.geometryStyle(layer.feature));
+                        layer.setStyle(this.getGeometryStyle(layer.feature));
                     })
                 }
                 // todo: update point styles (this is incorrect)
@@ -252,13 +296,13 @@ export default {
                         } else {
                             layer._icon.classList.remove('icon--selected')
                         }
-                        // layer.setStyle(this.pointStyle(layer.feature));
+                        // layer.setStyle(this.getPointStyle(layer.feature));
                     })
                 }
             })
         },
         /* get geometry classes */
-        geometryClasses(feature) {
+        getGeometryClasses(feature) {
             let highlight = this.highlightedFeatureIds.includes(feature.properties.id);
             let classes = feature.properties.placeType.map(i => 'geometry geometry--' + i)
             if (highlight) {
@@ -266,11 +310,11 @@ export default {
             }
             return classes
         },
-        iconClasses(placeType) {
+        getIconClasses(placeType) {
             return ['icon', 'icon--' + placeType.id]
         },
         /* get geometry style */
-        geometryStyle(feature) {
+        getGeometryStyle(feature) {
             const isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
             const isSearched = this.filterSearchIds.includes(feature.properties.id);
             const isPolygon = ['Polygon', 'MultiPolygon'].includes(feature.geometry.type);
@@ -283,23 +327,28 @@ export default {
                     color: 'rgb(0 0 0)',
                     opacity: 0.05,
                     weight: isPolygon ? 2 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
-                    className: this.geometryClasses(feature).join(' '),
+                    className: this.getGeometryClasses(feature).join(' '),
                     stroke: isPolygon ? false : this.zoom >= 15
                 },
                 searched: {
                     fillOpacity: 0.2,
-                    fillColor: 'rgb(237 71 74)',
-                    color: 'rgb(237 71 74)',
+                    // fillColor: 'rgb(237 71 74)',
+                    fillColor: 'rgb(3 69 97)',
+                    // color: 'rgb(237 71 74)',
+                    color: 'rgb(3 69 97)',
                     opacity: 0.4,
-                    stroke: true,
+                    stroke: !isPolygon,
                     weight: isPolygon ? 1.5 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
                 },
                 highlighted: {
-                    fillColor: 'rgb(237 71 74)',
+                    fillColor: 'rgb(3 69 97)',
                     fillOpacity: 0.4,
+                    // color: 'rgb(3 69 97)',
                     color: 'rgb(237 71 74)',
                     opacity: 0.7,
-                    stroke: true
+                    // stroke: !isPolygon,
+                    stroke: true,
+                    strokeWidth: 2,
                 }
             }
 
@@ -312,33 +361,10 @@ export default {
             }
 
             return config;
-
-            // switch (feature.geometry.type) {
-            //     case 'Polygon':
-            //     case 'MultiPolygon':
-            //         return {
-            //             fillOpacity: isHighlighted || isSearched ? 0.4 : (process.env.IS_SAD === 'true' ? 0.1 : 0.0 ),
-            //             fillColor: isHighlighted || isSearched ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 128 182)' ),
-            //             color: 'rgb(0 128 182)',
-            //             weight: 2,
-            //             stroke: isHighlighted || isSearched,
-            //             className: this.geometryClasses(feature).join(' ')
-            //         };
-            //     default:
-            //         return config;
-            //         return {
-            //             color: isHighlighted ? 'rgb(0 128 182)' : (process.env.IS_SAD === 'true' ? 'rgb(246,143,2)' : 'rgb(0 0 0)'),
-            //             opacity: isHighlighted ? 0.7 : (process.env.IS_SAD === 'true' ? 0.4 : 0.05),
-            //             weight: this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
-            //             stroke: isHighlighted || ( this.zoom >= 15 || process.env.IS_SAD === 'true' ),
-            //             className: this.geometryClasses(feature).join(' ')
-            //         };
-            // }
         },
         /* get point style */
-        pointStyle(feature) {
+        getPointStyle(feature) {
             let isHighlighted = this.highlightedFeatureIds.includes(feature.properties.id);
-
             return {
                 size: isHighlighted ? [44,44] : [40,40]
             }
@@ -347,58 +373,60 @@ export default {
     },
 
     created() {
-
         const me = this
 
         // add geojson point layer
-        this.layers.push(
-            {
-                id: 'geometries',
-                type: 'geojsonLayer',
-                zIndex: 1000,
-                options: {
-                    geojson: this.geometries,
-                    options: {
-                        onEachFeature: this.onEachFeature,
-                        style: this.geometryStyle,
-                    }
-                }
-            }
-        )
-
-        // add geojson geometry layer
-        this.layers.push(
-            {
-                id: 'points',
-                type: 'geojsonLayer',
-                options: {
-                    geojson: this.points,
+        if ( this.layers.filter( layer => layer.id === 'geometries').length === 0 ) {
+            this.layers.push(
+                {
+                    id: 'geometries',
+                    type: 'geojsonLayer',
                     zIndex: 1000,
                     options: {
-                        onEachFeature: this.onEachFeature,
-                        // style: this.styleGeometry,
-                        pointToLayer: function (feature, latlng) {
-                            // known placeType? display custom icon
-                            if ( feature.properties.placeType?.length && me.icons[feature.properties.placeType[0]] )
-                            {
-                                return L.marker(latlng, {
-                                    title: feature.properties.title,
-                                    icon: me.icons[feature.properties.placeType[0]],
-                                    riseOnHover: true
-                                })
-                            }
-                            // placeType unknown, display default icon
-                            return L.marker(latlng, {
-                                title: feature.properties.title,
-                                icon: L.icon(iconDefaults),
-                                riseOnHover: true
-                            })
+                        geojson: this.geometries,
+                        options: {
+                            onEachFeature: this.onEachFeature,
+                            style: this.getGeometryStyle,
                         }
                     }
                 }
-            }
-        )
+            )
+        }
 
+        // add geojson geometry layer
+        if ( this.layers.filter( layer => layer.id === 'points').length === 0 ) {
+            this.layers.push(
+                {
+                    id: 'points',
+                    type: 'geojsonLayer',
+                    options: {
+                        geojson: this.points,
+                        zIndex: 1000,
+                        options: {
+                            onEachFeature: this.onEachFeature,
+                            // style: this.styleGeometry,
+                            pointToLayer: function (feature, latlng) {
+                                // known placeType? display custom icon
+                                if ( feature.properties.placeType?.length && me.icons[feature.properties.placeType[0]] )
+                                {
+                                    return L.marker(latlng, {
+                                        title: feature.properties.title,
+                                        icon: me.icons[feature.properties.placeType[0]],
+                                        riseOnHover: true
+                                    })
+                                }
+                                // placeType unknown, display default icon
+                                return L.marker(latlng, {
+                                    title: feature.properties.title,
+                                    icon: L.icon(iconDefaults),
+                                    riseOnHover: true
+                                })
+                            }
+                        }
+                    }
+                }
+            )
+        }
 
     },
 }
