@@ -52,4 +52,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-          tags: flamsens/be.ugent.gentgemapt.frontend:latest
+        tags: flamsens/be.ugent.gentgemapt.frontend:latest
