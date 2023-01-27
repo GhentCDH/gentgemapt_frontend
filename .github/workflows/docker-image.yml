@@ -54,3 +54,4 @@ jobs:
       with:
         push: true
         tags: flamsens/be.ugent.gentgemapt.frontend:latest
+        context: .
