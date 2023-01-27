@@ -2,21 +2,33 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "release" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "release" ]
+    branches: [ "main" ]
 
 jobs:
 
   build:
-
+    name: Build Docker image
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
       with:
-        ref: release
-        path: dist
+        node-version: "18"
+    - name: Load cache
+      uses: actions/cache@v3
+      id: yarn-cache
+      with:
+        path: "**/node_modules"
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+    - name: Install packages
+      shell: bash
+      run: yarn install
+    - name: Build production
+      run: yarn build
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag be.ugent.gentgemapt.frontend:$(date +%s)
