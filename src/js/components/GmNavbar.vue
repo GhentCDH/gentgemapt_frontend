@@ -11,13 +11,13 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav class="bg-dark">
             <b-navbar-nav class="user-select-none">
-                <b-nav-item  @click="$store.dispatch('sidebarSearch/toggle', { property: 'collapsed' })">
+                <b-nav-item  @click="$store.dispatch('sidebarSearch/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Search.svg')" alt="Zoeken">
                 </b-nav-item>
-                <b-nav-item @click="$store.dispatch('sidebarMaps/toggle', { property: 'collapsed' })">
+                <b-nav-item @click="$store.dispatch('sidebarMaps/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Layers.svg')" alt="Kaarten">
                 </b-nav-item>
-                <b-nav-item @click="$store.dispatch('sidebarFilters/toggle', { property: 'collapsed' })">
+                <b-nav-item @click="$store.dispatch('sidebarFilters/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Filter.svg')" alt="Filter">
                 </b-nav-item>
             </b-navbar-nav>
