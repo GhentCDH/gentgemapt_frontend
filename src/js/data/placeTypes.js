@@ -50,13 +50,13 @@ const placeTypes = [
     {
         id: 'openbaar_gebouw',
         label: 'Openbaar gebouw',
-        icon: require('@/images/placetypes/color/GentGemapt_Brug.svg'),
+        icon: require('@/images/placetypes/color/GentGemapt_Openbaar_gebouw.svg'),
         active: true,
     },
     {
         id: 'religieuze_plaats',
         label: 'Religieuze plaats',
-        icon: require('@/images/placetypes/color/GentGemapt_Openbaar_gebouw.svg'),
+        icon: require('@/images/placetypes/color/GentGemapt_Religieus_gebouw.svg'),
         active: true,
     },
     {
