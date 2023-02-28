@@ -207,7 +207,6 @@ export default {
         },
         // map methods
         focusFeature(feature) {
-            // console.log( this.$store.getters['map/getFeaturesById'](feature.properties.id) )
             const bounds = this.getFeatureBounds(this.$store.getters['map/getFeaturesById'](feature.properties.id))
             const paddingBottomRight = [this.$store.getters['sidebarInfo/collapsed'] ? 0 : 550, 0 ]
             const paddingTopLeft = [this.$store.getters['sidebarSearch/collapsed'] ? 0 : 350, 0 ]
