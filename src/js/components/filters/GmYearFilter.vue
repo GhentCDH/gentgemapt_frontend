@@ -27,9 +27,9 @@ export default {
         },
         yearFilterConfig() {
             return {
-                min: 1400,
+                min: 1550,
                 max: new Date().getFullYear(),
-                marks: this.range(1400, 2100, 10)
+                marks: this.range(1550, 2100, 10)
             }
         },
         marks() {
