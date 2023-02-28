@@ -3,7 +3,8 @@ export default {
     state: () => ({
         collapsed: false,
         expanded: false,
-        content: {}
+        content: {},
+        id: null
     }),
     getters: {
         collapsed(state) {
@@ -22,16 +23,30 @@ export default {
                 state[payload.property] = !state[payload.property]
             }
         },
+        initStoreId(state, id) {
+            state.id = id
+        }
     },
     actions: {
         collapse(context, status = true) {
             context.commit('collapse', status)
+            if ( !context.state.collapsed )
+                context.commit('focusSidebar', context.state.id, { root: true})
+            else
+                context.commit('removeSidebarFocus', context.state.id, { root: true})
         },
         expand(context, status = true) {
             context.commit('expand', status)
         },
         toggle(context, payload) {
             context.commit('toggle', payload)
+            if ( !context.state.collapsed )
+                context.commit('focusSidebar', context.state.id, { root: true})
+            else
+                context.commit('removeSidebarFocus', context.state.id, { root: true})
+        },
+        initStoreId(context, id) {
+            context.commit('initStoreId', id)
         }
     }
 }

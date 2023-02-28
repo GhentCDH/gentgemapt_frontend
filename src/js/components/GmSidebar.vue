@@ -1,6 +1,7 @@
 <template>
     <aside class="sidebar"
            v-bind:class="{ 'sidebar--left': left, 'sidebar--right': right , 'sidebar--collapsed': collapsible && collapsed, 'sidebar--expanded': expandable && expanded }"
+           :style="{'z-index': zIndex - weight}"
     >
         <div class="sidebar__header">
             <div class="sidebar__header__buttons">
@@ -28,6 +29,10 @@ export default {
     components: {
     },
     props: {
+        id: {
+            type: String,
+            required: true
+        },
         expandable: {
             type: Boolean, default: false
         },
@@ -43,7 +48,9 @@ export default {
         store_namespace: {
             type: String, required: false
         },
-
+        zIndex: {
+            type: Number, default: 1050
+        }
     },
     computed: {
         // dynamic namespace
@@ -57,13 +64,19 @@ export default {
         },
         right: function () {
             return this.position === 'right'
+        },
+        weight: function() {
+            return this.$store.getters['sidebarWeight'](this.id)
         }
     },
     methods: {
         ...mapInstanceActions((self) => self.store_namespace, [
-            'collapse', 'expand', 'toggle'
+            'collapse', 'expand', 'toggle', 'initStoreId'
         ])
     },
+    created() {
+        this.initStoreId(this.id)
+    }
 }
 </script>
 
