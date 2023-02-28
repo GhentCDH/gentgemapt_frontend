@@ -95,7 +95,7 @@ export default {
                 endYear: this.formatVagueYearObject(this.place?.endDate),
             }
 
-            console.log([this.place?.startDate, this.place?.endDate, result])
+            // console.log([this.place?.startDate, this.place?.endDate, result])
 
             return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
         }

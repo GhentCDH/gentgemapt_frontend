@@ -4,7 +4,6 @@ import union from 'lodash/union';
 import layers from '../data/layers'
 
 function setPlaceUrl(id) {
-    console.log(typeof id)
     if ( ['number', 'string'].includes(typeof id) ) {
         const url = '/plaats/' + id
         window.history.pushState({}, '', url)
@@ -102,7 +101,6 @@ export default {
         setLayerOpacity(state, payload) {
             if ( payload?.id && payload?.opacity !== undefined ) {
                 state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.opacity = payload.opacity )
-                // console.log(payload)
             }
         }
     },
