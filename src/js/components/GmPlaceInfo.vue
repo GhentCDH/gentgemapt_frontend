@@ -90,13 +90,96 @@ export default {
                 .replaceAll('</strong></p>', '</h3>')
         },
         dating() {
-            return this.place?.startDate ? this.place.startDate + ( this.place?.endDate ? ' – ' + this.place.endDate : ' – heden' ) : null
+            const result = {
+                startYear: this.formatVagueYearObject(this.place?.startDate),
+                endYear: this.formatVagueYearObject(this.place?.endDate),
+            }
+
+            console.log([this.place?.startDate, this.place?.endDate, result])
+
+            return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
         }
     },
     methods: {
         async loadPlaceData(id) {
             const place = await PlaceService.get(id)
             this.place = place;
+        },
+        parseVagueYearExpression(year_expression) {
+            const dateRangeRe = /P([0-9]{1,4})-([0-9]{1,4})([~?%]?)/i;
+            const dateSingleRe = /([0-9]{1,4})([~?%]?)/i;
+            let match;
+
+            match = dateRangeRe.exec(year_expression)
+            if ( match ) {
+                return {
+                    lbound: match[1],
+                    ubound: match[2],
+                    type: 'range',
+                    modifier: match[3] === '' ? null : match[3]
+                }
+            }
+            match = dateSingleRe.exec(year_expression)
+            if ( match ) {
+                return {
+                    lbound: match[1],
+                    ubound: match[1],
+                    type: 'single',
+                    modifier: match[2] === '' ? null : match[2]
+                }
+            }
+
+            return null
+        },
+        formatVagueYearObject(year_expression) {
+            if ( !year_expression )
+                return null
+
+            const year = this.parseVagueYearExpression(year_expression)
+            if ( !year )
+                return null
+
+            let output = ''
+            if ( year.type === 'single') {
+                switch (year.modifier) {
+                    case '~': output = `omstreeks ${year.lbound}`; break;
+                    case '?': output = `${year.lbound} (onzeker)`; break;
+                    case '%': output = `omstreeks ${year.lbound} (onzeker)`; break;
+                    default: output = `${year.lbound}`; break;
+                }
+
+                return output
+            }
+
+            if (year.type === 'range') {
+                const lrem = year.lbound % 100;
+                const urem = year.ubound % 100;
+                const lcen = Math.floor(year.lbound / 100 ) + 1
+                const ucen = Math.floor(year.ubound / 100 ) + 1
+                if ( lcen === ucen ) {
+                    let prefix = null
+                    let century = ( lcen === 1 || lcen === 8 || lcen >= 20 ) ? `${lcen}ste eeuw` : `${lcen}de eeuw`
+
+                    if ( lrem === 0 && urem === 33 ) prefix = "begin";
+                    if ( lrem === 33 && urem === 66 ) prefix = "midden";
+                    if ( lrem === 66 && urem === 99 ) prefix = "eind";
+                    if ( lrem === 0 && urem === 24 ) prefix = "1ste kwart";
+                    if ( lrem === 25 && urem === 49 ) prefix = "2de kwart";
+                    if ( lrem === 50 && urem === 74 ) prefix = "3de kwart";
+                    if ( lrem === 75 && urem === 99 ) prefix = "4de kwart";
+                    if ( lrem === 0 && urem === 49 ) prefix = "1ste helft";
+                    if ( lrem === 50 && urem === 99 ) prefix = "2de helft";
+
+                    if ( prefix )
+                        output = `${prefix} ${century}`
+                    else
+                        output = `tussen ${year.lbound} en ${year.ubound}`
+                } else {
+                    output = `tussen ${year.lbound} en ${year.ubound}`
+                }
+                return output;
+            }
+
         }
     },
     watch: {
