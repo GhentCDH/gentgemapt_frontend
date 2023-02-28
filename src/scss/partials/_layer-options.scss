@@ -18,17 +18,36 @@ $layer-option-border-color: $light;
     cursor: pointer;
   }
 
-  &:last-child .layer-option__details {
-    border-bottom: 1px solid $layer-option-border-color;
-  }
-
   .layer-option__details {
     flex: 1;
     padding-right: 10px;
   }
 
+  .layer-option__icon {
+    border-top: 1px solid $layer-option-border-color;
+    padding-left: 0.6rem;
+
+    a {
+      .bi {
+        width: 20px;
+        color: $light;
+        transition: color 0.15s ease-in-out;
+      }
+
+      &:hover .bi {
+        color: $secondary;
+      }
+    }
+  }
+
   .layer-option__opacity {
     padding-left: 10px;
+  }
+
+  &:last-child {
+    .layer-option__icon, .layer-option__details {
+      border-bottom: 1px solid $layer-option-border-color;
+    }
   }
 
 }
