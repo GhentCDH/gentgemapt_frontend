@@ -28,7 +28,10 @@ export default {
             return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'base' )
         },
         overlayLayers() {
-            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'overlay' )
+            return this.$store.getters["map/getLayers"]
+                .filter( item => item.options?.layerType === 'overlay' )
+                .sort( (a,b) => a.weight - b.weight)
+                .map( function(item) { item.url = process.env.URL_INFOSITE + `/${item.id}`; return item })
         },
     }
 }

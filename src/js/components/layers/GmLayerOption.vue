@@ -5,10 +5,13 @@
             </b-form-checkbox>
         </div>
         <div class="layer-option__details">
-            <span class="layer-option__title" @click="toggleVisible(!isVisible)">{{ layer.options.name }}</span>
+            <span class="layer-option__title" @click="toggleVisible(!isVisible)">{{ layer.label }}</span>
             <div v-if="isVisible && isOverlay" class="layer-option__opacity">
                 <vue-slider :value="opacity" width="100%" :min="0" :max="1" :interval="0.01" :process="false" :tooltip="'none'" :silent="true" @change="setOpacity"></vue-slider>
             </div>
+        </div>
+        <div class="layer-option__icon" v-if="isOverlay && layer.url">
+                <a :href="layer.url" target="_blank"><i class="bi bi-info-circle-fill"></i></a>
         </div>
     </div>
 </template>
@@ -52,7 +55,6 @@ export default {
     },
     methods: {
         checkVisible(event) {
-            console.log(event)
             if ( this.radio && this.isVisible ) {
                 event.preventDefault();
             }
