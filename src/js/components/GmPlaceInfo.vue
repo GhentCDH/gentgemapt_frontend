@@ -44,7 +44,7 @@
                 </ul>
             </div>
 
-            <div class="moreinfo" v-if="place.biblio.length">
+            <div class="bibliography" v-if="place.biblio.length">
                 <h2>Bibliografie</h2>
                 <ul>
                     <li v-for="(reference,index) in place.biblio" :key="index">
@@ -53,6 +53,12 @@
                     </li>
                 </ul>
             </div>
+
+            <h2>Hoe verwijs je naar dit artikel?</h2>
+            <p>{{ place.title }}. Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
+            <p class="smaller">
+                Rechtenstatus: <a href="https://creativecommons.org/licenses/by-sa/2.0/be/deed.nl" target="_blank">CCBYSA</a>
+            </p>
         </div>
     </div>
 </template>
@@ -98,6 +104,13 @@ export default {
             // console.log([this.place?.startDate, this.place?.endDate, result])
 
             return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
+        },
+        permalink() {
+            return process.env.URL_MAP + '/plaats/' + this.placeId
+        },
+        today() {
+            const today = new Date()
+            return today.getDate()  + "/" + (today.getMonth()+1) + "/" + today.getFullYear()
         }
     },
     methods: {
