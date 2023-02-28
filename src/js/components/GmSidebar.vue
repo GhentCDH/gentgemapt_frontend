@@ -21,13 +21,11 @@
 
 <script>
 import {mapInstanceState, mapInstanceActions} from '@urbn/vuex-helpers';
-import { BIcon } from 'bootstrap-vue'
 
 
 export default {
     name: "AppSidebar",
     components: {
-        BIcon,
     },
     props: {
         expandable: {
