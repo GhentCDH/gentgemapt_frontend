@@ -34,7 +34,7 @@
             <gm-iiif-collection-gallery v-if="place.manifests && place.manifests.length" v-for="ref in place.manifests" :key="ref.url"
                                         :collectionUrl="ref.url"></gm-iiif-collection-gallery>
 
-            <div class="moreinfo" v-if="place.references.length">
+            <div class="more_info" v-if="place.references.length">
                 <h2>Meer weten</h2>
                 <ul>
                     <li v-for="(reference,index) in place.references" :key="index">
@@ -44,21 +44,13 @@
                 </ul>
             </div>
 
-            <div class="bibliography" v-if="place.biblio.length">
-                <h2>Bibliografie</h2>
-                <ul>
-                    <li v-for="(reference,index) in place.biblio" :key="index">
-                        <span v-if="!reference.url">{{ reference.label }}</span>
-                        <a v-if="reference.url" href="reference.url">{{ reference.label }}</a>
-                    </li>
-                </ul>
+            <div class="referencing">
+                <h2>Hoe verwijs je naar dit artikel?</h2>
+                <p>"{{ place.title }}". Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
+                <p class="smaller">
+                    Rechtenstatus: <a href="https://creativecommons.org/licenses/by-sa/2.0/be/deed.nl" target="_blank">CCBYSA</a>
+                </p>
             </div>
-
-            <h2>Hoe verwijs je naar dit artikel?</h2>
-            <p>{{ place.title }}. Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
-            <p class="smaller">
-                Rechtenstatus: <a href="https://creativecommons.org/licenses/by-sa/2.0/be/deed.nl" target="_blank">CCBYSA</a>
-            </p>
         </div>
     </div>
 </template>
@@ -115,6 +107,7 @@ export default {
     },
     methods: {
         async loadPlaceData(id) {
+            this.place = null;
             const place = await PlaceService.get(id)
             this.place = place;
         },
