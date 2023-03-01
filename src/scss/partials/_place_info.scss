@@ -40,6 +40,18 @@
     }
   }
 
+  .more_info {
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+        padding: 0;
+        margin-bottom: 0.6rem;
+      }
+    }
+  }
+
   .creators {
     color: $secondary;
     font-size: $font-size-smaller;
@@ -62,9 +74,6 @@
         }
       }
     }
-
-
-
   }
 }
 

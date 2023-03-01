@@ -9,12 +9,7 @@
 
   .feature {
     display: inline-block;
-
-    &::after {
-      content: '.';
-      padding-left: 4px;
-      padding-right: 4px;
-    }
+    margin-right: 1rem;
 
     &:last-child::after {
       display: none;
