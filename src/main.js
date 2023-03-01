@@ -8,17 +8,33 @@ Vue.use(VueAxios, axios)
 
 import store from "./js/store"
 
-import { BootstrapVue } from 'bootstrap-vue'
+import { LayoutPlugin, FormPlugin, NavPlugin, NavbarPlugin, ImagePlugin, CollapsePlugin,
+    FormCheckboxPlugin, FormGroupPlugin, FormInputPlugin, SpinnerPlugin, MediaPlugin } from "bootstrap-vue";
+
+// Install BootstrapVue
+Vue.use(LayoutPlugin);
+Vue.use(FormPlugin);
+Vue.use(NavPlugin);
+Vue.use(NavbarPlugin);
+Vue.use(ImagePlugin);
+Vue.use(CollapsePlugin);
+Vue.use(FormCheckboxPlugin);
+Vue.use(FormGroupPlugin);
+Vue.use(FormInputPlugin);
+Vue.use(SpinnerPlugin);
+Vue.use(MediaPlugin);
+// Vue.use(BInputGroup);
+
+// import { BootstrapVue } from 'bootstrap-vue'
 
 // import styles
 import './scss/index.scss'
 
-import 'bootstrap-icons/font/bootstrap-icons.css'
-
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 // Make BootstrapVue available throughout your project
-Vue.use(BootstrapVue)
+// Vue.use(BootstrapVue)
 
 new Vue({
     el: '#app',
