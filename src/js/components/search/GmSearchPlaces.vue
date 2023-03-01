@@ -15,7 +15,7 @@
                          @mouseleave="unhighlight(place)">
                     <template #aside>
                         <b-img :blank="!Boolean(place.thumbnail)" blank-color="#777" width="60"
-                               :src="place.thumbnail"></b-img>
+                               :src="place.thumbnail + ''" ></b-img>
                     </template>
                     <h5>{{ place.title }}</h5>
                     <div class="features">
@@ -40,12 +40,12 @@ import PlaceService from "../../services/PlaceService";
 
 import debounce from 'debounce';
 
-import { BIcon } from 'bootstrap-vue'
+import { BInputGroup } from 'bootstrap-vue'
 
 export default {
     name: "AppSearchPlaces",
     components: {
-        BIcon
+        BInputGroup
     },
     data() {
         return {
