@@ -2,6 +2,7 @@
     <aside class="sidebar"
            v-bind:class="{ 'sidebar--left': left, 'sidebar--right': right , 'sidebar--collapsed': collapsible && collapsed, 'sidebar--expanded': expandable && expanded }"
            :style="{'z-index': zIndex - weight}"
+           :id="id"
     >
         <div class="sidebar__header">
             <div class="sidebar__header__buttons">
