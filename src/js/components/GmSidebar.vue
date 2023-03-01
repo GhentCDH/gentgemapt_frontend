@@ -49,7 +49,7 @@ export default {
             type: String, required: false
         },
         zIndex: {
-            type: Number, default: 1050
+            type: Number, default: 1000
         }
     },
     computed: {
@@ -137,20 +137,20 @@ export default {
   }
 
   &--right {
-    right: 0;
+    right: -5px;
   }
 
   &--right.sidebar--collapsed {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + 10px));
   }
 
   &--left {
-    left: 0;
-    width: 450px;
+    left: -5px;
+    //width: 450px;
   }
 
   &--left.sidebar--collapsed {
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% - 10px));
   }
 
   &--top {
