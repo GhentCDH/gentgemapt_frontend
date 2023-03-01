@@ -1,9 +1,9 @@
 {
-  "name": "webpack-boilerplate",
+  "name": "gent_gemapt",
   "version": "2.0.0",
-  "description": "Sensible webpack 5 boilerplate using Babel and PostCSS with a hot dev server and an optimized production build.",
+  "description": "Gent Gemapt frontend based on VueJS.",
   "main": "index.js",
-  "author": "Tania Rascia",
+  "author": "Ghent Centre for Digital Humanities",
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.dev.js",
@@ -70,6 +70,7 @@
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
     "url": "^0.11.0",
+    "url-pattern": "^1.0.3",
     "vue": "^2.7.13",
     "vue-axios": "^3.4.1",
     "vue-element-resize-detector": "^1.0.6",
@@ -80,6 +81,7 @@
     "vue2-leaflet": "^2.7.1",
     "vuex": "^3.6.2",
     "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0"
@@ -94,6 +96,6 @@
     "not dead"
   ],
   "dependencies": {
-    "url-pattern": "^1.0.3"
+    "vue2-leaflet-markercluster": "^3.1.0"
   }
 }
