@@ -197,12 +197,16 @@ export default {
         onFeatureClick(e, feature) {
             this.$store.dispatch('map/selectFeature', {feature: feature})
             this.$store.dispatch('sidebarInfo/collapse', false)
-            // todo: positie berekenen
-            const containerWidth = document.getElementsByClassName('leaflet-container')[0].offsetWidth;
-            const sidebarWidth = 550;
-            const markerXPos = e.containerPoint.x;
-            if (markerXPos > containerWidth - sidebarWidth) {
-                this.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) + 200, 0]);
+            // to make sure the marker/geometry is visible after the sidebar opens,
+            // we pan the map to the left by some amount
+            if ( window.innerWidth >= 768 ) {
+                const containerWidth = document.getElementsByClassName('leaflet-container')[0].offsetWidth;
+                const sidebarWidth = 550;
+                const markerXPos = e.containerPoint.x;
+                if (markerXPos > containerWidth - sidebarWidth) {
+                    // this.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) + 200, 0]);
+                    this.mapObject.panBy([markerXPos - (containerWidth - sidebarWidth) / 2 , 0]);
+                }
             }
         },
         // map methods
@@ -371,7 +375,7 @@ export default {
 
     },
 
-    created() {
+    mounted() {
         const me = this
 
         // add geojson point layer
