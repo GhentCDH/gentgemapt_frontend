@@ -159,10 +159,12 @@ export default {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .sidebar {
-    width: 550px;
-    //max-width: 1100px;
+
+    &--right {
+      width: 550px;
+    }
 
     &--left {
       width: 450px;
