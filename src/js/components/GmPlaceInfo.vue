@@ -46,7 +46,7 @@
 
             <div class="referencing">
                 <h2>Hoe verwijs je naar dit artikel?</h2>
-                <p>"{{ place.title }}". Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
+                <p>"{{ place.title }}", Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
                 <p class="smaller">
                     Rechtenstatus: <a href="https://creativecommons.org/licenses/by-sa/2.0/be/deed.nl" target="_blank">CCBYSA</a>
                 </p>
