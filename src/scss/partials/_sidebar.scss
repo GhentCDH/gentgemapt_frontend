@@ -46,8 +46,8 @@
   }
 }
 
-
-
-#sidebar__viewer {
-  width: calc(100% -  560px);
+@include media-breakpoint-up(lg) {
+  #sidebar__viewer {
+    width: calc(100% -  560px);
+  }
 }
