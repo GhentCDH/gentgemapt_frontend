@@ -33,7 +33,8 @@ export default {
                 view: 'single',
                 thumbnailNavigationPosition: 'off',
                 canvasIndex: this.canvasIndex,
-                canvasId: this.canvasId
+                canvasId: this.canvasId,
+                companionAreaOpen: window.innerWidth >= 992 // don't open mirador sidebar on small devices
             }]
         },
         options() {
@@ -45,7 +46,6 @@ export default {
                     allowMaximize: false,
                     allowFullscreen: true,
                     defaultSideBarPanel: 'info',
-                    sideBarOpenByDefault: true,
                     hideWindowTitle: true,
                     views: [ // Only allow the user to select single and gallery view
                         {key: 'single'},
