@@ -35,7 +35,7 @@ const layers = [
         label: 'Compyn, Soenen & Piscador, 1912',
         weight: 1912,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_CompynSoenenPiscador_1912/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_CompynSoenenPiscador_1912/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -51,7 +51,7 @@ const layers = [
         label: 'Ferraris, 1771-1778',
         weight: 1771,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Ferraris_1771_1778/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Ferraris_1771_1778/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -67,7 +67,7 @@ const layers = [
         label: 'Gérard, 1855',
         weight: 1855,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Gerard_1855/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Gerard_1855/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: true,
@@ -83,7 +83,7 @@ const layers = [
         label: 'Gevaert en Vanimpe, 1878',
         weight: 1878,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_GevaertVanimpe_1878/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_GevaertVanimpe_1878/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: true,
@@ -99,7 +99,7 @@ const layers = [
         label: 'Goethals, 1796',
         weight: 1796,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Goethals_1796/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Goethals_1796/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -116,7 +116,7 @@ const layers = [
         label: 'Napoleontisch Kadaster, 1807-1808',
         weight: 1807,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_NapoleontischeAtlas_1812/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_NapoleontischeAtlas_1812/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -133,7 +133,7 @@ const layers = [
         label: 'Plan Industriel, 1912',
         weight: 1912,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_PlanIndustriel_1912/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_PlanIndustriel_1912/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -149,7 +149,7 @@ const layers = [
     //     type: 'tileLayer',
     //     label: 'Plan Wereldtentoonstelling, 1912',
     //     options: {
-    //         url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_PlanWereldtentoonstelling_1912/{z}/{x}/{y}.png',
+    //         url: 'https://maps.ghentcdh.ugent.be/Gent_PlanWereldtentoonstelling_1912/{z}/{x}/{y}.png',
     //         attribution: '',
     //         maxZoom: 18,
     //         tms: false,
@@ -166,7 +166,7 @@ const layers = [
         label: 'Sanderus & Hondius, 1641',
         weight: 1641,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_SanderusHondius_1641/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_SanderusHondius_1641/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: true,
@@ -181,7 +181,7 @@ const layers = [
         label: 'Vandermaelen, 1846-1854',
         weight: 1846,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Vandermaelen_1846_1854/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Vandermaelen_1846_1854/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -197,7 +197,7 @@ const layers = [
         label: 'Van Deventer, 1545-1575',
         weight: 1545,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_VanDeventer_1545_1575/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_VanDeventer_1545_1575/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: true,
@@ -213,7 +213,7 @@ const layers = [
         label: 'Horenbault, 1619',
         weight: 1619,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Horenbault_1619/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Horenbault_1619/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: false,
@@ -294,7 +294,7 @@ const layers = [
         label: 'Wereldtentoonstelling, 1913',
         weight: 1913,
         options: {
-            url: 'https://dev.gentgemapt.ugent.be/static/maps/Gent_Wereldtentoonstelling_1913/{z}/{x}/{y}.png',
+            url: 'https://maps.ghentcdh.ugent.be/Gent_Wereldtentoonstelling_1913/{z}/{x}/{y}.png',
             attribution: '',
             maxZoom: 18,
             tms: true,
