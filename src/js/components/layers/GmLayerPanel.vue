@@ -31,7 +31,7 @@ export default {
             return this.$store.getters["map/getLayers"]
                 .filter( item => item.options?.layerType === 'overlay' )
                 .sort( (a,b) => a.weight - b.weight)
-                .map( function(item) { item.url = process.env.URL_INFOSITE + `/${item.id}`; return item })
+                .map( function(item) { item.url = process.env.URL_INFOSITE + `/s/default/page/${item.id}`; return item })
         },
     }
 }
