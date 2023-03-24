@@ -22,10 +22,12 @@ export default new Vuex.Store({
     },
     state: () => ({
         focusedSidebar: [],
+        openRequests: 0
     }),
     getters: {
         focusedSidebar: (state) => state.focusedSidebar[0] ?? null,
-        sidebarWeight: (state) => (sidebar_id) => state.focusedSidebar.indexOf(sidebar_id)
+        sidebarWeight: (state) => (sidebar_id) => state.focusedSidebar.indexOf(sidebar_id),
+        openRequests: (state) => state.openRequests
     },
     mutations: {
         focusSidebar(state, sidebar_id) {
@@ -33,7 +35,15 @@ export default new Vuex.Store({
             state.focusedSidebar = [...new Set(state.focusedSidebar)];
         },
         removeSidebarFocus(state, sidebar_id) {
-            state.focusedSidebar = state.focusedSidebar.filter( id => id !== sidebar_id )
+            state.focusedSidebar = state.focusedSidebar.filter(id => id !== sidebar_id)
+        },
+        startRequest(state) {
+            state.openRequests++
+        },
+        endRequest(state) {
+            if (state.openRequests > 0 ) {
+                state.openRequests--
+            }
         }
     },
 })
