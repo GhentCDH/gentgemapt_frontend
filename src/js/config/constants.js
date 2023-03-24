@@ -1,1 +1,0 @@
-export const api = process.env.NODE_ENV === 'production' ? '/backend/api' : 'http://localhost:8082/gentgemapt/api';
