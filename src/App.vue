@@ -1,47 +1,52 @@
 <template>
-    <div id="app" class="d-flex flex-column w-100 h-100">
+  <div id="app" class="d-flex flex-column w-100 h-100">
 
-        <gm-navbar class="app__navbar" :title="title"></gm-navbar>
+    <gm-navbar :title="title" class="app__navbar"></gm-navbar>
 
-        <div class="app__main">
-            <gm-map :layers="$store.getters['map/getLayers']"
-                    :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
-                    :geojson="geojson"
-            >
-                <template v-slot:controls-topleft>
-                </template>
-            </gm-map>
+    <div class="app__main">
+      <gm-map
+        :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
+        :geojson="geojson"
+        :layers="$store.getters['map/getLayers']"
+      >
+        <template v-slot:controls-topleft>
+        </template>
+      </gm-map>
 
-            <gm-sidebar id="sidebar__search" position="left" collapsible store_namespace="sidebarSearch" title="Zoeken">
-                <gm-search-places></gm-search-places>
-            </gm-sidebar>
-            <gm-sidebar id="sidebar__maps" position="left" collapsible store_namespace="sidebarMaps" title="Kaart opties">
-                <div class="scrollable scrollable--vertical">
-                    <gm-layer-panel></gm-layer-panel>
-                </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__filters" position="left" collapsible store_namespace="sidebarFilters" title="Plaatstype">
-                <div class="scrollable scrollable--vertical">
-                    <gm-place-type-filter></gm-place-type-filter>
-                </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__viewer" position="left" collapsible store_namespace="sidebarViewer">
-                <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__place" position="right" collapsible store_namespace="sidebarInfo">
-                <gm-place-info></gm-place-info>
-            </gm-sidebar>
-
+      <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
+        <gm-search-places></gm-search-places>
+      </gm-sidebar>
+      <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps" title="Kaart opties">
+        <div class="scrollable scrollable--vertical">
+          <gm-layer-panel></gm-layer-panel>
         </div>
+      </gm-sidebar>
 
-        <div v-if="!isSAD" class="app__footer d-flex bg-dark">
+      <gm-sidebar id="sidebar__filters" collapsible position="left" store_namespace="sidebarFilters" title="Plaatstype">
+        <div class="scrollable scrollable--vertical">
+          <gm-place-type-filter></gm-place-type-filter>
         </div>
+      </gm-sidebar>
 
-        <gm-modal-root/>
+      <gm-sidebar id="sidebar__viewer" collapsible position="left" store_namespace="sidebarViewer">
+        <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
+      </gm-sidebar>
+
+      <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
+        <gm-place-info></gm-place-info>
+      </gm-sidebar>
+
     </div>
+
+    <div v-if="!isSAD" class="app__footer d-flex bg-dark">
+    </div>
+
+    <gm-modal-root/>
+
+    <div v-if="$store.getters['openRequests']" class="loading-overlay">
+      <div class="spinner"/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -51,8 +56,6 @@ import GmMap from "./js/components/GmMap";
 import GmPlaceInfo from "./js/components/GmPlaceInfo";
 import GmModalRoot from "./js/components/GmModalRoot";
 import GmIiifManifestViewer from "./js/components/GmIiifManifestViewer";
-
-import api from "./js/config/constants";
 
 import GmSearchPlaces from "./js/components/search/GmSearchPlaces";
 import GmPlaceTypeFilter from "./js/components/filters/GmPlaceTypeFilter";
@@ -150,6 +153,3 @@ export default {
     },
 }
 </script>
-
-<style scoped lang="scss">
-</style>
