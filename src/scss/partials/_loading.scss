@@ -1,0 +1,35 @@
+$overlay-color: rgba(255, 255, 255, .5) !default;
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: $overlay-color;
+
+    z-index: 99999;
+}
+
+.spinner {
+    position: absolute;
+    display: block;
+    left: 50%;
+    top: 50%;
+
+    margin-left: -25px;
+    margin-top: -25px;
+
+    width: 50px;
+    height: 50px;
+
+    background: no-repeat center/100% url('../../images/loadinggif_zwart.gif');
+}
+
+.link-disabled,
+.link-disabled:hover,
+.link-disabled:focus {
+    color: $light-gray;
+    cursor: not-allowed;
+}

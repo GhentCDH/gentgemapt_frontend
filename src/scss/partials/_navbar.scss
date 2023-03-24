@@ -1,34 +1,67 @@
 .navbar {
-  z-index: 1005;
-  padding: 0;
+    z-index: 1005;
+    padding: 0;
+    height: $navbar-height;
 
-  .navbar-collapse {
-    padding: 0 16px;
-  }
-
-  .navbar-brand {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 75px;
-    padding: 7px 40px;
-    z-index: 1006;
-
-    background-color: #610345 !important;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-
-    img {
-      height: 100%;
+    .navbar-collapse {
+        padding: 0 16px;
     }
-  }
 
-  .nav-item {
-    img {
-      height: 32px;
-      filter: invert(100%);
+    .navbar-brand {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 75px;
+        padding: 0;
+        margin: 0;
+        z-index: 1006;
+
+        background-color: #610345 !important;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        .navbar-brand-image {
+            height: 100%;
+            padding: 7px 40px;
+
+            img {
+                height: 100%;
+            }
+        }
+
+        img {
+            height: 100%;
+        }
+
+        .navbar-brand-border-left, .navbar-brand-border-right {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            top: calc($navbar-height - 5px);
+        }
+
+        .navbar-brand-border-left {
+            left: -10px;
+            border-top: 5px solid $primary;
+            border-right: 5px solid $primary;
+            border-top-right-radius: 15px;
+        }
+
+        .navbar-brand-border-right {
+            right: -10px;
+            border-top: 5px solid $primary;
+            border-left: 5px solid $primary;
+            border-top-left-radius: 15px;
+        }
+
     }
-  }
+
+    .nav-item {
+        img {
+            height: 32px;
+            filter: invert(100%);
+        }
+    }
 }
 
