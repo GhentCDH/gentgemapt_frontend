@@ -1,12 +1,13 @@
 <template>
     <b-navbar toggleable="sm" type="dark" variant="dark" :sticky="true" fixed="top">
         <b-navbar-brand>
-            <img :src="require('@/images/logo-white.svg')" alt="Gent Gemapt">
-
-            <!--        <div class="brand-spacer brand-spacer__left"></div>-->
-            <!--        <div class="brand-image">-->
-            <!--        </div>-->
-            <!--        <div class="brand-spacer brand-spacer__right"></div>-->
+            <div class="navbar-brand-border-left"></div>
+            <div class="navbar-brand-image">
+                <a :href="homepage" target="_blank">
+                    <img :src="require('@/images/logo-white.svg')" alt="Gent Gemapt">
+                </a>
+            </div>
+            <div class="navbar-brand-border-right"></div>
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav class="bg-dark">
@@ -37,6 +38,11 @@ export default {
         VueSlider
     },
     props: ['title'],
+    computed: {
+        homepage() {
+            return process.env.URL_INFOSITE
+        }
+    },
     methods: {
         range(start, stop, step = 1) {
             return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
