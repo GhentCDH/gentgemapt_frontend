@@ -112,7 +112,7 @@ export default {
             return {
                 type: 'FeatureCollection',
                 features: features.filter(function (item) {
-                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat') && !item.properties.placeType.includes('water');
+                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat');
                 })
             };
         },
@@ -199,7 +199,7 @@ export default {
             this.$store.dispatch('sidebarInfo/collapse', false)
             // to make sure the marker/geometry is visible after the sidebar opens,
             // we pan the map to the left by some amount
-            if ( window.innerWidth >= 768 ) {
+            if ( window.innerWidth >= 992 ) {
                 const containerWidth = document.getElementsByClassName('leaflet-container')[0].offsetWidth;
                 const sidebarWidth = 550;
                 const markerXPos = e.containerPoint.x;
@@ -248,7 +248,7 @@ export default {
             } else {
                 latLngs = features.geometry.type === 'Point' ? [ L.GeoJSON.coordsToLatLng(features.geometry.coordinates) ] : L.GeoJSON.coordsToLatLngs(features.geometry.coordinates.flat())
             }
-            
+
             return L.latLngBounds(latLngs)
         },
         updateGeoJson(mapObject, json) {
