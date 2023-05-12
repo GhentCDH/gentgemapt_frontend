@@ -91,7 +91,9 @@ export default {
             const geojson = this.$store.getters['map/getGeoJSONData']
             const year = this.$store.getters['featureFilters/getYear']
             const placeTypes = this.$store.getters['featureFilters/getPlaceTypes']
-            const hiddenPlaceTypes = placeTypes.filter( i => !i.active ).map( i => i.id )
+            const activePlaceTypes = placeTypes.filter( i => i.active ).map( i => i.id )
+            const isPlaceTypeFilter = placeTypes.filter( i => !i.active ).length > 0
+            const isPlaceTypeOtherAllowed = placeTypes.filter( i => i.active ).filter( i => i.id === 'andere_plaats').length > 0
             const search = this.$store.getters['featureFilters/getSearch']
 
             let features = geojson?.features ?? []
@@ -107,9 +109,18 @@ export default {
                     if ( search.length ) {
                         return search.includes(item.properties.id)
                     }
+
                     // filters by year and placeType
-                    return ((item.properties?.startDate ?? 0) <= year && (item.properties?.endDate ?? 10000) >= year) &&
-                    (item.properties.placeType.length === 0 || hiddenPlaceTypes.length === 0 || item.properties.placeType.filter( type => !hiddenPlaceTypes.includes(type)).length )
+                    if ( year < (item.properties?.startDate ?? 0) || year > (item.properties?.endDate ?? 10000) )
+                        return false
+
+                    if ( isPlaceTypeOtherAllowed && item.properties.placeType.length === 0 )
+                        return true
+
+                    if ( isPlaceTypeFilter )
+                        return item.properties.placeType.filter( type => activePlaceTypes.includes(type)).length > 0
+
+                    return true
                 })
             };
         },
