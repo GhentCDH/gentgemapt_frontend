@@ -3,6 +3,8 @@ const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const paths = require('./paths')
 const Dotenv = require("dotenv-webpack");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 module.exports = merge(common, {
   // Set the mode to development or production
@@ -47,5 +49,7 @@ module.exports = merge(common, {
     new Dotenv({
       defaults: true
     }),
+
+    // new BundleAnalyzerPlugin(),
   ],
 })

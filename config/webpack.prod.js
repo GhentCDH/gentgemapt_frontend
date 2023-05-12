@@ -24,11 +24,11 @@ module.exports = merge(common, {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
-              sourceMap: true,
+              sourceMap: false,
               modules: false, // css modules disabled
             },
           },
-          {loader: 'postcss-loader', options: {sourceMap: true}},
+          {loader: 'postcss-loader', options: {sourceMap: false}},
           {loader: 'resolve-url-loader'},
           {loader: 'sass-loader', options: {sourceMap: true}},
         ],
@@ -44,7 +44,7 @@ module.exports = merge(common, {
     }),
 
     new Dotenv({
-      defaults: true
+        path: './.env.prod',
     }),
 
   ],
