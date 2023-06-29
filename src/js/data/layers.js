@@ -229,7 +229,7 @@ const layers = [
         label: 'Popp, 1842-1879',
         weight: 1842,
         options: {
-            'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
+            'base-url': 'https://geo.api.vlaanderen.be/histcart/wms',
             layers: 'popp',
             transparent: true,
             opacity: 1,
@@ -327,7 +327,7 @@ const layers = [
         weight: 1979,
         url: '',
         options: {
-            'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/okz/wms',
+            'base-url': 'https://geo.api.vlaanderen.be/okz/wms',
             layers: 'okzrgb79_90vl',
             transparent: true,
             opacity: 1,
