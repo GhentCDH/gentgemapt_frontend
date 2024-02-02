@@ -1,13 +1,15 @@
-$filter-option-padding-top: 8px !default;
+$filter-option-padding-top: 5px !default;
 $filter-option-border-color: $light;
 
 
 .filter-option {
   display: flex;
-  align-items: center;
+  align-items: stretch;
 
   & > div {
     padding: $filter-option-padding-top 0;
+    display: flex;
+    align-items: center;
   }
 
   .filter-option__select {
@@ -31,7 +33,7 @@ $filter-option-border-color: $light;
     padding-left: 0.6rem;
 
     img {
-      width: 20px;
+      width: 28px;
     }
 
   }

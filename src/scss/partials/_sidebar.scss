@@ -1,53 +1,68 @@
 .sidebar {
 
-  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.20);
-  padding: 30px;
+    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.20);
+    padding: 30px;
+    padding-top: 60px;
 
-  top: 10px;
-  bottom: 10px;
-  height: auto;
+    top: 0px;
+    bottom: 0px;
+    height: auto;
 
-  &.sidebar--right {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    padding-left: 30px;
-  }
-
-  &.sidebar--left {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    padding-right: 30px;
-  }
-
-  .sidebar--left {
-    width: 350px;
-  }
-
-  .sidebar__header__buttons .button {
-    color: $light-gray;
-    display: flex;
-    justify-content: center;
-
-    transition-property: color, background-color;
-    transition-duration: .3s;
-
-    &:hover {
-      color: white;
+    &.sidebar--right {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        padding-left: 30px;
     }
 
-    i.bi {
-      display: flex;
+    &.sidebar--left {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding-right: 30px;
+    }
 
-      &::before {
+    .sidebar--left {
+        width: 350px;
+    }
+
+    .sidebar__header__buttons {
+        top: -52px;
+    }
+
+    //.sidebar--left {
+    //    .sidebar__header__buttons {
+    //        right: unset;
+    //        left: 5px;
+    //    }
+    //}
+
+    .sidebar__header__buttons .button {
+
+        font-size: larger;
+
+        color: $light-gray;
         display: flex;
-        align-items: center;
-      }
+        justify-content: center;
+
+        transition-property: color, background-color;
+        transition-duration: .3s;
+
+        &:hover {
+            color: white;
+        }
+
+        i.bi {
+            display: flex;
+
+            &::before {
+                display: flex;
+                align-items: center;
+            }
+        }
     }
-  }
 }
 
 @include media-breakpoint-up(lg) {
-  #sidebar__viewer {
-    width: calc(100% -  560px);
-  }
+    #sidebar__viewer {
+        width: calc(100% - 560px);
+    }
 }

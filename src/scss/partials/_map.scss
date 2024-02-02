@@ -1,34 +1,48 @@
 .map__control button {
-  display: block;
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  border: 2px solid #ccc;
-  border-radius: 0px;
-  margin-bottom: 5px;
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 0px;
+    margin-bottom: 5px;
 
-  img {
-    width: 100%;
-  }
+    img {
+        width: 100%;
+    }
 }
 
-.leaflet-container .leaflet-marker-icon {
-  background: url(../../images/placetypes/GentGemapt_Marker.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  filter: drop-shadow(2px 2px 3px rgb(171,166,166));
+.leaflet-pane {
 
-  &.icon--selected {
-    background: url(../../images/placetypes/GentGemapt_Marker_Selected.svg);
-    background-size: contain;
-  }
+    .feature {
 
-  img {
-    width: 20px;
-    height: 20px;
-    position: relative;
-    left: 4px;
-    top: 4px;
-  }
+        &.feature--hidden {
+            display: none;
+        }
+
+
+    }
+
+
+    .leaflet-marker-icon {
+        background: url(../../images/placetypes/GentGemapt_Marker.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(2px 2px 3px rgb(171, 166, 166));
+
+        &.feature--selected {
+            background: url(../../images/placetypes/GentGemapt_Marker_Selected.svg);
+            background-size: contain;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            left: 4px;
+            top: 4px;
+        }
+
+    }
 
 }
