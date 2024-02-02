@@ -1,13 +1,27 @@
 import ghent from '../data/ghent.json'
 
 const layers = [
+    // {
+    //     id: 'mapbox-v1',
+    //     label: 'Gent Gemapt basiskaart',
+    //     type: 'tileLayer',
+    //     options: {
+    //         url: 'https://api.mapbox.com/styles/v1/sysadmin-ghentcdh/ckk5uzofh03s517pd44ucjk61/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic3lzYWRtaW4tZ2hlbnRjZGgiLCJhIjoiY2trNXR3ZW55MGFxYTJ3bndiZDE0czNpOSJ9.b7hzKcWY7vIOdWNgBl6Wkw',
+    //         attribution: 'mapbox',
+    //         maxZoom: 18,
+    //         visible: true,
+    //         opacity: 1,
+    //         layerType: 'base',
+    //         zIndex: 10,
+    //     }
+    // },
     {
-        id: 'mapbox-v1',
+        id: 'gentgemapt-v1',
         label: 'Gent Gemapt basiskaart',
         type: 'tileLayer',
         options: {
-            url: 'https://api.mapbox.com/styles/v1/sysadmin-ghentcdh/ckk5uzofh03s517pd44ucjk61/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic3lzYWRtaW4tZ2hlbnRjZGgiLCJhIjoiY2trNXR3ZW55MGFxYTJ3bndiZDE0czNpOSJ9.b7hzKcWY7vIOdWNgBl6Wkw',
-            attribution: 'mapbox',
+            url: 'https://maps.ghentcdh.ugent.be/GentGemapt/v1/{z}/{x}/{y}.png',
+            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
             maxZoom: 18,
             visible: true,
             opacity: 1,
@@ -21,7 +35,7 @@ const layers = [
         label: 'Google satelliet',
         options: {
             url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-            attribution: 'Google',
+            attribution: '© Google',
             maxZoom: 18,
             visible: false,
             opacity: 1,
