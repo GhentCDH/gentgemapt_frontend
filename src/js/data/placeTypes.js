@@ -77,12 +77,12 @@ const placeTypes = [
         icon: require('@/images/placetypes/color/GentGemapt_Stadspoort.svg'),
         active: true,
     },
-    // {
-    //     id: 'straat',
-    //     label: 'Straat',
-    //     //icon: require('@/images/placetypes/color/GentGemapt_.svg',
-    //     active: true,
-    // },
+    {
+        id: 'straat',
+        label: 'Straat',
+        icon: require('@/images/placetypes/color/GentGemapt_Straat.svg'),
+        active: true,
+    },
     {
         id: 'water',
         label: 'Water',
