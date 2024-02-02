@@ -86,6 +86,12 @@ export default {
             }
             state.selectFeature = null
         },
+        clearHighlight(state) {
+            if ( state.highlightFeatures.length ) {
+                state.highlightFeatures.map(feature => feature.highlight = false)
+            }
+            state.highlightFeatures = []
+        },
         setGeoJSONData(state, payload) {
             state.geojson = payload
         },
@@ -150,6 +156,9 @@ export default {
         },
         clearSelection(context) {
             context.commit('clearSelection')
+        },
+        clearHighlight(context) {
+            context.commit('clearHighlight')
         },
         highlightFeature(context, payload) {
             if ( payload?.id ) {
