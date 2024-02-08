@@ -91,18 +91,18 @@ export default {
   height: 100%;
   width: 100%;
 
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   transform: none;
 
   padding: 15px;
 
-  z-index: 1001;
+  z-index: 2001;
 
   background: white;
 
   &__header {
     position: relative;
-    z-index: 1000;
+    z-index: 2000;
 
     &__title {
     }
@@ -138,7 +138,7 @@ export default {
   }
 
   &--right {
-    right: -5px;
+    right: 0px;
   }
 
   &--right.sidebar--collapsed {
@@ -146,7 +146,7 @@ export default {
   }
 
   &--left {
-    left: -5px;
+    //left: -5px;
     //width: 450px;
   }
 
