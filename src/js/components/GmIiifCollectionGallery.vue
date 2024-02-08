@@ -1,6 +1,6 @@
 <template>
     <div class="image-grid">
-        <div class="image-grid__item" v-if="manifests && manifests.length" v-for="manifest in manifests" :key="manifest.id"
+        <div class="image-grid__item" v-if="manifests && manifests.length" v-for="(manifest, index) in manifests" :key="manifest.id + '-' + index"
              @click="handleClick(manifest)">
             <b-img :src="getThumbNailUrl(manifest)"></b-img>
         </div>
