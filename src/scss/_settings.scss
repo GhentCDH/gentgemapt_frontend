@@ -1,0 +1,31 @@
+$gg-feature-icons: (
+    'brug': url(../images/placetypes/color/GentGemapt_Brug.svg),
+    'bedrijf': url(../images/placetypes/color/GentGemapt_Bedrijf.svg),
+    'cinema': url(../images/placetypes/color/GentGemapt_Cinema.svg),
+    'handel': url(../images/placetypes/color/GentGemapt_Handel.svg),
+    'horeca': url(../images/placetypes/color/GentGemapt_Horeca.svg),
+    'kunst_en_cultuur': url(../images/placetypes/color/GentGemapt_Kunst_en_cultuur.svg),
+    'groen_en_natuur': url(../images/placetypes/color/GentGemapt_Groen_natuur.svg),
+    'plein': url(../images/placetypes/color/GentGemapt_Plein.svg),
+    'openbaar_gebouw': url(../images/placetypes/color/GentGemapt_Openbaar_gebouw.svg),
+    'religieuze_plaats': url(../images/placetypes/color/GentGemapt_Religieus_gebouw.svg),
+    'onderwijs': url(../images/placetypes/color/GentGemapt_Onderwijs.svg),
+    'sport_en_spel': url(../images/placetypes/color/GentGemapt_Sport_spel.svg),
+    'stadspoort_of_stadsmuur': url(../images/placetypes/color/GentGemapt_Stadspoort.svg),
+    'straat': url(../images/placetypes/color/GentGemapt_Straat.svg),
+    'water': url(../images/placetypes/color/GentGemapt_Water.svg),
+    'woning': url(../images/placetypes/color/GentGemapt_Woningen.svg),
+    'woonwijk': url(../images/placetypes/color/GentGemapt_Wijk.svg),
+    'zorg': url(../images/placetypes/color/GentGemapt_Zorg.svg),
+    'andere_plaats': url(../images/placetypes/color/GentGemapt_Andere.svg),
+);
+
+$gg-cluster-icon: url(../images/placetypes/GentGemapt_Cluster.svg);
+$gg-cluster-icon: url(../images/placetypes/GentGemapt_Marker.svg);
+$gg-cluster-icon-background: url(../images/placetypes/GentGemapt_Cluster.svg);
+$gg-cluster-icon-background: url(../images/placetypes/GentGemapt_Marker.svg);
+
+$gg-feature-icon-background: url(../images/placetypes/GentGemapt_Marker.svg);
+$gg-feature-focused-icon-background: url(../images/placetypes/GentGemapt_Marker_Selected.svg);
+$gg-feature-icon: url(../images/placetypes/color/GentGemapt_Andere.svg);
+$gg-feature-focused-icon: url(../images/placetypes/color/GentGemapt_Andere.svg);

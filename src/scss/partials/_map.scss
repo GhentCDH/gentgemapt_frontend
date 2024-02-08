@@ -14,33 +14,71 @@
 
 .leaflet-pane {
 
+    .cluster {
+        background: $gg-cluster-icon-background;
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(2px 2px 3px rgb(171, 166, 166));
+        position: relative;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+            color: $primary;
+            font-weight: 500;
+            font-family: $font-family-sans-serif;
+            position: relative;
+            top: -2px;
+            display: inline-block;
+        }
+    }
+
     .feature {
 
         &.feature--hidden {
             display: none;
         }
 
+        &.geometry--point {
 
-    }
-
-
-    .leaflet-marker-icon {
-        background: url(../../images/placetypes/GentGemapt_Marker.svg);
-        background-size: contain;
-        background-repeat: no-repeat;
-        filter: drop-shadow(2px 2px 3px rgb(171, 166, 166));
-
-        &.feature--selected {
-            background: url(../../images/placetypes/GentGemapt_Marker_Selected.svg);
+            /* feature icon background */
+            background: $gg-feature-icon-background;
             background-size: contain;
-        }
-
-        img {
-            width: 20px;
-            height: 20px;
+            background-repeat: no-repeat;
+            filter: drop-shadow(2px 2px 3px rgb(171, 166, 166));
             position: relative;
-            left: 4px;
-            top: 4px;
+
+            &.feature--focused {
+                background: $gg-feature-focused-icon-background;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+
+            /* feature icon */
+            &::after {
+                content: '';
+                display: block;
+                background: $gg-feature-icon;
+                background-repeat: no-repeat;
+                width: 20px;
+                height: 20px;
+                position: relative;
+                left: 4px;
+                top: 4px;
+            }
+
+            &.feature--focused::after {
+                background: $gg-feature-focused-icon;
+            }
+
+            @each $name, $icon in $gg-feature-icons {
+                &.feature--#{$name}::after {
+                    background: $icon;
+                }
+            }
+
         }
 
     }
