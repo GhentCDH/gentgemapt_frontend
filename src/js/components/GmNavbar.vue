@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="sm" type="dark" variant="dark" :sticky="true" fixed="top">
+    <b-navbar :toggleable="false" type="dark" variant="dark" :sticky="true" fixed="top">
         <b-navbar-brand>
             <div class="navbar-brand-border-left"></div>
             <div class="navbar-brand-image">
@@ -10,19 +10,20 @@
             <div class="navbar-brand-border-right"></div>
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
         <b-collapse id="nav-collapse" is-nav class="bg-dark">
             <b-navbar-nav class="user-select-none">
-                <b-nav-item  @click="$store.dispatch('sidebarSearch/collapse', false)">
+                <div class="nav-item d-none d-sm-block"  @click="$store.dispatch('sidebarSearch/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Search.svg')" alt="Zoeken">
-                </b-nav-item>
-                <b-nav-item @click="$store.dispatch('sidebarMaps/collapse', false)">
+                </div>
+                <div class="nav-item d-none d-sm-block" @click="$store.dispatch('sidebarMaps/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Layers.svg')" alt="Kaarten">
-                </b-nav-item>
-                <b-nav-item @click="$store.dispatch('sidebarFilters/collapse', false)">
+                </div>
+                <div class="nav-item" @click="$store.dispatch('sidebarFilters/collapse', false)">
                     <img :src="require('@/images/icons/GentGemapt_Filter.svg')" alt="Filter">
-                </b-nav-item>
+                </div>
             </b-navbar-nav>
-            <gm-year-filter class="ml-auto"></gm-year-filter>
+            <gm-year-filter class="ml-auto d-none d-sm-flex"></gm-year-filter>
         </b-collapse>
     </b-navbar>
 </template>
