@@ -23,16 +23,17 @@ export default {
         },
         bounds: null,
         zoom: 15,
-        selectFeature: null,
+        selectedFeature: null,
         focusFeature: null,
-        highlightFeatures: [],
+        highlightedFeatures: [],
         geojson: null,
         layers: layers,
         layerOptions: {
             'mapbox-v1' : {
                 visible: true,
             }
-        }
+        },
+        featuresToRedraw: []
     }),
     getters: {
         getGeoJSONData: state => state.geojson,
@@ -49,9 +50,10 @@ export default {
         getZoom: state => state.zoom,
         getCenter: state => state.center,
         getBounds: state => state.bounds,
-        getSelectedFeature: state => state.selectFeature,
+        getSelectedFeature: state => state.selectedFeature,
         getFocusedFeature: state => state.focusFeature,
-        getHighlightedFeatures: state => state.selectFeature ? union(state.highlightFeatures, [state.selectFeature]) : state.highlightFeatures
+        getHighlightedFeatures: state => state.selectedFeature ? union(state.highlightedFeatures, [state.selectedFeature]) : state.highlightedFeatures,
+        getFeaturesToRedraw: state => state.featuresToRedraw
     },
     mutations: {
         setCenter(state, payload) {
@@ -61,36 +63,36 @@ export default {
             state.zoom = payload
         },
         selectFeature(state, feature) {
-            feature.highlight = true
-            state.selectFeature = feature
+            // feature.highlight = true
+            state.selectedFeature = feature
         },
         focusFeature(state, feature) {
             state.focusFeature = feature
         },
         highlightFeature(state, feature) {
-            feature.highlight = true;
-            state.highlightFeatures.push(feature);
+            // feature.highlight = true;
+            state.highlightedFeatures.push(feature);
         },
         unhighlightFeature(state, feature) {
-            if ( !state.selectFeature || state.selectFeature !== feature ) {
-                feature.highlight = false;
-            }
-            state.highlightFeatures = state.highlightFeatures.filter(item => item.properties.id !== feature.properties.id)
+            // if ( !state.selectedFeature || state.selectedFeature !== feature ) {
+            //     // feature.highlight = false;
+            // }
+            state.highlightedFeatures = state.highlightedFeatures.filter(item => item.properties.id !== feature.properties.id)
         },
         setBounds(state, bounds) {
             state.bounds = bounds
         },
         clearSelection(state) {
-            if ( state.selectFeature ) {
-                state.selectFeature.highlight = false;
-            }
-            state.selectFeature = null
+            // if ( state.selectedFeature ) {
+            //     state.selectedFeature.highlight = false;
+            // }
+            state.selectedFeature = null
         },
         clearHighlight(state) {
-            if ( state.highlightFeatures.length ) {
-                state.highlightFeatures.map(feature => feature.highlight = false)
-            }
-            state.highlightFeatures = []
+            // if ( state.highlightedFeatures.length ) {
+            //     state²lightedFeatures.map(feature => feature.highlight = false)
+            // }
+            state.highlightedFeatures = []
         },
         setGeoJSONData(state, payload) {
             state.geojson = payload
@@ -108,75 +110,70 @@ export default {
             if ( payload?.id && payload?.opacity !== undefined ) {
                 state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.opacity = payload.opacity )
             }
+        },
+        setFeaturesToRedraw(state, featureIds) {
+            state.featuresToRedraw = featureIds
         }
     },
     actions: {
-        setCenter(context, payload) {
+        setCenter({ commit, state }, payload) {
             // update if different
-            if ( JSON.stringify(payload) !== JSON.stringify(context.state.center) ) {
-                context.commit('setCenter', payload)
+            if ( JSON.stringify(payload) !== JSON.stringify(state.center) ) {
+                commit('setCenter', payload)
             }
         },
-        setZoom(context, payload) {
+        setZoom({ commit, state }, payload) {
             // update if different
-            if ( payload !== context.state.zoom ) {
-                context.commit('setZoom', payload)
+            if ( payload !== state.zoom ) {
+                commit('setZoom', payload)
             }
         },
-        setBounds(context, payload) {
+        setBounds({ commit, state }, payload) {
             // update if different
-            if ( JSON.stringify(payload) !== JSON.stringify(context.state.bounds) ) {
-                context.commit('setBounds', payload)
+            if ( JSON.stringify(payload) !== JSON.stringify(state.bounds) ) {
+                commit('setBounds', payload)
             }
         },
-        selectFeature(context, payload) {
-            context.commit('clearSelection');
-            if ( payload?.id ) {
-                const feature = context.getters.getFeatureById(payload.id);
-                if ( feature ) {
-                    context.commit('selectFeature', feature);
-                    setPlaceUrl(feature.properties.id)
-                }
-            }
-            if ( payload?.feature ) {
-                context.commit('selectFeature', payload.feature)
-                setPlaceUrl(payload.feature.properties.id)
+        selectFeature({ commit, dispatch, getters }, payload) {
+            dispatch('clearSelection')
+            const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
+            if ( feature ) {
+                commit('selectFeature', feature);
+                setPlaceUrl(feature.properties.id)
             }
         },
-        focusFeature(context, payload) {
-            if ( payload?.id ) {
-                const feature = context.getters.getFeatureById(payload.id);
-                if ( feature ) {
-                    context.commit('focusFeature', feature);
-                }
-            }
-            if ( payload?.feature ) {
-                context.commit('focusFeature', payload.feature)
+        focusFeature({ commit, dispatch, getters }, payload) {
+            const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
+            if ( feature ) {
+                commit('focusFeature', feature);
             }
         },
-        clearSelection(context) {
-            context.commit('clearSelection')
+        clearSelection({ commit, dispatch, getters }) {
+            const feature = getters['getSelectedFeature']
+            if (feature) {
+                dispatch('redrawFeatures', [ feature.properties.id ])
+            }
+            commit('clearSelection')
         },
-        clearHighlight(context) {
-            context.commit('clearHighlight')
+        clearHighlight({ commit, dispatch }) {
+            commit('clearHighlight')
         },
-        highlightFeature(context, payload) {
-            if ( payload?.id ) {
-                const feature = context.getters.getFeatureById(payload.id);
-                context.commit('highlightFeature', feature);
-            }
-            if ( payload?.feature ) {
-                context.commit('highlightFeature', payload.feature);
+        highlightFeature({ commit, dispatch, getters }, payload) {
+            const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
+            if ( feature ) {
+                commit('highlightFeature', feature);
+                dispatch('redrawFeatures', [feature.properties.id])
             }
         },
-        unhighlightFeature(context, payload) {
-            if ( payload?.id ) {
-                const feature = context.getters.getFeatureById(payload.id);
-                context.commit('unhighlightFeature', feature);
+        unhighlightFeature({ commit, dispatch, getters }, payload) {
+            const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
+            if ( feature ) {
+                commit('unhighlightFeature', feature);
+                dispatch('redrawFeatures', [feature.properties.id])
             }
-            if ( payload?.feature ) {
-                context.commit('unhighlightFeature', payload.feature);
-            }
+        },
+        redrawFeatures({ commit, dispatch }, ids = []) {
+            commit('setFeaturesToRedraw', ids)
         },
         async loadGeoJSONData(context) {
             if ( !context.state.geojson ) {

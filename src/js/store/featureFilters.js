@@ -45,14 +45,17 @@ export default {
         },
     },
     actions: {
-        setPlaceTypeStatus(context, payload) {
-            context.commit('setPlaceTypeStatus', payload);
+        setPlaceTypeStatus({commit}, payload) {
+            commit('setPlaceTypeStatus', payload);
         },
-        activateAllPlaceTypes(context) {
-            context.commit('resetPlaceTypes', true)
+        activateAllPlaceTypes({commit}) {
+            commit('resetPlaceTypes', true)
         },
-        deactivateAllPlaceTypes(context) {
-            context.commit('resetPlaceTypes', false)
+        deactivateAllPlaceTypes({commit}) {
+            commit('resetPlaceTypes', false)
+        },
+        resetSearch({commit}) {
+            commit('resetSearch')
         }
     }
 }
