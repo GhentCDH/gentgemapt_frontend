@@ -1,20 +1,6 @@
 import ghent from '../data/ghent.json'
 
 const layers = [
-    // {
-    //     id: 'mapbox-v1',
-    //     label: 'Gent Gemapt basiskaart',
-    //     type: 'tileLayer',
-    //     options: {
-    //         url: 'https://api.mapbox.com/styles/v1/sysadmin-ghentcdh/ckk5uzofh03s517pd44ucjk61/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic3lzYWRtaW4tZ2hlbnRjZGgiLCJhIjoiY2trNXR3ZW55MGFxYTJ3bndiZDE0czNpOSJ9.b7hzKcWY7vIOdWNgBl6Wkw',
-    //         attribution: 'mapbox',
-    //         maxZoom: 18,
-    //         visible: true,
-    //         opacity: 1,
-    //         layerType: 'base',
-    //         zIndex: 10,
-    //     }
-    // },
     {
         id: 'gentgemapt-v1',
         label: 'Gent Gemapt basiskaart',
@@ -374,7 +360,7 @@ const layers = [
      */
     {
         id: 'ghent-overlay',
-        type: 'geojsonLayer',
+        type: 'geoJsonLayer',
         options: {
             optionsStyle: {
                 "color": "#093549",
@@ -384,8 +370,11 @@ const layers = [
             geojson: ghent,
             options: {
                 invert: true,
+                // render improvement
+                // see: https://github.com/ebrelsford/Leaflet.snogylop/issues/1#issuecomment-487265696
+                renderer: L.svg({ padding: 1 })
             },
-            visible: process.env.IS_SAD !== "true",
+            visible: true,
             zIndex: 200,
         }
     },
