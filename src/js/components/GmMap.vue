@@ -120,6 +120,11 @@ export default {
             type: Array,
             required: false,
             default: () => []
+        },
+        visibleFeatureIds: {
+            type: Set,
+            required: false,
+            default: () => new Set()
         }
     },
     data() {
@@ -132,6 +137,7 @@ export default {
                     zoomControl: true
                 }
             },
+            clusterMarkers: {}
         }
     },
     computed: {
@@ -181,32 +187,29 @@ export default {
             this.updateFeatureStyles(placeIds)
         },
         geojsonClusterLayers(layers) {
+            this.clusterMarkers = {}
             if (!layers?.length) {
                 return
             }
-            const clusterLayer = this.$refs.markerCluster.mapObject
-            clusterLayer.clearLayers()
+            // calculate add cluster makers and cache them
             for (const layer of layers) {
                 const geojson = new L.geoJSON(layer.options.geojson, layer.options.options)
-                clusterLayer.addLayer(geojson);
+                geojson.getLayers().forEach( layer => {this.clusterMarkers[layer.feature.properties.id] = layer})
             }
 
-            // for (const layer of layers) {
-            //     let layersToRemove = []
-            //     let clusterLayerIds = new Set()
-            //     const layerIds = new Set(layer.options.geojson.features.map( feature => feature.properties.id ))
-            //     clusterLayer.eachLayer( layer => {
-            //         if (layerIds.has(layer?.feature.properties.id)) {
-            //             layersToRemove.push(layer)
-            //         }
-            //         clusterLayerIds.add(layer.feature.properties.id)
-            //     })
-            //     console.log(layersToRemove)
-            //     clusterLayer.removeLayers(layersToRemove)
-            //     const geojson = new L.geoJSON(layer.options.geojson, {...layer.options.options, filter: feature => !clusterLayerIds.has(feature.properties.id) })
-            //     clusterLayer.addLayer(geojson);
-            // }
-        }
+            // update map
+            this.updateClusterMarkers()
+        },
+        visibleFeatureIds(current, previous) {
+            if (previous === null) {
+                return
+            }
+            const left = Array.from(current).filter(id => !previous.has(id))
+            const right = Array.from(previous).filter(id => !current.has(id))
+
+            this.updateClusterMarkers()
+            this.$store.dispatch('map/redrawFeatures', [...left, ...right])
+        },
     },
     methods: {
         /* map events */
@@ -300,6 +303,15 @@ export default {
                     isCallable(this.featureClass) ? this.featureClass(layer.feature) : this.featureClass)
             })
         },
+        updateClusterMarkers() {
+            const clusterLayer = this.$refs.markerCluster.mapObject
+            const visibleClusterMakers = []
+            for ( const id of this.visibleFeatureIds ) {
+                this.clusterMarkers?.[id] && visibleClusterMakers.push(this.clusterMarkers[id])
+            }
+            clusterLayer.clearLayers()
+            clusterLayer.addLayers(visibleClusterMakers)
+        }
     },
 
     mounted() {
