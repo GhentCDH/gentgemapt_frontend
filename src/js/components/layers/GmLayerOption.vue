@@ -41,16 +41,16 @@ export default {
     },
     computed: {
         isVisible() {
-            return this.layer.options?.visible ?? false
+            return this.layer?.options?.visible ?? false
         },
         isOverlay() {
-            return this.layer.options?.layerType === "overlay"
+            return !this.layer?.isBaseLayer
         },
         isBaseLayer() {
-            return this.layer.options?.layerType === "base"
+            return this.layer?.isBaseLayer === true
         },
         opacity() {
-            return this.layer.options?.opacity ?? 0
+            return this.layer?.options?.opacity ?? 0
         }
     },
     methods: {

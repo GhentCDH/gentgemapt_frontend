@@ -100,10 +100,14 @@ export default {
         setLayerVisibility(state, payload) {
             if ( payload?.id && payload?.visible !== undefined ) {
                 // base layer? reset all layers first
-                if ( state.layers.filter( i => i.id === payload.id )[0].options?.layerType === "base" ) {
-                    state.layers.filter( i => i.options?.layerType === "base" ).forEach( i => i.options.visible = false )
+                if ( state.layers.filter( layer => layer.id === payload.id )[0].isBaseLayer ) {
+                    state.layers
+                        .filter( layer => layer.isBaseLayer )
+                        .forEach( layer => layer.options.visible = false )
                 }
-                state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.visible = payload.visible )
+                state.layers
+                    .filter( layer => layer.id === payload.id )
+                    .forEach( layer => layer.options.visible = payload.visible )
             }
         },
         setLayerOpacity(state, payload) {

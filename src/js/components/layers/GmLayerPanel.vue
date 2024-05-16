@@ -25,12 +25,12 @@ export default {
     },
     computed: {
         baseLayers() {
-            return this.$store.getters["map/getLayers"].filter( item => item.options?.layerType === 'base' )
+            return this.$store.getters["map/getLayers"].filter( item => item?.isBaseLayer === true && (item?.isToggleable ?? true) === true )
         },
         overlayLayers() {
             return this.$store.getters["map/getLayers"]
-                .filter( item => item.options?.layerType === 'overlay' )
-                .sort( (a,b) => a.weight - b.weight)
+                .filter( item => !item?.isBaseLayer && (item?.isToggleable ?? true) === true)
+                .sort( (a,b) => (a?.weight ?? 0) - (b?.weight ?? 0))
                 .map( function(item) { item.url = process.env.URL_INFOSITE + `/s/default/page/${item.id}`; return item })
         },
     }

@@ -5,13 +5,13 @@ const layers = [
         id: 'gentgemapt-v1',
         label: 'Gent Gemapt basiskaart',
         type: 'tileLayer',
+        isBaseLayer: true,
         options: {
             url: 'https://maps.ghentcdh.ugent.be/GentGemapt/v1/{z}/{x}/{y}.png',
             attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
             maxZoom: 18,
             visible: true,
             opacity: 1,
-            layerType: 'base',
             zIndex: 10,
         }
     },
@@ -19,13 +19,13 @@ const layers = [
         id: 'google-satellite',
         type: 'tileLayer',
         label: 'Google satelliet',
+        isBaseLayer: true,
         options: {
             url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
             attribution: '© Google',
             maxZoom: 18,
             visible: false,
             opacity: 1,
-            layerType: 'base',
             zIndex: 10,
         }
     },
@@ -41,7 +41,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -57,7 +56,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -73,7 +71,6 @@ const layers = [
             tms: true,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -89,7 +86,6 @@ const layers = [
             tms: true,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -105,7 +101,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -122,7 +117,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -139,7 +133,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -172,7 +165,6 @@ const layers = [
             tms: true,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },    {
@@ -187,7 +179,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -203,7 +194,6 @@ const layers = [
             tms: true,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -219,7 +209,6 @@ const layers = [
             tms: false,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -235,7 +224,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -251,7 +239,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -267,7 +254,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -283,7 +269,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -300,7 +285,6 @@ const layers = [
             tms: true,
             visible: false,
             opacity: 1,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -333,7 +317,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
@@ -350,7 +333,6 @@ const layers = [
             opacity: 1,
             format: 'image/png',
             visible: false,
-            layerType: 'overlay',
             zIndex: 100,
         }
     },
