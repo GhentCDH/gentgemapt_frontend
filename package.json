@@ -17,12 +17,13 @@
         "webpack boilerplate"
     ],
     "devDependencies": {
+        "@allmaps/leaflet": "^1.0.0-beta.16",
         "@babel/core": "^7.17.8",
         "@babel/plugin-proposal-class-properties": "^7.16.7",
         "@babel/preset-env": "^7.16.11",
         "@benmajor/jquery-touch-events": "^2.0.3",
         "@urbn/vuex-helpers": "^0.1.0",
-        "axios": "^0.21.4",
+        "axios": "^1.6.7",
         "babel-loader": "^8.2.4",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.6.2",
@@ -56,7 +57,7 @@
         "manifesto.js": "^4.3.0-pre-4",
         "mini-css-extract-plugin": "^2.7.5",
         "mirador": "^3.3.0",
-        "normalize-url": "4.5.1",
+        "normalize-url": "^5.3.0",
         "popper.js": "^1.16.1",
         "postcss": "^8.4.19",
         "postcss-loader": "^7.0.1",
@@ -68,7 +69,7 @@
         "react": "^16.14.0",
         "react-dom": "^16.14.0",
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.56.1",
+        "sass": "~1.64.2",
         "sass-loader": "^13.2.0",
         "style-loader": "^3.3.1",
         "url": "^0.11.0",
@@ -81,6 +82,7 @@
         "vue-style-loader": "^4.1.3",
         "vue-template-compiler": "^2.7.13",
         "vue2-leaflet": "^2.7.1",
+        "vue2-leaflet-markercluster": "^3.1.0",
         "vuex": "^3.6.2",
         "webpack": "^5.75.0",
         "webpack-bundle-analyzer": "^4.8.0",
@@ -97,7 +99,10 @@
         "last 2 versions",
         "not dead"
     ],
-    "dependencies": {},
+    "dependencies": {
+        "@types/leaflet": "^1.5.7",
+        "is-callable": "^1.2.7"
+    },
     "resolutions": {
         "mirador/**/normalize-url": "4.5.1",
         "manifesto.js/normalize-url": "4.5.1"
