@@ -1,4 +1,11 @@
 **/.DS_Store
 /node_modules
 /dist
-.env
+.env*
+/*.sh
+/docs
+changelog.md
+/.idea
+todo.txt
+Test.*
+*.prev.vue
