@@ -22,7 +22,7 @@ export default {
                 return this.$store.getters['featureFilters/getYear']
             },
             set (value) {
-                this.$store.commit('featureFilters/setYear', value)
+                this.$store.dispatch('featureFilters/setYear', value)
             }
         },
         yearFilterConfig() {
