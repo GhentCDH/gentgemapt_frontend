@@ -112,7 +112,9 @@ export default {
         },
         setLayerOpacity(state, payload) {
             if ( payload?.id && payload?.opacity !== undefined ) {
-                state.layers.filter( i => i.id === payload.id ).forEach( i => i.options.opacity = payload.opacity )
+                state.layers
+                    .filter( layer => layer.id === payload.id )
+                    .forEach( layer => layer.options.opacity = payload.opacity )
             }
         },
         setFeaturesToRedraw(state, featureIds) {
@@ -180,6 +182,12 @@ export default {
             commit('setFeaturesToRedraw', ids)
         },
         async loadGeoJSONData(context) {
+        setLayerOpacity({commit}, payload) {
+            commit('setLayerOpacity', payload)
+        },
+        setLayerVisibility({commit}, payload) {
+            commit('setLayerVisibility', payload)
+        },
             if ( !context.state.geojson ) {
                 context.commit('startRequest', null, { root: true });
                 const geojson = await PlaceService.list();
