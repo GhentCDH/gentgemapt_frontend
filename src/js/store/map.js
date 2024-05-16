@@ -181,13 +181,13 @@ export default {
         redrawFeatures({ commit, dispatch }, ids = []) {
             commit('setFeaturesToRedraw', ids)
         },
-        async loadGeoJSONData(context) {
         setLayerOpacity({commit}, payload) {
             commit('setLayerOpacity', payload)
         },
         setLayerVisibility({commit}, payload) {
             commit('setLayerVisibility', payload)
         },
+        async loadGeoJSONData(context) {
             if ( !context.state.geojson ) {
                 context.commit('startRequest', null, { root: true });
                 const geojson = await PlaceService.list();
