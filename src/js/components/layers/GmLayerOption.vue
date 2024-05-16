@@ -61,11 +61,11 @@ export default {
         },
         toggleVisible(checked) {
             if (!this.radio || (this.radio && checked) ) {
-                this.$store.commit('map/setLayerVisibility', { id: this.layer.id, visible: checked })
+                this.$store.dispatch('map/setLayerVisibility', { id: this.layer.id, visible: checked })
             }
         },
         setOpacity(opacity) {
-            this.$store.commit('map/setLayerOpacity', { id: this.layer.id, opacity: opacity })
+            this.$store.dispatch('map/setLayerOpacity', { id: this.layer.id, opacity: opacity })
         }
     }
 }

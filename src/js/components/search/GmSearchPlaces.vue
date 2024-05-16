@@ -72,11 +72,11 @@ export default {
                 this.noResults = this.response.count === 0
                 // update bounds
                 if (data.count) {
-                    this.$store.commit('featureFilters/setSearchResult', data.items.map( i => i.id ))
+                    this.$store.dispatch('featureFilters/setSearchResult', data.items.map( i => i.id ))
                     this.$store.dispatch('map/setBounds', [[data.bbox.corner1.lat, data.bbox.corner1.lng], [data.bbox.corner2.lat, data.bbox.corner2.lng]]);
                 }
             } else {
-                this.$store.commit('featureFilters/resetSearch')
+                this.$store.dispatch('featureFilters/resetSearch')
             }
         },
         select: function (item) {

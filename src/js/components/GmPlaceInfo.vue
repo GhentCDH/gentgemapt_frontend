@@ -74,11 +74,8 @@ export default {
     },
     computed: {
         placeId() {
-            if (this.$store.state.map.selectFeature) {
-                return this.$store.state.map.selectFeature.properties.id;
-            } else {
-                return null
-            }
+            const selectedFeature = this.$store.getters['map/getSelectedFeature']
+            return selectedFeature?.properties?.id ?? null;
         },
         descriptionFormatted() {
             return this.place.description
