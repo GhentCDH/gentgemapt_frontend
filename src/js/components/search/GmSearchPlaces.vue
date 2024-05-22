@@ -66,7 +66,7 @@ export default {
             this.response = [];
             if (this.text.trim()) {
                 this.searching = true;
-                const data = await PlaceService.search(this.text)
+                const data = await PlaceService.search(this.text, this.$store.getters['project/getActiveProjectId']);
                 this.searching = false;
                 this.response = data;
                 this.noResults = this.response.count === 0
