@@ -101,7 +101,8 @@
     ],
     "dependencies": {
         "@types/leaflet": "^1.5.7",
-        "is-callable": "^1.2.7"
+        "is-callable": "^1.2.7",
+        "url-join": "^5.0.0"
     },
     "resolutions": {
         "mirador/**/normalize-url": "4.5.1",

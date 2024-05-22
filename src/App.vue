@@ -462,42 +462,8 @@ export default {
         }
     },
     created() {
-        // collapse info window
-        this.$store.dispatch('sidebarInfo/collapse')
-        this.$store.dispatch('sidebarViewer/collapse')
-        this.$store.dispatch('sidebarSearch/collapse')
-        this.$store.dispatch('sidebarMaps/collapse')
-        this.$store.dispatch('sidebarFilters/collapse')
-        this.$store.dispatch('sidebarTimeline/collapse')
-        this.$store.dispatch('sidebarProjects/collapse')
-
-        // parse url
-        var options = {segmentValueCharset: 'a-zA-Z0-9-_', segmentNameCharset: 'a-zA-Z0-9_-'}
-        const ProjectPlaceUrlPattern = new UrlPattern('/:project_slug(/plaats/:place_id)', options)
-        let urlSegmentValues = ProjectPlaceUrlPattern.match(window.location.pathname)
-
-        // load project data
-        this.$store.dispatch('loadProjects').then( (result) => {
-            // determine active project
-            let activeProject = this.$store.getters['project/getDefaultProject']
-            let projects = this.$store.getters['project/getProjects']
-
-            // url refers to project id?
-            if (urlSegmentValues) {
-                activeProject = projects.find( project => project.slug === urlSegmentValues.project_slug )
-            }
-
-            // set active project
-            if (activeProject) {
-                this.$store.commit('project/setActiveProject', activeProject) // commit = sync, dispatch = async
-            }
-        }).then( (result) => {
-            // load features
-            this.$store.dispatch('loadFeatures')
-            if (urlSegmentValues?.place_id) {
-                this.$store.dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
-            }
-        });
+        // init application
+        this.$store.dispatch('initApplication')
     },
 }
 </script>

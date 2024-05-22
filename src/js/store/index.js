@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 import ProjectService from '../services/ProjectService'
 import PlaceService from "../services/PlaceService";
+import UrlHelper from "../helper/UrlHelper";
 
 export default new Vuex.Store({
     modules: {
@@ -60,4 +61,62 @@ export default new Vuex.Store({
                 commit('project/setProjects', projects);
             }
         },
+        async loadFeatures({state, commit, getters}) {
+            commit('startRequest');
+            const geojson = await PlaceService.list(getters['project/getActiveProjectId']);
+            commit('endRequest');
+            commit('map/setGeoJSONData', geojson);
+        },
+        async initProject({dispatch, commit}, project) {
+            // prepare map
+            commit('map/clearSelection')
+            commit('map/clearHighlight')
+            // close sidebars
+            commit('sidebarInfo/collapse')
+            // set active project
+            commit('project/setActiveProject', project);
+            // set url
+            window.history.pushState({}, '', UrlHelper.createProjectUrl(project));
+            // load project features
+            dispatch('loadFeatures');
+        },
+        initApplication({dispatch, commit, getters}) {
+            // collapse info window
+            dispatch('sidebarInfo/collapse')
+            dispatch('sidebarViewer/collapse')
+            dispatch('sidebarSearch/collapse')
+            dispatch('sidebarMaps/collapse')
+            dispatch('sidebarFilters/collapse')
+            dispatch('sidebarTimeline/collapse')
+            dispatch('sidebarProjects/collapse')
+
+            // parse url
+            const urlSegmentValues = UrlHelper.parseUrlPath(window.location.pathname)
+
+            // load project data
+            dispatch('loadProjects').then( (result) => {
+                // determine active project
+                let activeProject = getters['project/getDefaultProject']
+                let projects = getters['project/getProjects']
+
+                // url refers to project id?
+                if (urlSegmentValues.project_slug) {
+                    activeProject = projects.find( project => project.slug === urlSegmentValues.project_slug )
+                }
+
+                // set active project
+                if (activeProject) {
+                    commit('project/setActiveProject', activeProject) // commit = sync, dispatch = async
+                }
+            }).then( (result) => {
+                // load features
+                dispatch('loadFeatures').then( (result) => {
+                    // select feature
+                    if (urlSegmentValues?.place_id) {
+                        dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
+                    }
+                });
+            });
+        }
+    }
 })

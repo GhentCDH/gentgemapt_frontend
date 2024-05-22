@@ -1,12 +1,12 @@
 import PlaceService from "../services/PlaceService";
+import UrlHelper from "../helper/UrlHelper";
 import union from 'lodash/union';
 
 import layers from '../data/layers'
 
-function setPlaceUrl(id) {
-    if ( ['number', 'string'].includes(typeof id) ) {
-        const url = '/plaats/' + id
-        window.history.pushState({}, '', url)
+function setPlaceUrl(place_id) {
+    if ( ['number', 'string'].includes(typeof place_id) ) {
+        window.history.pushState({}, '', UrlHelper.createPlaceUrl(place_id))
     }
 }
 
