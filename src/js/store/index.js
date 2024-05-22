@@ -20,6 +20,7 @@ export default new Vuex.Store({
         sidebarSearch: sidebar,
         sidebarMaps: sidebar,
         sidebarFilters: sidebar,
+        sidebarProjects: sidebar,
         sidebarTimeline: sidebar,
         sidebarInfo: sidebar,
         sidebarViewer: sidebar,

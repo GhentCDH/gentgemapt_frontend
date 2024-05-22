@@ -44,9 +44,17 @@
         </div>
       </gm-sidebar>
 
-      <gm-sidebar id="sidebar__viewer" collapsible position="left" store_namespace="sidebarViewer">
-        <gm-iiif-manifest-viewer :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
-      </gm-sidebar>
+            <gm-sidebar id="sidebar__projects" collapsible position="left" store_namespace="sidebarProjects"
+                        title="Blikken op Gent">
+                <div class="scrollable scrollable--vertical">
+                    <gm-project-panel></gm-project-panel>
+                </div>
+            </gm-sidebar>
+
+            <gm-sidebar id="sidebar__viewer" collapsible position="left" store_namespace="sidebarViewer">
+                <gm-iiif-manifest-viewer
+                    :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
+            </gm-sidebar>
 
       <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
         <gm-place-info></gm-place-info>
@@ -75,6 +83,8 @@ import GmIiifManifestViewer from "./js/components/GmIiifManifestViewer";
 import GmSearchPlaces from "./js/components/search/GmSearchPlaces";
 import GmPlaceTypeFilter from "./js/components/filters/GmPlaceTypeFilter";
 import GmLayerPanel from "./js/components/layers/GmLayerPanel";
+import GmProjectPanel from "./js/components/projects/GmProjectPanel";
+
 import UrlPattern from "url-pattern";
 import GmYearFilter from "./js/components/filters/GmYearFilter.vue";
 
@@ -95,6 +105,7 @@ export default {
         'gm-modal-root': GmModalRoot,
         GmIiifManifestViewer,
         GmLayerPanel,
+        GmProjectPanel,
     },
     data() {
         return {
@@ -456,6 +467,7 @@ export default {
         this.$store.dispatch('sidebarMaps/collapse')
         this.$store.dispatch('sidebarFilters/collapse')
         this.$store.dispatch('sidebarTimeline/collapse')
+        this.$store.dispatch('sidebarProjects/collapse')
 
         // load geojson data
         this.$store.dispatch('map/loadGeoJSONData').then( (result) => {
