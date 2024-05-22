@@ -33,7 +33,9 @@
                 </a>
             </div>
             <div class="navbar-brand-title pt-3">
-                <h1 class="text-white">{{ $store.getters['project/getActiveProject'].title }}</h1>
+                <a :href="$store.getters['project/getActiveProject'].url" target="_blank">
+                    <h1 class="text-white">{{ $store.getters['project/getActiveProject'].title }}</h1>
+                </a>
             </div>
         </b-navbar-brand>
 
