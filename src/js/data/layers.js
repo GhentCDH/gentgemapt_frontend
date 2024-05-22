@@ -343,6 +343,7 @@ const layers = [
     {
         id: 'ghent-overlay',
         type: 'geoJsonLayer',
+        isToggleable: false,
         options: {
             optionsStyle: {
                 "color": "#093549",
