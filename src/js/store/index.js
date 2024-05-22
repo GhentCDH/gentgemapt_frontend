@@ -51,8 +51,9 @@ export default new Vuex.Store({
             if (state.openRequests > 0 ) {
                 state.openRequests--
             }
-        }
+        },
     },
+    actions: {
         async loadProjects({state, commit}) {
             if (!state.project.projects.length) {
                 commit('startRequest');
