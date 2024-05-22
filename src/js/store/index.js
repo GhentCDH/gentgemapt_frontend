@@ -2,15 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import map from './map'
+import project from './project'
 import filters from './featureFilters'
 import sidebar from './sidebar'
 import iiifViewer from './iiifViewer'
 
 Vue.use(Vuex)
 
+import ProjectService from '../services/ProjectService'
+import PlaceService from "../services/PlaceService";
+
 export default new Vuex.Store({
     modules: {
         map: map,
+        project: project,
         featureFilters: filters,
         sidebarSearch: sidebar,
         sidebarMaps: sidebar,
@@ -46,4 +51,12 @@ export default new Vuex.Store({
             }
         }
     },
+        async loadProjects({state, commit}) {
+            if (!state.project.projects.length) {
+                commit('startRequest');
+                const projects = await ProjectService.list();
+                commit('endRequest');
+                commit('project/setProjects', projects);
+            }
+        },
 })
