@@ -1,48 +1,50 @@
 <template>
-  <div id="app" class="d-flex flex-column vw-100 dvh-100">
+    <div id="app" class="d-flex flex-column vw-100 dvh-100">
 
-    <gm-navbar :title="title" class="app__navbar"></gm-navbar>
+        <gm-navbar :title="title" class="app__navbar"></gm-navbar>
 
-    <div class="app__main">
-      <gm-map
-        :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
-        :layers="layers"
-        :featureClass="featureClass"
-        :featureStyle="featureStyle"
-        :debug="true"
-        :zoom="zoom"
-        :bounds="bounds"
-        :center="center"
-        :refresh-features="$store.getters['map/getFeaturesToRedraw']"
-        :maxZoom="18"
-        :visible-feature-ids="visibleFeatureIds"
-        @featureMouseEnter="onFeatureMouseEnter"
-        @featureMouseLeave="onFeatureMouseLeave"
-        @featureSelect="onFeatureSelect"
-        @updateZoom="onUpdateZoom"
-        @updateBounds="onUpdateBounds"
-        @updateCenter="onUpdateCenter"
-        @mapReady="onMapReady"
-      >
-<!--        :layers="$store.getters['map/getLayers']"-->
-        <template v-slot:controls-topleft>
-        </template>
-      </gm-map>
+        <div class="app__main">
+            <gm-map
+                :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
+                :layers="layers"
+                :featureClass="featureClass"
+                :featureStyle="featureStyle"
+                :debug="true"
+                :zoom="zoom"
+                :bounds="bounds"
+                :center="center"
+                :refresh-features="$store.getters['map/getFeaturesToRedraw']"
+                :maxZoom="18"
+                :visible-feature-ids="visibleFeatureIds"
+                @featureMouseEnter="onFeatureMouseEnter"
+                @featureMouseLeave="onFeatureMouseLeave"
+                @featureSelect="onFeatureSelect"
+                @updateZoom="onUpdateZoom"
+                @updateBounds="onUpdateBounds"
+                @updateCenter="onUpdateCenter"
+                @mapReady="onMapReady"
+            >
+                <!--        :layers="$store.getters['map/getLayers']"-->
+                <template v-slot:controls-topleft>
+                </template>
+            </gm-map>
 
-      <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
-        <gm-search-places></gm-search-places>
-      </gm-sidebar>
-      <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps" title="Kaart opties">
-        <div class="scrollable scrollable--vertical">
-          <gm-layer-panel></gm-layer-panel>
-        </div>
-      </gm-sidebar>
+            <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
+                <gm-search-places></gm-search-places>
+            </gm-sidebar>
+            <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps"
+                        title="Kaart opties">
+                <div class="scrollable scrollable--vertical">
+                    <gm-layer-panel></gm-layer-panel>
+                </div>
+            </gm-sidebar>
 
-      <gm-sidebar id="sidebar__filters" collapsible position="left" store_namespace="sidebarFilters" title="Plaatstype">
-        <div class="scrollable scrollable--vertical">
-          <gm-place-type-filter></gm-place-type-filter>
-        </div>
-      </gm-sidebar>
+            <gm-sidebar id="sidebar__filters" collapsible position="left" store_namespace="sidebarFilters"
+                        title="Plaatstype">
+                <div class="scrollable scrollable--vertical">
+                    <gm-place-type-filter></gm-place-type-filter>
+                </div>
+            </gm-sidebar>
 
             <gm-sidebar id="sidebar__projects" collapsible position="left" store_namespace="sidebarProjects"
                         title="Blikken op Gent">
@@ -56,20 +58,20 @@
                     :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
             </gm-sidebar>
 
-      <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
-        <gm-place-info></gm-place-info>
-      </gm-sidebar>
+            <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
+                <gm-place-info></gm-place-info>
+            </gm-sidebar>
 
-    </div>
+        </div>
 
         <gm-footer></gm-footer>
 
-    <gm-modal-root/>
+        <gm-modal-root/>
 
-    <div v-if="$store.getters['openRequests']" class="loading-overlay">
-      <div class="spinner"/>
+        <div v-if="$store.getters['openRequests']" class="loading-overlay">
+            <div class="spinner"/>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -469,13 +471,31 @@ export default {
         this.$store.dispatch('sidebarTimeline/collapse')
         this.$store.dispatch('sidebarProjects/collapse')
 
-        // load geojson data
-        this.$store.dispatch('map/loadGeoJSONData').then( (result) => {
-            // url refers to place id?
-            const PlaceUrlPattern = new UrlPattern('/plaats/:id')
-            const matchResult = PlaceUrlPattern.match(window.location.pathname)
-            if (matchResult) {
-                this.$store.dispatch('map/selectFeature', {id: matchResult.id})
+        // parse url
+        var options = {segmentValueCharset: 'a-zA-Z0-9-_', segmentNameCharset: 'a-zA-Z0-9_-'}
+        const ProjectPlaceUrlPattern = new UrlPattern('/:project_slug(/plaats/:place_id)', options)
+        let urlSegmentValues = ProjectPlaceUrlPattern.match(window.location.pathname)
+
+        // load project data
+        this.$store.dispatch('loadProjects').then( (result) => {
+            // determine active project
+            let activeProject = this.$store.getters['project/getDefaultProject']
+            let projects = this.$store.getters['project/getProjects']
+
+            // url refers to project id?
+            if (urlSegmentValues) {
+                activeProject = projects.find( project => project.slug === urlSegmentValues.project_slug )
+            }
+
+            // set active project
+            if (activeProject) {
+                this.$store.commit('project/setActiveProject', activeProject) // commit = sync, dispatch = async
+            }
+        }).then( (result) => {
+            // load features
+            this.$store.dispatch('loadFeatures')
+            if (urlSegmentValues?.place_id) {
+                this.$store.dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
             }
         });
     },
