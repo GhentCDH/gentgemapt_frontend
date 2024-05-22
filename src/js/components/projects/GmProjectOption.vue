@@ -7,8 +7,8 @@
         <div class="layer-option__details">
             <span class="filter-option__label" @click="setFilterStatus(!isActive)">{{ project.title }}</span>
         </div>
-        <div class="layer-option__icon" v-if="project?.url">
-            <a :href="project.url" target="_blank"><i class="bi bi-info-circle-fill"></i></a>
+        <div class="layer-option__icon" v-if="project?.homepage">
+            <a :href="project.homepage" target="_blank"><i class="bi bi-info-circle-fill"></i></a>
         </div>
     </div>
 </template>

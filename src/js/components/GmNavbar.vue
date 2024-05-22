@@ -33,7 +33,7 @@
                 </a>
             </div>
             <div class="navbar-brand-title pt-3">
-                <a :href="$store.getters['project/getActiveProject'].url" target="_blank">
+                <a :href="$store.getters['project/getActiveProject'].homepage" target="_blank">
                     <h1 class="text-white">{{ $store.getters['project/getActiveProject'].title }}</h1>
                 </a>
             </div>
