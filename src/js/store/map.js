@@ -187,13 +187,5 @@ export default {
         setLayerVisibility({commit}, payload) {
             commit('setLayerVisibility', payload)
         },
-        async loadGeoJSONData(context) {
-            if ( !context.state.geojson ) {
-                context.commit('startRequest', null, { root: true });
-                const geojson = await PlaceService.list();
-                context.commit('endRequest', null, { root: true });
-                context.commit('setGeoJSONData', geojson);
-            }
-        }
     }
 }
