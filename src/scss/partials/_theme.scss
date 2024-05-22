@@ -1,0 +1,30 @@
+.theme--blikken {
+    .bg-dark {
+        background-color: $secondary !important;
+    }
+
+    h1, .h1 {
+        color: $secondary;
+    }
+
+    .vue-slider.vue-slider--gm {
+        color: white;
+
+        &:hover {
+            .vue-slider-rail {
+                background: none;
+            }
+
+            .vue-slider-dot-handle, .vue-slider-dot-handle:hover {
+                background: $light;
+                border: 2px solid $light;
+            }
+        }
+
+        .vue-slider-dot-handle {
+            background: $light;
+            border: 2px solid $light;
+        }
+    }
+
+}

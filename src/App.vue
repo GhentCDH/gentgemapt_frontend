@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="d-flex flex-column vw-100 dvh-100">
+    <div id="app" class="d-flex flex-column vw-100 dvh-100" :class="themeClass">
 
         <gm-navbar :title="title" class="app__navbar"></gm-navbar>
 
@@ -86,11 +86,7 @@ import GmSearchPlaces from "./js/components/search/GmSearchPlaces";
 import GmPlaceTypeFilter from "./js/components/filters/GmPlaceTypeFilter";
 import GmLayerPanel from "./js/components/layers/GmLayerPanel";
 import GmProjectPanel from "./js/components/projects/GmProjectPanel";
-
-import UrlPattern from "url-pattern";
 import GmYearFilter from "./js/components/filters/GmYearFilter.vue";
-
-import isEqual from "lodash/isEqual"
 import GmFooter from "./js/components/GmFooter.vue";
 
 export default {
@@ -118,6 +114,9 @@ export default {
         }
     },
     computed: {
+        themeClass() {
+            return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--blikken'
+        },
         isSAD() {
             return process.env.IS_SAD === 'true'
         },
