@@ -32,6 +32,7 @@
             <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
                 <gm-search-places></gm-search-places>
             </gm-sidebar>
+
             <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps"
                         title="Kaart opties">
                 <div class="scrollable scrollable--vertical">
@@ -211,20 +212,20 @@ export default {
                 //         minZoom: 10
                 //     }
                 // },
-                // {
-                //     id: 'geometries',
-                //     type: 'geoJsonLayer',
-                //     zIndex: 1000,
-                //     options: {
-                //         geojson: this.geometries,
-                //         options: {
-                //             // pane: 'custom',
-                //             style: this.featureStyle,
-                //         },
-                //         maxZoom: 18,
-                //         minZoom: 10
-                //     }
-                // },
+                {
+                    id: 'geometries',
+                    type: 'geoJsonLayer',
+                    zIndex: 1000,
+                    options: {
+                        geojson: this.geometries,
+                        options: {
+                            // pane: 'custom',
+                            style: this.featureStyle,
+                        },
+                        maxZoom: 18,
+                        minZoom: 10
+                    }
+                },
                 {
                     id: 'points',
                     type: 'geoJsonLayer',
