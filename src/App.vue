@@ -47,7 +47,7 @@
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__projects" collapsible position="left" store_namespace="sidebarProjects"
-                        title="Blikken op Gent">
+                        title="Gent Gezien">
                 <div class="scrollable scrollable--vertical">
                     <gm-project-panel></gm-project-panel>
                 </div>
