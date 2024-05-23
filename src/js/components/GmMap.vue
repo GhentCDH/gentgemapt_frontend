@@ -36,6 +36,11 @@
 </template>
 
 <script>
+/*
+- markers and geometries are now in separate props, makes reactivity easier
+- marker-cluster icons are added manually from cache (a lot faster than re-creating them)
+ */
+
 import {LControl, LControlLayers, LControlAttribution, LGeoJson, LMap, LMarker, LTileLayer, LWMSTileLayer} from 'vue2-leaflet';
 import LWarpedMap from './LWarpedMap.vue';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster'
