@@ -20,7 +20,7 @@
 import VueSlider from 'vue-slider-component';
 
 export default {
-    name: 'GmLayerOption',
+    name: 'gm-layer-option',
     components: {
         VueSlider
     },

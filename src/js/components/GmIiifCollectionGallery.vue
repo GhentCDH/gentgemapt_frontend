@@ -13,7 +13,7 @@ import GmIiifManifestViewer from "./GmIiifManifestViewer";
 import {ModalBus} from "../eventbus"
 
 export default {
-    name: "GmIiifCollectionGallery",
+    name: "gm-iiif-collection-galery",
     components: {
         GmIiifManifestViewer,
         ModalBus

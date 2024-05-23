@@ -13,7 +13,7 @@
 import GmFilterOption from "./GmFilterOption";
 
 export default {
-    name: "GmPlaceTypeFilter",
+    name: "gm-place-type-filter",
     components: {
         GmFilterOption,
     },

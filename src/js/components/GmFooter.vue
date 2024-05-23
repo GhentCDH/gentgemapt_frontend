@@ -2,7 +2,7 @@
 import GmYearFilter from "./filters/GmYearFilter.vue";
 
 export default {
-    name: "GmFooter",
+    name: "gm-footer",
     components: {GmYearFilter}
 }
 </script>

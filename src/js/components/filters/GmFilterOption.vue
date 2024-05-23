@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    name: 'GmFilterOption',
+    name: 'gm-filter-option',
     data() {
         return {
         }

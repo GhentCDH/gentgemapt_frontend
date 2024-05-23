@@ -91,17 +91,17 @@ import GmYearFilter from "./js/components/filters/GmYearFilter.vue";
 import GmFooter from "./js/components/GmFooter.vue";
 
 export default {
-    name: "App",
+    name: "app",
     components: {
         GmFooter,
         GmYearFilter,
         GmPlaceTypeFilter,
-        'gm-navbar': GmNavbar,
-        'gm-sidebar': GmSidebar,
-        'gm-search-places': GmSearchPlaces,
-        'gm-place-info': GmPlaceInfo,
-        'gm-map': GmMap,
-        'gm-modal-root': GmModalRoot,
+        GmNavbar,
+        GmSidebar,
+        GmSearchPlaces,
+        GmPlaceInfo,
+        GmMap,
+        GmModalRoot,
         GmIiifManifestViewer,
         GmLayerPanel,
         GmProjectPanel,

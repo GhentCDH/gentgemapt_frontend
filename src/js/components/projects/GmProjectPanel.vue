@@ -12,7 +12,7 @@
 import GmProjectOption from "./GmProjectOption";
 
 export default {
-    name: "GmProjectPanel",
+    name: "gm-project-panel",
     components: {
         GmProjectOption
     },

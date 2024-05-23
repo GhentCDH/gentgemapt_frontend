@@ -26,7 +26,7 @@ import {mapInstanceState, mapInstanceActions} from '@urbn/vuex-helpers';
 
 
 export default {
-    name: "AppSidebar",
+    name: "gm-sidebar",
     components: {
     },
     props: {

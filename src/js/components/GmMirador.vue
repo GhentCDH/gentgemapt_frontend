@@ -7,7 +7,7 @@
 import Mirador from 'mirador/dist/es/src/index';
 
 export default {
-    name: "GmMirador",
+    name: "gm-mirador",
     props: {
         id: {
             type: String,

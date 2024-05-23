@@ -19,7 +19,7 @@
 import GmLayerOption from "./GmLayerOption";
 
 export default {
-    name: "GmLayerPanel",
+    name: "gm-layer-panel",
     components: {
         GmLayerOption
     },

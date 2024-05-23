@@ -37,7 +37,7 @@ import 'leaflet/dist/leaflet.css';
 import {WarpedMapLayer} from "@allmaps/leaflet";
 
 export default {
-    name: "AppMap",
+    name: "gm-map",
     emits: [
         'featureSelect', 'featureMouseLeave', 'featureMouseEnter',
         'updateZoom', 'updateCenter', 'updateBounds', 'mapReady'

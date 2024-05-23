@@ -43,7 +43,7 @@ import debounce from 'debounce';
 import { BInputGroup } from 'bootstrap-vue'
 
 export default {
-    name: "AppSearchPlaces",
+    name: "gm-search-places",
     components: {
         BInputGroup
     },

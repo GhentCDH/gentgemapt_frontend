@@ -62,7 +62,7 @@ import GmIiifCollectionGallery from "./GmIiifCollectionGallery";
 import GmShowMore from "./GmShowMore";
 
 export default {
-    name: "GmPlaceInfo",
+    name: "gm-place-info",
     components: {
         GmIiifCollectionGallery,
         GmShowMore

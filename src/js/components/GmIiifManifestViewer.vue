@@ -6,7 +6,7 @@
 import GmMirador from "./GmMirador";
 
 export default {
-    name: 'GmIiifManifestViewer',
+    name: 'gm-iiif-manifest-viewer',
     components: {
         GmMirador
     },

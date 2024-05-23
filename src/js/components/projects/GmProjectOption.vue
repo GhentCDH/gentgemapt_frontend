@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    name: 'GmProjectOption',
+    name: 'gm-project-option',
     data() {
         return {
         }
