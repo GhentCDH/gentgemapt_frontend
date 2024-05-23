@@ -6,13 +6,15 @@
         <div class="app__main">
             <gm-map
                 :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
-                :layers="layers"
+                :layers="this.$store.getters['map/getLayers']"
+                :markers="this.$store.getters['map/points']"
+                :geometries="this.$store.getters['map/geometries']"
                 :featureClass="featureClass"
                 :featureStyle="featureStyle"
                 :debug="true"
-                :zoom="zoom"
-                :bounds="bounds"
-                :center="center"
+                :zoom="this.$store.getters['map/getZoom']"
+                :bounds="this.$store.getters['map/getBounds']"
+                :center="this.$store.getters['map/getCenter']"
                 :refresh-features="$store.getters['map/getFeaturesToRedraw']"
                 :maxZoom="18"
                 :visible-feature-ids="visibleFeatureIds"
@@ -118,36 +120,8 @@ export default {
         themeClass() {
             return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--blikken'
         },
-        isSAD() {
-            return process.env.IS_SAD === 'true'
-        },
         highlightedIds() {
             return this.$store.getters['map/getHighlightedFeatures'].map(i => i.properties.id)
-        },
-        /* geojson */
-        geojson() {
-            return this.$store.getters['map/getGeoJSONData'];
-        },
-        points() {
-            let features = this.geojson?.features ?? []
-            const that = this
-            let ret = {
-                type: 'FeatureCollection',
-                features: features.filter(function (item) {
-                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat')
-                        // && that.visibleFeatureIds.has(item.properties.id);
-                })
-            };
-            return ret
-        },
-        geometries() {
-            let features = this.geojson?.features ?? []
-            return {
-                type: 'FeatureCollection',
-                features: features.filter(function (item) {
-                    return item.geometry.type !== 'Point';
-                })
-            };
         },
         sidebarInfoCollapsed() {
             return this.$store.getters["sidebarInfo/collapsed"]
@@ -155,111 +129,10 @@ export default {
         sidebarSearchCollapsed() {
             return this.$store.getters["sidebarSearch/collapsed"]
         },
-        layers() {
-            const extras = [
-                {
-                    id: 'gentgemapt-v1',
-                    label: 'Gent Gemapt basiskaart',
-                    type: 'tileLayer',
-                    options: {
-                        url: 'https://maps.ghentcdh.ugent.be/GentGemapt/v1/{z}/{x}/{y}.png',
-                        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
-                        maxZoom: 18,
-                        visible: true,
-                        opacity: 1,
-                        layerType: 'base',
-                        zIndex: 10,
-                    }
-                },
-                {
-                    id: 'google-satellite',
-                    type: 'tileLayer',
-                    label: 'Google satelliet',
-                    options: {
-                        url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-                        attribution: '© Google',
-                        maxZoom: 18,
-                        visible: false,
-                        opacity: 1,
-                        layerType: 'base',
-                        zIndex: 10,
-                    }
-                },
-
-                // {
-                //     id: 'geojson',
-                //     type: 'geoJsonLayer',
-                //     zIndex: 1000,
-                //     options: {
-                //         geojson: this.geojson,
-                //         options: {
-                //             // pane: 'custom',
-                //             style: this.featureStyle,
-                //         }
-                //     }
-                // },
-
-                // {
-                //     id: 'allmaps',
-                //     type: '_warpedMapLayer',
-                //     options: {
-                //         url: 'https://annotations.allmaps.org/images/0d17b31e4b32aa8a',
-                //         options: {
-                //             opacity: 1,
-                //             visible: true
-                //         },
-                //         maxZoom: 18,
-                //         minZoom: 10
-                //     }
-                // },
-                {
-                    id: 'geometries',
-                    type: 'geoJsonLayer',
-                    zIndex: 1000,
-                    options: {
-                        geojson: this.geometries,
-                        options: {
-                            // pane: 'custom',
-                            style: this.featureStyle,
-                        },
-                        maxZoom: 18,
-                        minZoom: 10
-                    }
-                },
-                {
-                    id: 'points',
-                    type: 'geoJsonLayer',
-                    zIndex: 1000,
-                    options: {
-                        geojson: this.points,
-                        clusterMarkers: true,
-                        options: {
-                            // pane: 'custom',
-                            style: this.featureStyle,
-                        },
-                        maxZoom: 18,
-                        minZoom: 10
-                    }
-                },
-            ]
-            return extras
-            // return [...this.$store.getters["map/getLayers"], ...extras]
-        },
-        center() {
-            return this.$store.getters['map/getCenter'];
-        },
-        zoom() {
-            return this.$store.getters['map/getZoom'];
-        },
-        bounds() {
-            return this.$store.getters['map/getBounds'];
-        },
-        visibleFeatures() {
-
-        },
         visibleFeatureIds() {
-            if (!this.geojson) return new Set();
-            const ids = this.geojson.features.filter( feature => this.featureIsVisible(feature) ).map( feature => feature.properties.id )
+            const geojson = this.$store.getters['map/getPlaces']
+            if (!geojson) return new Set();
+            const ids = geojson.features.filter( feature => this.featureIsVisible(feature) ).map( feature => feature.properties.id )
             return (new Set(ids))
         },
         activePlaceTypeIds() {
@@ -280,16 +153,6 @@ export default {
                 this.$store.dispatch('featureFilters/resetSearch')
             }
         },
-        // visibleFeatureIds(current, previous) {
-        //     if (previous === null) {
-        //         return
-        //     }
-        //     const left = Array.from(current).filter(id => !previous.has(id))
-        //     const right = Array.from(previous).filter(id => !current.has(id))
-        //
-        //     this.$store.dispatch('map/redrawFeatures', [...left, ...right])
-        // },
-
     },
     methods: {
         featureIsVisible(feature) {
@@ -363,7 +226,7 @@ export default {
             const isHighlighted = status.highlighted;
             const isSearched = status.searched;
             const isPolygon = ['Polygon', 'MultiPolygon'].includes(feature.geometry.type);
-
+            const zoom = this.$store.getters['map/getZoom']
 
             const configs = {
                 default: {
@@ -372,9 +235,9 @@ export default {
                     // color: 'rgb(0 128 182)',
                     color: 'rgb(0 0 0)',
                     opacity: 0.05,
-                    weight: isPolygon ? 2 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
+                    weight: isPolygon ? 2 : zoom < 17 ? 4 : Math.ceil(2 ^ (zoom - 16) * 4 ),
                     className: this.featureClass(feature), //this.getGeometryClasses(feature).join(' '),
-                    stroke: isPolygon ? false : this.zoom >= 15
+                    stroke: isPolygon ? false : zoom >= 15
                 },
                 searched: {
                     fillOpacity: 0.2,
@@ -384,7 +247,7 @@ export default {
                     color: 'rgb(3 69 97)',
                     opacity: 0.4,
                     stroke: !isPolygon,
-                    weight: isPolygon ? 1.5 : this.zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
+                    weight: isPolygon ? 1.5 : zoom < 17 ? 4 : Math.ceil(2 ^ (this.zoom - 16) * 4 ),
                 },
                 highlighted: {
                     fillColor: 'rgb(3 69 97)',
@@ -424,9 +287,7 @@ export default {
             });
         },
 
-        // focusedFeature() {
-        //     return this.$store.getters['map/getFocusedFeature']
-        // }
+        /** map events **/
         onUpdateZoom(payload) {
             this.$store.dispatch('map/setZoom', payload)
         },

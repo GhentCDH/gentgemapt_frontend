@@ -7,14 +7,26 @@
                @ready="onMapReady">
             <v-marker-cluster :options="defaultMarkerClusterOptions" ref="markerCluster">
             </v-marker-cluster>
-            <l-tile-layer v-for="layer in tileLayers" :key="layer.id"
+            <l-tile-layer v-for="layer in tileLayers"
+                          :key="'tile-layer-' + layer.id"
                           v-bind="layer.options"
             />
-            <l-w-m-s-tile-layer v-for="layer in wmsLayers" :key="layer.id" v-bind="layer.options"></l-w-m-s-tile-layer>
-            <l-geo-json :ref="layer.id" v-for="layer in geojsonLayers" :key="layer.id"
-                        v-bind="layer.options"></l-geo-json>
-            <l-warped-map :ref="layer.id" v-for="layer in warpedMapLayers" :key="layer.id"
-                        v-bind="layer.options"></l-warped-map>
+            <l-w-m-s-tile-layer v-for="layer in wmsLayers"
+                                :key="'wms-layer-' + layer.id"
+                                v-bind="layer.options"
+            ></l-w-m-s-tile-layer>
+            <l-geo-json :ref="layer.id" v-for="layer in geojsonLayers"
+                        :key="'geojson-layer-' + layer.id"
+                        v-bind="layer.options"
+            ></l-geo-json>
+            <l-geo-json ref="gg_map_geometries"
+                        :geojson="geometries"
+                        :options="defaultGeoJsonOptions"
+                        :zIndex="10000"
+            ></l-geo-json>
+            <l-warped-map :ref="layer.id" v-for="layer in warpedMapLayers"
+                          :key="layer.id"
+                          v-bind="layer.options"></l-warped-map>
             <l-control class="map__control map__control--topleft" position="topleft">
                 <slot name="controls-topleft"></slot>
             </l-control>
@@ -66,6 +78,14 @@ export default {
                 return []
             }
         },
+        markers: {
+            type: Object,
+            default: null
+        },
+        geometries: {
+            type: Object,
+            default: null
+        },
         bounds: {
             type: Array|Object,
             default: null
@@ -109,7 +129,12 @@ export default {
         featureClass: {
             type: String|Function,
             required: false,
-            default: 'feature'
+            default: 'feature',
+        },
+        featureStyle: {
+            type: String|Function,
+            required: false,
+            default: null,
         },
         clusterClass: {
             type: String|Function,
@@ -144,7 +169,9 @@ export default {
         defaultGeoJsonOptions() {
             return {
                 onEachFeature: this.onEachFeature,
-                pointToLayer: this.pointToLayer
+                pointToLayer: this.pointToLayer,
+                style: this.featureStyle,
+                visible: true
             }
         },
         defaultMarkerClusterOptions() {
@@ -156,51 +183,74 @@ export default {
         },
         /* layers */
         wmsLayers() {
+            this.debug && console.log("* wmsLayers refreshed")
             return this.layers.filter( layer => layer.type === "wmsLayer" )
         },
         tileLayers() {
+            this.debug && console.log("* tileLayers refreshed")
             return this.layers.filter( layer => layer.type === "tileLayer" )
         },
         geojsonLayers() {
-            const that = this
-            return this.layers.filter( layer => layer.type === "geoJsonLayer" && !layer?.options?.clusterMarkers ).map( function(layer) {
-                layer.options.options = { ...layer.options.options, ...that.defaultGeoJsonOptions}
-                return layer
+            this.debug && console.log("* geojsonLayers refreshed")
+            return this.layers.filter( layer => layer.type === "geoJsonLayer" && !layer?.options?.clusterMarkers )
+                .map( layer => {
+                const clonedLayer = {...layer}
+                clonedLayer.options.options = {
+                    ...this.defaultGeoJsonOptions,
+                    ...layer.options.options
+                }
+                return clonedLayer
             })
         },
         geojsonClusterLayers() {
-            const that = this
             this.debug && console.log("* geojsonClusterLayers refreshed")
-            return this.layers.filter( layer => layer.type === "geoJsonLayer" && layer?.options?.clusterMarkers ).map( function(layer) {
-                layer.options.options = { ...layer.options.options, ...that.defaultGeoJsonOptions}
-                return layer
+            return this.layers.filter( layer => layer.type === "geoJsonLayer" && layer?.options?.clusterMarkers )
+                .map( layer => {
+                const clonedLayer = {...layer}
+                clonedLayer.options.options = {
+                    ...this.defaultGeoJsonOptions,
+                    ...layer.options.options }
+                return clonedLayer
             })
         },
         warpedMapLayers() {
+            this.debug && console.log("* warpedMapLayers refreshed")
             return this.layers.filter( layer => layer.type === "warpedMapLayer" )
         },
     },
     watch: {
         refreshFeatures(current, previous) {
             let placeIds = [...current, ...previous]
-            this.debug && console.log("* refreshFeatures", placeIds)
+            this.debug && console.log("* watch: refreshFeatures", placeIds)
             this.updateFeatureStyles(placeIds)
         },
-        geojsonClusterLayers(layers) {
+        // geojsonClusterLayers(layers) {
+        //     this.debug && console.log("* watch: geojsonClusterLayers", layers)
+        //     this.clusterMarkers = {}
+        //     if (!layers?.length) {
+        //         return
+        //     }
+        //     // calculate add cluster makers and cache them
+        //     for (const layer of layers) {
+        //         const geojson = new L.geoJSON(layer.options.geojson, { ...layer.options.options, ...this.geoJsonDefaults})
+        //         geojson.getLayers().forEach( layer => {this.clusterMarkers[layer.feature.properties.id] = layer})
+        //     }
+        //
+        //     // update map
+        //     this.updateClusterMarkers()
+        // },
+        markers(current, previous) {
+            this.debug && console.log("* watch: points", current)
             this.clusterMarkers = {}
-            if (!layers?.length) {
-                return
-            }
-            // calculate add cluster makers and cache them
-            for (const layer of layers) {
-                const geojson = new L.geoJSON(layer.options.geojson, layer.options.options)
-                geojson.getLayers().forEach( layer => {this.clusterMarkers[layer.feature.properties.id] = layer})
-            }
+
+            const geojson = new L.geoJSON(current, this.defaultGeoJsonOptions)
+            geojson.getLayers().forEach( layer => {this.clusterMarkers[layer.feature.properties.id] = layer})
 
             // update map
             this.updateClusterMarkers()
         },
         visibleFeatureIds(current, previous) {
+            this.debug && console.log("* watch: visibleFeatureIds", current)
             if (previous === null) {
                 return
             }
@@ -304,6 +354,7 @@ export default {
             })
         },
         updateClusterMarkers() {
+            this.debug && console.log('* method: updateClusterMarkers')
             const clusterLayer = this.$refs.markerCluster.mapObject
             const visibleClusterMakers = []
             for ( const id of this.visibleFeatureIds ) {
