@@ -27,17 +27,15 @@ export default {
         focusFeature: null,
         highlightedFeatures: [],
         geojson: null,
-        layers: layers,
-        layerOptions: {
-            'mapbox-v1' : {
-                visible: true,
-            }
-        },
+        layers: [],
+        defaultLayers: [],
         featuresToRedraw: []
     }),
     getters: {
-        getGeoJSONData: state => state.geojson,
-        getLayers: state => state.layers,
+        getPlaces: state => {
+            return state.geojson
+        },
+        getLayers: (state, getters) => state.layers,
         getFeatureById: state => id => {
             return state.geojson.features.find(feature => feature.properties.id === id);
         },
@@ -53,7 +51,27 @@ export default {
         getSelectedFeature: state => state.selectedFeature,
         getFocusedFeature: state => state.focusFeature,
         getHighlightedFeatures: state => state.selectedFeature ? union(state.highlightedFeatures, [state.selectedFeature]) : state.highlightedFeatures,
-        getFeaturesToRedraw: state => state.featuresToRedraw
+        getFeaturesToRedraw: state => state.featuresToRedraw,
+        points(state) {
+            let features = state.geojson?.features ?? []
+            let ret = {
+                type: 'FeatureCollection',
+                features: features.filter(function (item) {
+                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat')
+                    // && that.visibleFeatureIds.has(item.properties.id);
+                })
+            };
+            return ret
+        },
+        geometries(state) {
+            let features = state.geojson?.features ?? []
+            return {
+                type: 'FeatureCollection',
+                features: features.filter(function (item) {
+                    return item.geometry.type !== 'Point';
+                })
+            };
+        },
     },
     mutations: {
         setCenter(state, payload) {
@@ -94,8 +112,11 @@ export default {
             // }
             state.highlightedFeatures = []
         },
-        setGeoJSONData(state, payload) {
+        setPlaces(state, payload) {
             state.geojson = payload
+        },
+        setLayers(state, layers) {
+            state.layers = layers
         },
         setLayerVisibility(state, payload) {
             if ( payload?.id && payload?.visible !== undefined ) {
@@ -186,6 +207,9 @@ export default {
         },
         setLayerVisibility({commit}, payload) {
             commit('setLayerVisibility', payload)
+        },
+        setLayers({commit}, layers) {
+            commit('setLayers', layers)
         },
     }
 }

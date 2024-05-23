@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 import ProjectService from '../services/ProjectService'
 import PlaceService from "../services/PlaceService";
+import MapService from "../services/MapService";
 import UrlHelper from "../helper/UrlHelper";
 
 export default new Vuex.Store({
@@ -62,11 +63,17 @@ export default new Vuex.Store({
                 commit('project/setProjects', projects);
             }
         },
-        async loadFeatures({state, commit, getters}) {
+        async loadLayers({commit, getters}){
+            commit('startRequest', null, { root: true });
+            const layers = await MapService.list(getters['project/getActiveProjectId']);
+            commit('endRequest', null, { root: true });
+            commit('map/setLayers', layers);
+        },
+        async loadPlaces({commit, getters}) {
             commit('startRequest');
             const geojson = await PlaceService.list(getters['project/getActiveProjectId']);
             commit('endRequest');
-            commit('map/setGeoJSONData', geojson);
+            commit('map/setPlaces', geojson);
         },
         async initProject({dispatch, commit}, project) {
             // prepare map
@@ -78,8 +85,10 @@ export default new Vuex.Store({
             commit('project/setActiveProject', project);
             // set url
             window.history.pushState({}, '', UrlHelper.createProjectUrl(project));
+            // load project layers
+            dispatch('loadLayers')
             // load project features
-            dispatch('loadFeatures');
+            dispatch('loadPlaces');
         },
         initApplication({dispatch, commit, getters}) {
             // collapse info window
@@ -110,8 +119,10 @@ export default new Vuex.Store({
                     commit('project/setActiveProject', activeProject) // commit = sync, dispatch = async
                 }
             }).then( (result) => {
-                // load features
-                dispatch('loadFeatures').then( (result) => {
+                // load project layers
+                dispatch('loadLayers')
+                // load project places
+                dispatch('loadPlaces').then( (result) => {
                     // select feature
                     if (urlSegmentValues?.place_id) {
                         dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
