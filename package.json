@@ -101,6 +101,7 @@
     ],
     "dependencies": {
         "@types/leaflet": "^1.5.7",
+        "date-format": "^4.0.14",
         "is-callable": "^1.2.7",
         "url-join": "^5.0.0"
     },
