@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import map from './map'
+import poi from './poi'
 import project from './project'
 import filters from './featureFilters'
 import sidebar from './sidebar'
@@ -17,6 +18,7 @@ import UrlHelper from "../helper/UrlHelper";
 export default new Vuex.Store({
     modules: {
         map: map,
+        poi: poi,
         project: project,
         featureFilters: filters,
         sidebarSearch: sidebar,
@@ -75,7 +77,21 @@ export default new Vuex.Store({
             commit('endRequest');
             commit('map/setPlaces', geojson);
         },
+        async loadPlace({commit}, placeId) {
+            commit('startRequest');
+            const place = await PlaceService.get(placeId);
+            commit('endRequest');
+            commit('poi/setPlace', place);
+        },
+        async selectPlace({dispatch, commit}, placeId) {
+            window.history.pushState({}, '', UrlHelper.createPlaceUrl(placeId))
+            dispatch('map/selectFeature', {id: placeId})
+            dispatch('loadPlace', placeId)
+            dispatch('sidebarInfo/collapse', false)
+        },
         async initProject({dispatch, commit}, project) {
+            // clear place
+            dispatch('poi/clearPlace')
             // prepare map
             commit('map/clearSelection')
             commit('map/clearHighlight')
@@ -123,9 +139,11 @@ export default new Vuex.Store({
                 dispatch('loadLayers')
                 // load project places
                 dispatch('loadPlaces').then( (result) => {
-                    // select feature
                     if (urlSegmentValues?.place_id) {
+                        // select place on map
                         dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
+                        // load place data
+                        // dispatch('loadPlace', urlSegmentValues.place_id)
                     }
                 });
             });

@@ -1,18 +1,11 @@
 import PlaceService from "../services/PlaceService";
-import UrlHelper from "../helper/UrlHelper";
 import union from 'lodash/union';
 
 import layers from '../data/layers'
 
-function setPlaceUrl(place_id) {
-    if ( ['number', 'string'].includes(typeof place_id) ) {
-        window.history.pushState({}, '', UrlHelper.createPlaceUrl(place_id))
-    }
-}
 
-function resetPlaceUrl() {
-    window.history.pushState({}, '', '/')
-}
+
+
 
 export default {
     namespaced: true,
@@ -166,7 +159,6 @@ export default {
             const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
             if ( feature ) {
                 commit('selectFeature', feature);
-                setPlaceUrl(feature.properties.id)
             }
         },
         focusFeature({ commit, dispatch, getters }, payload) {

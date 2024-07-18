@@ -62,9 +62,8 @@
             </gm-sidebar>
 
             <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
-                <gm-place-info></gm-place-info>
+                <gm-place-info :place="$store.getters['poi/getPlace']" v-if="$store.getters['poi/getPlace']"></gm-place-info>
             </gm-sidebar>
-
         </div>
 
         <gm-footer></gm-footer>
@@ -304,8 +303,7 @@ export default {
             this.$store.dispatch('map/unhighlightFeature', {feature: feature})
         },
         onFeatureSelect({feature, layer, map}, event) {
-            this.$store.dispatch('map/selectFeature', {feature: feature})
-            this.$store.dispatch('sidebarInfo/collapse', false)
+            this.$store.dispatch('selectPlace', feature.properties.id)
 
             // to make sure the marker/geometry is visible after the sidebar opens,
             // we pan the map to the left by some amount

@@ -44,9 +44,9 @@
                 </ul>
             </div>
 
-            <div class="referencing">
+            <div class="referencing" v-if="citation">
                 <h2>Hoe verwijs je naar dit artikel?</h2>
-                <p>“{{ place.title }}.” Gent Gemapt. Geconsulteerd op {{ today }}. {{ permalink }}.</p>
+                <p>{{ citation }}</p>
                 <p class="smaller">
                     Rechtenstatus: <a href="https://creativecommons.org/licenses/by-sa/2.0/be/deed.nl" target="_blank">CCBYSA</a>
                 </p>
@@ -56,10 +56,10 @@
 </template>
 
 <script>
-import PlaceService from "../services/PlaceService";
-
 import GmIiifCollectionGallery from "./GmIiifCollectionGallery";
 import GmShowMore from "./GmShowMore";
+
+import dateFormat from 'date-format'
 
 export default {
     name: "gm-place-info",
@@ -69,13 +69,17 @@ export default {
     },
     data() {
         return {
-            place: null
+        }
+    },
+    props: {
+        place: {
+            type: Object,
+            default: () => null
         }
     },
     computed: {
         placeId() {
-            const selectedFeature = this.$store.getters['map/getSelectedFeature']
-            return selectedFeature?.properties?.id ?? null;
+            return this.place?.id
         },
         descriptionFormatted() {
             return this.place.description
@@ -89,25 +93,58 @@ export default {
                 startYear: this.formatVagueYearObject(this.place?.startDate),
                 endYear: this.formatVagueYearObject(this.place?.endDate),
             }
-
-            // console.log([this.place?.startDate, this.place?.endDate, result])
-
             return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
         },
         permalink() {
+            // todo: use store?
             return process.env.URL_MAP + '/plaats/' + this.placeId
         },
         today() {
             const today = new Date()
             return today.getDate()  + "/" + (today.getMonth()+1) + "/" + today.getFullYear()
+        },
+        changed() {
+            return this.place?.changed ? dateFormat.asString('dd/MM/yyyy', new Date(this.place.changed.date)) : null
+        },
+        citation() {
+            let citationTemplate = this.$store.getters['project/getActiveProject']?.citationTemplate;
+            if ( !citationTemplate )
+                return null
+
+            // replace placeholders
+            const sr = new Map();
+            sr.set('titel', this.place.title)
+            sr.set('TITEL', this.place.title.toUpperCase())
+            sr.set('auteur', this.place.creators.join(', '))
+            sr.set('AUTEUR', this.place.creators.join(', ').toUpperCase())
+            sr.set('permalink', this.permalink ?? '')
+            sr.set('datum_vandaag', this.today ?? '')
+            sr.set('datum_gewijzigd', this.changed ?? '')
+
+
+            // search conditional parts
+            const srConditional = new Map();
+            const regex = /\|\?\(([a-zA-Z_-]+)\)([^|]*)\|([^|]*)\|/gm;
+            let m;
+            while ((m = regex.exec(citationTemplate)) !== null) {
+                console.log(m)
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+                srConditional.set(m[0], sr.get(m[1]) ? m[2] : m[3])
+            }
+
+            srConditional.forEach((value, key) => {
+                citationTemplate = citationTemplate.replace(key, value)
+            })
+            sr.forEach((value, key) => {
+                citationTemplate = citationTemplate.replace('{{' + key + '}}', value)
+            })
+
+            return citationTemplate
         }
     },
     methods: {
-        async loadPlaceData(id) {
-            this.place = null;
-            const place = await PlaceService.get(id)
-            this.place = place;
-        },
         parseVagueYearExpression(year_expression) {
             const dateRangeRe = /P([0-9]{1,4})-([0-9]{1,4})([~?%]?)/i;
             const dateSingleRe = /([0-9]{1,4})([~?%]?)/i;
@@ -185,11 +222,5 @@ export default {
 
         }
     },
-    watch: {
-        async placeId(newId, oldId) {
-            await this.loadPlaceData(newId)
-            this.$store.dispatch('sidebarInfo/collapse', false)
-        }
-    }
 }
 </script>
