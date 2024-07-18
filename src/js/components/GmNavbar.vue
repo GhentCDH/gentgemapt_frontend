@@ -20,7 +20,7 @@
             <div class="navbar-brand-border-left"></div>
             <div class="navbar-brand-image" >
                 <a :href="homepage" target="_blank" v-if="$store.getters['project/isDefaultProject']">
-                    <img :src="require('@/images/logo-white.svg')" alt="Gent Gemapt">
+                    <img :src="require('@/images/gentgemapt-logo-white.svg')" alt="Gent Gemapt">
                 </a>
             </div>
             <div class="navbar-brand-border-right"></div>
@@ -29,7 +29,7 @@
         <b-navbar-brand class="bg-dark d-flex px-3" v-if="!$store.getters['project/isDefaultProject']">
             <div class="navbar-brand-image mr-5 pt-3 pb-2" >
                 <a :href="homepage" target="_blank">
-                    <img :src="require('@/images/logo-white.svg')" alt="Gent Gemapt">
+                    <img :src="require('@/images/gentgezien-logo-white.svg')" alt="Gent Gemapt">
                 </a>
             </div>
             <div class="navbar-brand-title pt-3">
