@@ -117,7 +117,7 @@ export default {
     },
     computed: {
         themeClass() {
-            return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--blikken'
+            return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--gentgezien'
         },
         highlightedIds() {
             return this.$store.getters['map/getHighlightedFeatures'].map(i => i.properties.id)
