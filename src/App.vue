@@ -297,12 +297,20 @@ export default {
             this.$store.dispatch('map/setBounds', payload)
         },
         onFeatureMouseEnter({feature, layer}) {
-            this.$store.dispatch('map/highlightFeature', {feature: feature})
+            if (['place', 'story'].includes(feature?.properties?.type)) {
+                this.$store.dispatch('map/highlightFeature', {feature: feature})
+            }
         },
         onFeatureMouseLeave({feature, layer}) {
-            this.$store.dispatch('map/unhighlightFeature', {feature: feature})
+            if (['place', 'story'].includes(feature?.properties?.type)) {
+                this.$store.dispatch('map/unhighlightFeature', {feature: feature})
+            }
         },
         onFeatureSelect({feature, layer, map}, event) {
+            if (!['place', 'story'].includes(feature?.properties?.type)) {
+                return
+            }
+
             this.$store.dispatch('selectPlace', feature.properties.id)
 
             // to make sure the marker/geometry is visible after the sidebar opens,
