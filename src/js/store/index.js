@@ -78,9 +78,9 @@ export default new Vuex.Store({
             commit('map/setPlaces', geojson);
         },
         async loadPlace({commit}, placeId) {
-            commit('startRequest');
+            // commit('startRequest');
             const place = await PlaceService.get(placeId);
-            commit('endRequest');
+            // commit('endRequest');
             commit('poi/setPlace', place);
         },
         async selectPlace({dispatch, commit}, placeId) {
