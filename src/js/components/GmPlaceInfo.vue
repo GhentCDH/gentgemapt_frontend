@@ -60,6 +60,7 @@ import GmIiifCollectionGallery from "./GmIiifCollectionGallery";
 import GmShowMore from "./GmShowMore";
 
 import dateFormat from 'date-format'
+import UrlHelper from "../helper/UrlHelper";
 
 export default {
     name: "gm-place-info",
@@ -96,8 +97,9 @@ export default {
             return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
         },
         permalink() {
-            // todo: use store?
-            return process.env.URL_MAP + '/plaats/' + this.placeId
+            // todo: use url helper!
+            return UrlHelper.getMapUrl() + UrlHelper.createPlaceUrl(this.placeId)
+            // return process.env.URL_MAP + '/plaats/' + this.placeId
         },
         today() {
             const today = new Date()
@@ -127,7 +129,6 @@ export default {
             const regex = /\|\?\(([a-zA-Z_-]+)\)([^|]*)\|([^|]*)\|/gm;
             let m;
             while ((m = regex.exec(citationTemplate)) !== null) {
-                console.log(m)
                 if (m.index === regex.lastIndex) {
                     regex.lastIndex++;
                 }

@@ -3,14 +3,23 @@ import store from '../store'
 import UrlPattern from "url-pattern";
 
 export default {
+    getApiUrl() {
+        return process.env.URL_API
+    },
+    getMapUrl() {
+        return process.env.URL_MAP
+    },
+    getInfositeUrl() {
+        return process.env.URL_INFOSITE
+    },
     createProjectUrl(project) {
         return '/' + (store.getters['project/getDefaultProject'].id === project.id ? '' : project.slug)
     },
-    createPlaceUrl(place_id, project = null) {
+    createPlaceUrl(placeId, project = null, absolute = false) {
         project = project ?? store.getters['project/getActiveProject']
-        return project ? urlJoin(this.createProjectUrl(project), 'plaats', place_id) : urlJoin('plaats', place_id)
+        return project ? urlJoin(this.createProjectUrl(project), 'plaats', placeId) : urlJoin('plaats', placeId)
     },
-    parseUrlPath(url_path) {
+    parseUrlPath(urlPath) {
         const urlPatterns = [
             '/:project_slug(/plaats/:place_id)',
             '/plaats/:place_id'
@@ -19,7 +28,7 @@ export default {
         const patternOptions = {segmentValueCharset: 'a-zA-Z0-9-_', segmentNameCharset: 'a-zA-Z0-9_-'}
 
         for (let pattern of urlPatterns) {
-            const urlSegmentValues = (new UrlPattern(pattern, patternOptions)).match(url_path)
+            const urlSegmentValues = (new UrlPattern(pattern, patternOptions)).match(urlPath)
             if (urlSegmentValues) {
                 return { ...defaultReturn, ...urlSegmentValues }
             }
