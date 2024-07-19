@@ -97,9 +97,7 @@ export default {
             return result?.startYear ? result.startYear + ( result?.endYear ? ' – ' + result.endYear : ' – heden' ) : null
         },
         permalink() {
-            // todo: use url helper!
             return UrlHelper.getMapUrl() + UrlHelper.createPlaceUrl(this.placeId)
-            // return process.env.URL_MAP + '/plaats/' + this.placeId
         },
         today() {
             const today = new Date()
