@@ -225,7 +225,7 @@ export default {
     },
     watch: {
         refreshFeatures(current, previous) {
-            let placeIds = [...current, ...previous]
+            let placeIds = Array.from(new Set([...current, ...previous]))
             this.debug && console.log("* watch: refreshFeatures", placeIds)
             this.updateFeatureStyles(placeIds)
         },
