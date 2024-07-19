@@ -347,8 +347,9 @@ const layers = [
         options: {
             optionsStyle: {
                 "color": "#093549",
+                "strokeWidth": 2,
                 "weight": 1,
-                "fillOpacity": .6
+                "fillOpacity": 0
             },
             geojson: ghent,
             options: {
