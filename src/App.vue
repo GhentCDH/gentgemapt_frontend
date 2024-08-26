@@ -11,7 +11,7 @@
                 :geometries="this.$store.getters['map/geometries']"
                 :featureClass="featureClass"
                 :featureStyle="featureStyle"
-                :debug="true"
+                :debug="this.$store.state.debug"
                 :zoom="this.$store.getters['map/getZoom']"
                 :bounds="this.$store.getters['map/getBounds']"
                 :center="this.$store.getters['map/getCenter']"

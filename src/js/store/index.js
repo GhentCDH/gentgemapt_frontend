@@ -32,7 +32,8 @@ export default new Vuex.Store({
     },
     state: () => ({
         focusedSidebar: [],
-        openRequests: 0
+        openRequests: 0,
+        debug: !!process.env?.DEBUG,
     }),
     getters: {
         focusedSidebar: (state) => state.focusedSidebar[0] ?? null,
