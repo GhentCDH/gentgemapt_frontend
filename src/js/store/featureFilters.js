@@ -58,7 +58,7 @@ export default {
             commit('resetSearch')
         },
         setSearchResult({commit}, ids) {
-            commit('search', ids)
+            commit('setSearchResult', ids)
         },
         setYear({commit}, year) {
             commit('setYear', year)
