@@ -28,8 +28,8 @@
 
         <b-navbar-brand class="bg-dark d-flex px-3" v-if="!$store.getters['project/isDefaultProject']">
             <div class="navbar-brand-image mr-5 pt-3 pb-2" >
-                <a :href="homepage" target="_blank">
-                    <img :src="require('@/images/gentgezien-logo-white.svg')" alt="Gent Gemapt">
+                <a :href="gentgezien" target="_blank">
+                    <img :src="require('@/images/gentgezien-logo-white.svg')" alt="Gent Gezien">
                 </a>
             </div>
             <div class="navbar-brand-title pt-3">
@@ -65,6 +65,9 @@ export default {
     computed: {
         homepage() {
             return process.env.URL_INFOSITE
+        },
+        gentgezien() {
+            return process.env.URL_INFOSITE + '/gent-gezien'
         }
     },
     methods: {
