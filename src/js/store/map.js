@@ -50,7 +50,7 @@ export default {
             let ret = {
                 type: 'FeatureCollection',
                 features: features.filter(function (item) {
-                    return item.geometry.type === 'Point' && !item.properties.placeType.includes('straat')
+                    return item.geometry.type === 'Point'//  && !item.properties.placeType.includes('straat')
                     // && that.visibleFeatureIds.has(item.properties.id);
                 })
             };
