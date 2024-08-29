@@ -231,12 +231,13 @@ export default {
                 default: {
                     fillColor: 'rgb(0 0 0)',
                     fillOpacity: 0,
-                    // color: 'rgb(0 128 182)',
                     color: 'rgb(0 0 0)',
-                    opacity: 0.05,
+                    // opacity: 0.1,
+                    opacity: 0.05 + (zoom - 14) * 0.05,
                     weight: isPolygon ? 2 : zoom < 17 ? 4 : Math.ceil(2 ^ (zoom - 16) * 4 ),
                     className: this.featureClass(feature), //this.getGeometryClasses(feature).join(' '),
-                    stroke: isPolygon ? false : zoom >= 15
+                    // stroke: isPolygon ? false : zoom >= 15
+                    stroke: true,
                 },
                 searched: {
                     fillOpacity: 0.2,
