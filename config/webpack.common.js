@@ -2,8 +2,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const {VueLoaderPlugin} = require("vue-loader");
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const PrettierPlugin = require('prettier-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
 const paths = require('./paths')
 const webpack = require('webpack');
 const path = require('path');
@@ -54,18 +52,6 @@ module.exports = {
         new webpack.IgnorePlugin({
             resourceRegExp: /@blueprintjs\/(core|icons)/, // ignore optional UI framework dependencies
         }),
-
-        // ESLint configuration
-        /*
-        new ESLintPlugin({
-          files: ['.', 'src', 'config'],
-          formatter: 'table',
-        }),
-        */
-        // Prettier configuration
-        //new PrettierPlugin(),
-
-
     ],
 
     resolve: {
