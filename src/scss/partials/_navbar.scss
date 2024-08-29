@@ -19,6 +19,10 @@
         .navbar-brand-image img {
             height: 40px;
         }
+
+        a:hover {
+            text-decoration: none;
+        }
     }
 
     .navbar-brand.navbar-brand--default {
@@ -62,6 +66,7 @@
     }
 
     .nav-item {
+        cursor: pointer;
         img {
             height: 40px;
             filter: invert(100%);
