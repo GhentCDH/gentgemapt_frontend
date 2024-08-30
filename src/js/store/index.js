@@ -84,8 +84,10 @@ export default new Vuex.Store({
             // commit('endRequest');
             commit('poi/setPlace', place);
         },
-        async selectPlace({dispatch, commit}, placeId) {
-            window.history.pushState({}, '', UrlHelper.createPlaceUrl(placeId))
+        async selectPlace({dispatch, commit}, placeId, pushState = true) {
+            if (pushState) {
+                window.history.pushState({}, '', UrlHelper.createPlaceUrl(placeId))
+            }
             dispatch('map/selectFeature', {id: placeId})
             dispatch('loadPlace', placeId)
             dispatch('sidebarInfo/collapse', false)
@@ -141,10 +143,10 @@ export default new Vuex.Store({
                 // load project places
                 dispatch('loadPlaces').then( (result) => {
                     if (urlSegmentValues?.place_id) {
-                        // select place on map
-                        dispatch('map/selectFeature', {id: urlSegmentValues.place_id})
-                        // load place data
-                        // dispatch('loadPlace', urlSegmentValues.place_id)
+                        // select place
+                        dispatch('selectPlace', urlSegmentValues.place_id, false)
+                        // update feature
+                        dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
                     }
                 });
             });
