@@ -6,7 +6,7 @@ ARG NODE_VERSION=19
 FROM node:${NODE_VERSION} AS build
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn install --production
+RUN yarn install
 COPY . .
 RUN yarn build
 
