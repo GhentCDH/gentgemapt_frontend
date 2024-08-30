@@ -3,7 +3,7 @@
 ARG NODE_VERSION=19
 
 # build container
-FROM node:${NODE_VERSION} as build
+FROM node:${NODE_VERSION} AS build
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --production
