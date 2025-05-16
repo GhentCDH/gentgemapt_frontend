@@ -28,13 +28,13 @@
 
         <b-navbar-brand class="bg-dark d-flex px-3" v-if="!notch">
             <div class="navbar-brand-image mr-5 pt-3 pb-2" >
-                <a :href="gentgezien" target="_blank">
-                    <img :src="require('@/images/gentgezien-logo-white.svg')" alt="Gent Gezien">
+                <a :href="homepage" target="_blank">
+                    <img v-if="logo" :src="logo" :alt="title">
                 </a>
             </div>
             <div class="navbar-brand-title pt-3">
-                <a :href="$store.getters['project/getActiveProject'].homepage" target="_blank">
-                    <h1 class="text-white">{{ $store.getters['project/getActiveProject'].title }}</h1>
+                <a :href="homepage" target="_blank">
+                    <h1 class="text-white">{{ title }}</h1>
                 </a>
             </div>
         </b-navbar-brand>
@@ -61,10 +61,12 @@ export default {
         GmYearFilter,
         VueSlider
     },
-    props: ['title'],
     computed: {
         homepage() {
-            return process.env.URL_INFOSITE
+            return this.$store.getters['project/getActiveProject']?.homepage
+        },
+        title() {
+            return this.$store.getters['project/getActiveProject']?.title
         },
         logo() {
             return this.$store.getters['theme/getLogo']
