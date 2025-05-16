@@ -106,12 +106,37 @@ export default new Vuex.Store({
             commit('sidebarInfo/collapse')
             // set active project
             commit('project/setActiveProject', project);
+
+            // set bounds
+            if (project?.config?.bounds) {
+                commit('map/setBounds', project.config.bounds)
+            }
+
+            // set center
+            if (project?.config?.center) {
+                commit('map/setCenter', project.config.center)
+            }
+
+            // set zoom
+            if (project?.config?.zoom) {
+                commit('map/setZoom', project.config.zoom)
+            }
+
+            // set theme
+            commit('theme/setTheme', project?.config?.theme ?? {})
+
             // set url
             window.history.pushState({}, '', UrlHelper.createProjectUrl(project));
+
             // load project layers
-            dispatch('loadLayers')
+            if (project?.config?.layers) {
+                await dispatch('map/setLayers', project.config.layers)
+            } else {
+                await dispatch('loadLayers')
+            }
+
             // load project features
-            dispatch('loadPlaces');
+            return dispatch('loadPlaces');
         },
         initApplication({dispatch, commit, getters}) {
             // collapse info window
@@ -153,21 +178,24 @@ export default new Vuex.Store({
                 }
 
                 // set active project
-                if (activeProject) {
-                    commit('project/setActiveProject', activeProject) // commit = sync, dispatch = async
-                }
-            }).then( (result) => {
-                // load project layers
-                dispatch('loadLayers')
-                // load project places
-                dispatch('loadPlaces').then( (result) => {
+                dispatch('initProject', activeProject).then( (result) => {
                     if (urlSegmentValues?.place_id) {
                         // select place
                         dispatch('selectPlace', urlSegmentValues.place_id, false)
                         // update feature
                         dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
                     }
-                });
+                })
+            }).then( (result) => {
+                // load project places
+                // dispatch('loadPlaces').then( (result) => {
+                //     if (urlSegmentValues?.place_id) {
+                //         // select place
+                //         dispatch('selectPlace', urlSegmentValues.place_id, false)
+                //         // update feature
+                //         dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
+                //     }
+                // });
             });
         }
     }
