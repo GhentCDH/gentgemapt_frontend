@@ -48,18 +48,10 @@ module.exports = merge(common, {
 
         // dotenv
         new Dotenv({
-            path: './.env.prod',
+            path: './.env.schelde',
             defaults: false,
             silent: false,
         }),
-
-        // partials
-        new HtmlWebpackPartialsPlugin({
-            path: paths.src + '/partials/analytics.html',
-            location: 'head',
-            priority: 'high'
-        })
-
     ],
     optimization: {
         minimize: true,
