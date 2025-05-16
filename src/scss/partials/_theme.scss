@@ -1,14 +1,14 @@
-.theme--gentgezien {
+.theme--default {
     .bg-dark {
-        background-color: $secondary !important;
+        background-color: var(--theme-color-primary) !important;
     }
 
     h1, .h1 {
-        color: $secondary;
+        color: var(--theme-color-primary);
     }
 
     .vue-slider.vue-slider--gm {
-        color: white;
+        color: #fff;
 
         &:hover {
             .vue-slider-rail {
@@ -16,14 +16,14 @@
             }
 
             .vue-slider-dot-handle, .vue-slider-dot-handle:hover {
-                background: $light;
-                border: 2px solid $light;
+                background: var(--theme-color-primary-contrast);
+                border: 2px solid var(--theme-color-primary-contrast);
             }
         }
 
         .vue-slider-dot-handle {
-            background: $light;
-            border: 2px solid $light;
+            background: var(--theme-color-primary-contrast);
+            border: 2px solid var(--theme-color-primary-contrast);
         }
     }
 

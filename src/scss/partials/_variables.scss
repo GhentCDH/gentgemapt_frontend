@@ -1,5 +1,5 @@
 //$font-family: 'Noto Serif', serif;
-$background-color: white;
+$background-color: #fff;
 $font-color: #333333;
 
 $font-family-sans-serif: 'Graphik', sans-serif;
@@ -21,10 +21,31 @@ $h5-font-size: 1.0rem;
 
 $headings-font-family: $font-family-sans-serif;
 
+
+
+//$primary: var(--primary);
+//$secondary: var(--secondary);
+//$tertiary: var(--tertiary);
+//$black: #323232;
+//
+//$theme-colors: (
+//    'primary': var(--primary),
+//    'secondary': var(--secondary)
+//);
+
 $primary: #610345;
 $secondary: #ed474a;
 $tertiary: #909090;
 $black: #323232;
+
+:root {
+    --theme-color-primary: #{$primary};
+    --theme-color-secondary:  #{$secondary};
+    --theme-color-marker: #fff;
+    --theme-color-marker-focused: #{$secondary};
+    --theme-color-marker-contrast: #{$primary};
+    --theme-color-marker-focused-contrast: #fff;
+}
 
 $light: #e6e6e6;
 

@@ -1,5 +1,8 @@
 <template>
-    <div id="app" class="d-flex flex-column vw-100 dvh-100" :class="themeClass">
+    <div id="app" class="d-flex flex-column vw-100 dvh-100"
+         :class="themeClass"
+         :style="themeVariables"
+    >
 
         <gm-navbar :title="title" class="app__navbar"></gm-navbar>
 
@@ -116,6 +119,9 @@ export default {
         }
     },
     computed: {
+        themeVariables() {
+            return this.$store.getters['theme/getThemeVariables']
+        },
         themeClass() {
             return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--gentgezien'
         },

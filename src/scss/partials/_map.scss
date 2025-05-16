@@ -43,39 +43,48 @@
 
         &.geometry--point {
 
-            /* feature icon background */
-            background: $gg-feature-icon-background;
-            background-size: contain;
-            background-repeat: no-repeat;
-            filter: drop-shadow(2px 2px 3px rgb(171, 166, 166));
+            filter: drop-shadow(2px 2px 3px rgba(171, 166, 166, 1));
             position: relative;
 
-            &.feature--focused {
-                background: $gg-feature-focused-icon-background;
-                background-size: contain;
-                background-repeat: no-repeat;
+
+            &::before {
+                mask: $gg-feature-icon-background;
+                mask-size: contain;
+                background: var(--theme-color-marker);
+                content: ' ';
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* feature icon background */
+
+            &.feature--focused::before {
+                background: var(--theme-color-marker-focused);
             }
 
             /* feature icon */
             &::after {
                 content: '';
                 display: block;
-                background: $gg-feature-icon;
-                background-repeat: no-repeat;
+                mask: $gg-feature-icon;
+                mask-size: contain;
                 width: 20px;
                 height: 20px;
                 position: relative;
                 left: 4px;
                 top: 4px;
+                background: var(--theme-color-marker-contrast);
             }
 
             &.feature--focused::after {
-                background: $gg-feature-focused-icon;
+                background: var(--theme-color-marker-focused-contrast);
             }
 
             @each $name, $icon in $gg-feature-icons {
                 &.feature--#{$name}::after {
-                    background: $icon;
+                    mask: $icon;
                 }
             }
 

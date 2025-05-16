@@ -7,6 +7,7 @@ import project from './project'
 import filters from './featureFilters'
 import sidebar from './sidebar'
 import iiifViewer from './iiifViewer'
+import theme from './theme'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,8 @@ import ProjectService from '../services/ProjectService'
 import PlaceService from "../services/PlaceService";
 import MapService from "../services/MapService";
 import UrlHelper from "../helper/UrlHelper";
+
+const logo = require('@/images/gentgemapt-logo-white.svg');
 
 export default new Vuex.Store({
     modules: {
@@ -28,7 +31,8 @@ export default new Vuex.Store({
         sidebarTimeline: sidebar,
         sidebarInfo: sidebar,
         sidebarViewer: sidebar,
-        iiifViewer: iiifViewer
+        iiifViewer: iiifViewer,
+        theme: theme,
     },
     state: () => ({
         focusedSidebar: [],
@@ -118,6 +122,21 @@ export default new Vuex.Store({
             dispatch('sidebarFilters/collapse')
             dispatch('sidebarTimeline/collapse')
             dispatch('sidebarProjects/collapse')
+
+            commit('theme/setThemeDefaults', {
+                logo: logo,
+                notch: true,
+                colors: {
+                    primary: '#610345',
+                    secondary: '#ed474a',
+                    primaryContrast: '#e6e6e6',
+                    secondaryContrast: '#e6e6e6',
+                    marker: '#fff',
+                    markerFocused: '#ed474a',
+                    markerContrast: '#610345',
+                    markerFocusedContrast: '#fff',
+                }
+            })
 
             // parse url
             const urlSegmentValues = UrlHelper.parseUrlPath(window.location.pathname)

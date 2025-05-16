@@ -16,17 +16,17 @@
             </div>
         </b-navbar-nav>
 
-        <b-navbar-brand class="bg-dark navbar-brand--default" v-if="$store.getters['project/isDefaultProject']">
+        <b-navbar-brand class="bg-dark navbar-brand--default" v-if="notch">
             <div class="navbar-brand-border-left"></div>
             <div class="navbar-brand-image" >
-                <a :href="homepage" target="_blank" v-if="$store.getters['project/isDefaultProject']">
-                    <img :src="require('@/images/gentgemapt-logo-white.svg')" alt="Gent Gemapt">
+                <a :href="homepage" target="_blank" v-if="notch">
+                    <img :src="$store.getters['theme/getLogo']" :alt="title">
                 </a>
             </div>
             <div class="navbar-brand-border-right"></div>
         </b-navbar-brand>
 
-        <b-navbar-brand class="bg-dark d-flex px-3" v-if="!$store.getters['project/isDefaultProject']">
+        <b-navbar-brand class="bg-dark d-flex px-3" v-if="!notch">
             <div class="navbar-brand-image mr-5 pt-3 pb-2" >
                 <a :href="gentgezien" target="_blank">
                     <img :src="require('@/images/gentgezien-logo-white.svg')" alt="Gent Gezien">
@@ -66,9 +66,12 @@ export default {
         homepage() {
             return process.env.URL_INFOSITE
         },
-        gentgezien() {
-            return process.env.URL_INFOSITE + '/gent-gezien'
-        }
+        logo() {
+            return this.$store.getters['theme/getLogo']
+        },
+        notch() {
+            return this.$store.getters['theme/getNotch']
+        },
     },
     methods: {
         range(start, stop, step = 1) {
