@@ -212,6 +212,7 @@ const layers = [
             zIndex: 100,
         }
     },
+
     {
         id: 'Popp_1842_1879',
         type: 'wmsLayer',
@@ -289,21 +290,6 @@ const layers = [
         }
     },
 
-    // {
-    //     id: 'vandermaelen',
-    //     type: 'wmsLayer',
-    //     options: {
-    //         'base-url': 'https://geoservices.informatievlaanderen.be/raadpleegdiensten/histcart/wms',
-    //         layers: 'vandermaelen',
-    //         transparent: true,
-    //         opacity: 1,
-    //         format: 'image/png',
-    //         label: 'Topografische kaart Vandermaelen (1846-1854), Vlaanderen',
-    //         visible: false,
-    //         layerType: 'overlay',
-    //         zIndex: 100,
-    //     }
-    // },
     {
         id: 'Luchtfoto_Vlaanderen_1979_1990',
         type: 'wmsLayer',
@@ -320,6 +306,7 @@ const layers = [
             zIndex: 100,
         }
     },
+
     {
         id: 'Luchtfotos_Gent_1954_1961',
         type: 'wmsLayer',
@@ -337,9 +324,115 @@ const layers = [
         }
     },
 
-    /*
-    [{'type':'WMS','url':'https://geoserver.gis.cloud.mow.vlaanderen.be/geoserver/wms?SERVICE=WMS&version=1.3.0&request=GetMap','layers':[{'id':'ato:topokaarten','title':'WMS-map Topografische kaarten Ministerie van Openbare Werken en Wederopbouw, opname 1950 - 1970'}]}]
-     */
+    {
+        id: 'topo_1873_ngi',
+        label: 'Topografische kaart, 1873 (NGI)',
+        type: 'tileLayer',
+        weight: 1873,
+        options: {
+            url: 'https://wmts.ngi.be/arcgis/rest/services/seamless_carto__default__3857__140/MapServer/tile/{z}/{y}/{x}',
+            visible: false,
+            opacity: 1,
+            transparent: true,
+            zIndex: 100,
+        }
+    },
+
+    {
+        id: 'topo_1904_ngi',
+        label: 'Topografische kaart, 1904 (NGI)',
+        weight: 1904,
+        active: true,
+        options: {
+            url: 'https://wmts.ngi.be/arcgis/rest/services/seamless_carto__default__3857__450/MapServer/tile/{z}/{y}/{x}',
+            visible: false,
+            opacity: 1,
+            transparent: true,
+            zIndex: 100,
+        }
+    },
+    {
+        id: 'topo_1939_ngi',
+        label: 'Topografische kaart, 1939 (NGI)',
+        weight: 1939,
+        options: {
+            url: 'https://wmts.ngi.be/arcgis/rest/services/seamless_carto__default__3857__800/MapServer/tile/{z}/{y}/{x}',
+            visible: false,
+            opacity: 1,
+            transparent: true,
+            zIndex: 100,
+        }
+    },
+    {
+        id: 'topo_1969_ngi',
+        label: 'Topografische kaart, 1969 (NGI)',
+        weight: 1969,
+        options: {
+            url: 'https://wmts.ngi.be/arcgis/rest/services/seamless_carto__default__3857__1100/MapServer/tile/{z}/{y}/{x}',
+            visible: false,
+            opacity: 1,
+            transparent: true,
+            zIndex: 100,
+        }
+    },
+    {
+        id: 'dhv_mh',
+        label: 'Digitaal hoogtemodel Vlaanderen, multidirectionale hillshade 0,25m',
+        options: {
+            url: 'https://geo.api.vlaanderen.be/DHMV/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=DHMV_II_HILL_25cm&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+            visible: false,
+            opacity: 1,
+            transparent: true,
+            zIndex: 100,
+        }
+    },
+
+    {
+        id: 'bodemkaart_vlaams_gewest',
+        label: 'Digitale bodemkaart van het Vlaams Gewest, bodemtypes',
+        type: 'wmsLayer',
+        options: {
+            'base-url': 'https://www.dov.vlaanderen.be/geoserver/bodemkaart/wms',
+            layers: 'bodemtypes',
+            transparent: true,
+            opacity: 1,
+            format: 'image/png',
+            visible: false,
+            zIndex: 100,
+        }
+    },
+
+    {
+        id: 'NatOverstrGeb',
+        label: 'Van nature overstroombare gebieden',
+        type: 'wmsLayer',
+        options: {
+            service: 'https://www.dov.vlaanderen.be/geoserver/bodemkaart/wms',
+            layers: 'NatOverstrGeb',
+            transparent: true,
+            opacity: 1,
+            format: 'image/png',
+            visible: false,
+            zIndex: 100,
+        }
+
+    },
+    {
+        id: 'RecOvstrGeb',
+        label: 'Recent overstroomde gebieden',
+        type: 'wmsLayer',
+        options: {
+            service: 'https://www.dov.vlaanderen.be/geoserver/bodemkaart/wms',
+            layers: 'RecOvstrGeb',
+            transparent: true,
+            opacity: 1,
+            format: 'image/png',
+            visible: false,
+            zIndex: 100,
+        }
+    },
+
+
     {
         id: 'ghent-overlay',
         type: 'geoJsonLayer',

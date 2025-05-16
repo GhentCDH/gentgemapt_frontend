@@ -4,7 +4,7 @@
          :style="themeVariables"
     >
 
-        <gm-navbar :title="title" class="app__navbar"></gm-navbar>
+        <gm-navbar class="app__navbar"></gm-navbar>
 
         <div class="app__main">
             <gm-map
@@ -112,7 +112,6 @@ export default {
     },
     data() {
         return {
-            title: process.env.TITLE,
             filters: {
                 year: 2022
             }
@@ -123,7 +122,7 @@ export default {
             return this.$store.getters['theme/getThemeVariables']
         },
         themeClass() {
-            return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--gentgezien'
+            return this.$store.getters['project/isDefaultProject'] ? 'theme--default' : 'theme--default' // todo: still needed?
         },
         highlightedIds() {
             return this.$store.getters['map/getHighlightedFeatures'].map(i => i.properties.id)
