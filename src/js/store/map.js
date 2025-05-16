@@ -68,7 +68,11 @@ export default {
     },
     mutations: {
         setCenter(state, payload) {
-            state.center = [ payload.lat, payload.lng ]
+            if ( Array.isArray(payload) && payload.length === 2 ) {
+                state.center = payload
+            } else if ( payload.lat && payload.lng ) {
+                state.center = [ payload.lat, payload.lng ]
+            }
         },
         setZoom(state, payload) {
             state.zoom = payload
