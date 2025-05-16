@@ -30,7 +30,7 @@ export default {
         overlayLayers() {
             return this.$store.getters["map/getLayers"]
                 .filter( item => !item?.isBaseLayer && (item?.isToggleable ?? true) === true)
-                .sort( (a,b) => (a?.weight ?? 0) - (b?.weight ?? 0))
+                .sort( (a,b) => (a?.weight ?? 9999) - (b?.weight ?? 9999))
                 .map( function(item) { item.url = process.env.URL_INFOSITE + `/s/default/page/${item.id}`; return item })
         },
     }
