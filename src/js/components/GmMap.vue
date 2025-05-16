@@ -11,6 +11,10 @@
                           :key="'tile-layer-' + layer.id"
                           v-bind="layer.options"
             />
+            <l-maptiler-layer v-for="layer in maptilerLayers"
+                                :key="'maptiler-layer-' + layer.id"
+                                v-bind="layer.options"
+            />
             <l-w-m-s-tile-layer v-for="layer in wmsLayers"
                                 :key="'wms-layer-' + layer.id"
                                 v-bind="layer.options"
@@ -52,6 +56,7 @@ var isCallable = require('is-callable');
 import 'leaflet.snogylop'
 import 'leaflet/dist/leaflet.css';
 import {WarpedMapLayer} from "@allmaps/leaflet";
+import LMaptilerLayer from "./LMaptilerLayer.vue";
 
 export default {
     name: "gm-map",
@@ -60,6 +65,7 @@ export default {
         'updateZoom', 'updateCenter', 'updateBounds', 'mapReady'
     ],
     components: {
+        LMaptilerLayer,
         LMap,
         LTileLayer,
         LMarker,
@@ -161,7 +167,7 @@ export default {
         return {
             mapObject: null,
             map: {
-                minZoom: 12,
+                minZoom: 10,
                 options: {
                     attributionControl: false,
                     zoomControl: true
@@ -221,6 +227,10 @@ export default {
         warpedMapLayers() {
             this.debug && console.log("* warpedMapLayers refreshed")
             return this.layers.filter( layer => layer.type === "warpedMapLayer" )
+        },
+        maptilerLayers() {
+            this.debug && console.log("* maptilerLayer refreshed")
+            return this.layers.filter( layer => layer.type === "maptilerLayer" )
         },
     },
     watch: {
