@@ -17,10 +17,11 @@
         "webpack boilerplate"
     ],
     "devDependencies": {
-        "@allmaps/leaflet": "^1.0.0-beta.16",
+        "@allmaps/leaflet": "1.0.0-beta.40",
         "@babel/core": "^7.17.8",
         "@babel/plugin-proposal-class-properties": "^7.16.7",
         "@babel/preset-env": "^7.16.11",
+        "@maptiler/leaflet-maptilersdk": "^4.0.3",
         "@types/leaflet": "^1.9.12",
         "@urbn/vuex-helpers": "^0.1.0",
         "axios": "^1.6.7",
@@ -60,8 +61,8 @@
         "react": "^16.14.0",
         "react-dom": "^16.14.0",
         "resolve-url-loader": "^5.0.0",
-        "sass": "~1.64.2",
-        "sass-loader": "^13.2.0",
+        "sass": "^1.86.0",
+        "sass-loader": "^16.0.5",
         "style-loader": "^3.3.1",
         "url": "^0.11.0",
         "url-join": "^5.0.0",
@@ -91,9 +92,8 @@
         "last 2 versions",
         "not dead"
     ],
-    "dependencies": {},
-    "resolutions": {
-        "mirador/**/normalize-url": "4.5.1",
-        "manifesto.js/normalize-url": "4.5.1"
-    }
+    "overrides": {
+        "normalize-url": "4.5.1"
+    },
+    "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }
