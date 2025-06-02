@@ -17,6 +17,7 @@
 
 <script>
 import GmLayerOption from "./GmLayerOption";
+import UrlHelper from "../../helper/UrlHelper";
 
 export default {
     name: "gm-layer-panel",
@@ -31,7 +32,7 @@ export default {
             return this.$store.getters["map/getLayers"]
                 .filter( item => !item?.isBaseLayer && (item?.isToggleable ?? true) === true)
                 .sort( (a,b) => (a?.weight ?? 9999) - (b?.weight ?? 9999))
-                .map( function(item) { item.url = process.env.URL_INFOSITE + `/s/default/page/${item.id}`; return item })
+                .map( function(item) { item.url = UrlHelper.createSiteUrl(`/s/default/page/${item.id}`); return item })
         },
     }
 }

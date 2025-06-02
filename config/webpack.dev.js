@@ -4,9 +4,9 @@ const common = require('./webpack.common.js')
 const paths = require('./paths')
 
 // plugins
-const Dotenv = require("dotenv-webpack");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
+const fs = require("node:fs");
 
 
 module.exports = merge(common, {
@@ -25,6 +25,15 @@ module.exports = merge(common, {
         hot: true,
         port: 8080,
         // overlay: false
+        proxy: {
+            '/config.json': {
+                selfHandleResponse: true,
+                bypass(req, resp) {
+                    resp.header("Content-Type", "application/json");
+                    fs.createReadStream(`./config.json`).pipe(resp);
+                },
+            },
+        },
     },
 
     module: {
@@ -49,11 +58,6 @@ module.exports = merge(common, {
     plugins: [
         // Only update what has changed on hot reload
         new webpack.HotModuleReplacementPlugin(),
-
-        // dotenv
-        new Dotenv({
-            defaults: true
-        }),
 
         // new BundleAnalyzerPlugin(),
     ],

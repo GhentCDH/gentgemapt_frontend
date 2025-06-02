@@ -4,20 +4,26 @@ import UrlPattern from "url-pattern";
 
 export default {
     getApiUrl() {
-        return process.env.URL_API
+        return store.getters['config/getApiUrl']
     },
     getMapUrl() {
-        return process.env.URL_MAP
+        return store.getters['config/getMapUrl'] ?? '/'
     },
     getInfositeUrl() {
-        return process.env.URL_INFOSITE
+        return store.getters['config/getSiteUrl']
     },
     createProjectUrl(project) {
-        return '/' + (store.getters['project/getDefaultProject'].id === project.id ? '' : project.slug)
+        return this.createMapUrl(store.getters['project/getDefaultProject'].id === project.id ? '' : project.slug)
     },
     createPlaceUrl(placeId, project = null, absolute = false) {
         project = project ?? store.getters['project/getActiveProject']
         return project ? urlJoin(this.createProjectUrl(project), 'plaats', placeId) : urlJoin('plaats', placeId)
+    },
+    createSiteUrl(path) {
+        return urlJoin(store.getters['config/getSiteUrl'], path)
+    },
+    createMapUrl(path) {
+        return urlJoin(store.getters['config/getMapUrl'], path)
     },
     parseUrlPath(urlPath) {
         const urlPatterns = [
