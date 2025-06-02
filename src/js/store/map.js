@@ -11,8 +11,8 @@ export default {
     namespaced: true,
     state: () => ( {
         center: {
-            lat: process.env.MAP_LAT,
-            lng: process.env.MAP_LNG
+            lat: null, //process.env.MAP_LAT,
+            lng: null, //process.env.MAP_LNG
         },
         bounds: null,
         zoom: 15,
