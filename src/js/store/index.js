@@ -40,12 +40,15 @@ export default new Vuex.Store({
     state: () => ({
         focusedSidebar: [],
         openRequests: 0,
-        debug: process.env?.DEBUG === 'true',
+        error: false,
+        errorMessage: null,
     }),
     getters: {
         focusedSidebar: (state) => state.focusedSidebar[0] ?? null,
         sidebarWeight: (state) => (sidebar_id) => state.focusedSidebar.indexOf(sidebar_id),
-        openRequests: (state) => state.openRequests
+        openRequests: (state) => state.openRequests,
+        isError: (state) => state.error,
+        getErrorMessage: (state) => state.errorMessage,
     },
     mutations: {
         focusSidebar(state, sidebar_id) {
@@ -62,6 +65,12 @@ export default new Vuex.Store({
             if (state.openRequests > 0 ) {
                 state.openRequests--
             }
+        },
+        setError(state, error) {
+            state.error = error;
+        },
+        setErrorMessage(state, message) {
+            state.errorMessage = message;
         },
     },
     actions: {
@@ -206,6 +215,8 @@ export default new Vuex.Store({
                     })
                 }).catch( error => {
                     console.error(error);
+                    commit('setError', true);
+                    commit('setErrorMessage', "Failed to initialize application. Please try again later.");
                     commit('endRequest');
                 })
 

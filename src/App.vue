@@ -1,77 +1,82 @@
 <template>
-    <div id="app" class="d-flex flex-column vw-100 dvh-100"
+    <div id="app" class="vw-100 dvh-100"
          :class="themeClass"
          :style="themeVariables"
     >
-
-        <gm-navbar class="app__navbar"></gm-navbar>
-
-        <div class="app__main">
-            <gm-map
-                :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
-                :layers="this.$store.getters['map/getLayers']"
-                :markers="this.$store.getters['map/points']"
-                :geometries="this.$store.getters['map/geometries']"
-                :featureClass="featureClass"
-                :featureStyle="featureStyle"
-                :debug="this.$store.state.debug"
-                :zoom="this.$store.getters['map/getZoom']"
-                :bounds="this.$store.getters['map/getBounds']"
-                :center="this.$store.getters['map/getCenter']"
-                :refresh-features="$store.getters['map/getFeaturesToRedraw']"
-                :maxZoom="18"
-                :visible-feature-ids="visibleFeatureIds"
-                @featureMouseEnter="onFeatureMouseEnter"
-                @featureMouseLeave="onFeatureMouseLeave"
-                @featureSelect="onFeatureSelect"
-                @updateZoom="onUpdateZoom"
-                @updateBounds="onUpdateBounds"
-                @updateCenter="onUpdateCenter"
-                @mapReady="onMapReady"
-            >
-                <!--        :layers="$store.getters['map/getLayers']"-->
-                <template v-slot:controls-topleft>
-                </template>
-            </gm-map>
-
-            <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
-                <gm-search-places></gm-search-places>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps"
-                        title="Kaart opties">
-                <div class="scrollable scrollable--vertical">
-                    <gm-layer-panel></gm-layer-panel>
-                </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__filters" collapsible position="left" store_namespace="sidebarFilters"
-                        title="Plaatstype">
-                <div class="scrollable scrollable--vertical">
-                    <gm-place-type-filter></gm-place-type-filter>
-                </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__projects" collapsible position="left" store_namespace="sidebarProjects"
-                        title="Gent Gezien">
-                <div class="scrollable scrollable--vertical">
-                    <gm-project-panel></gm-project-panel>
-                </div>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__viewer" collapsible position="left" store_namespace="sidebarViewer">
-                <gm-iiif-manifest-viewer
-                    :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
-            </gm-sidebar>
-
-            <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
-                <gm-place-info :place="$store.getters['poi/getPlace']" v-if="$store.getters['poi/getPlace']"></gm-place-info>
-            </gm-sidebar>
+        <div v-if="$store.getters['isError']" class="mx-auto">
+            <span class="alert alert-danger">{{ $store.getters['getErrorMessage'] }}</span>
         </div>
 
-        <gm-footer></gm-footer>
+        <div v-if="!$store.getters['isError']" class="d-flex flex-column w-100 h-100">
+            <gm-navbar class="app__navbar"></gm-navbar>
 
-        <gm-modal-root/>
+            <div class="app__main">
+                <gm-map
+                    :class="{ 'sidebar-left-open': !this.$store.state.sidebarSearch.collapsed, 'sidebar-right-open': !this.$store.state.sidebarInfo.collapsed }"
+                    :layers="this.$store.getters['map/getLayers']"
+                    :markers="this.$store.getters['map/points']"
+                    :geometries="this.$store.getters['map/geometries']"
+                    :featureClass="featureClass"
+                    :featureStyle="featureStyle"
+                    :debug="this.$store.state.debug"
+                    :zoom="this.$store.getters['map/getZoom']"
+                    :bounds="this.$store.getters['map/getBounds']"
+                    :center="this.$store.getters['map/getCenter']"
+                    :refresh-features="$store.getters['map/getFeaturesToRedraw']"
+                    :maxZoom="18"
+                    :visible-feature-ids="visibleFeatureIds"
+                    @featureMouseEnter="onFeatureMouseEnter"
+                    @featureMouseLeave="onFeatureMouseLeave"
+                    @featureSelect="onFeatureSelect"
+                    @updateZoom="onUpdateZoom"
+                    @updateBounds="onUpdateBounds"
+                    @updateCenter="onUpdateCenter"
+                    @mapReady="onMapReady"
+                >
+                    <!--        :layers="$store.getters['map/getLayers']"-->
+                    <template v-slot:controls-topleft>
+                    </template>
+                </gm-map>
+
+                <gm-sidebar id="sidebar__search" collapsible position="left" store_namespace="sidebarSearch" title="Zoeken">
+                    <gm-search-places></gm-search-places>
+                </gm-sidebar>
+
+                <gm-sidebar id="sidebar__maps" collapsible position="left" store_namespace="sidebarMaps"
+                            title="Kaart opties">
+                    <div class="scrollable scrollable--vertical">
+                        <gm-layer-panel></gm-layer-panel>
+                    </div>
+                </gm-sidebar>
+
+                <gm-sidebar id="sidebar__filters" collapsible position="left" store_namespace="sidebarFilters"
+                            title="Plaatstype">
+                    <div class="scrollable scrollable--vertical">
+                        <gm-place-type-filter></gm-place-type-filter>
+                    </div>
+                </gm-sidebar>
+
+                <gm-sidebar id="sidebar__projects" collapsible position="left" store_namespace="sidebarProjects"
+                            title="Gent Gezien">
+                    <div class="scrollable scrollable--vertical">
+                        <gm-project-panel></gm-project-panel>
+                    </div>
+                </gm-sidebar>
+
+                <gm-sidebar id="sidebar__viewer" collapsible position="left" store_namespace="sidebarViewer">
+                    <gm-iiif-manifest-viewer
+                        :manifest-url="$store.getters['iiifViewer/getManifestUrl']"></gm-iiif-manifest-viewer>
+                </gm-sidebar>
+
+                <gm-sidebar id="sidebar__place" collapsible position="right" store_namespace="sidebarInfo">
+                    <gm-place-info :place="$store.getters['poi/getPlace']" v-if="$store.getters['poi/getPlace']"></gm-place-info>
+                </gm-sidebar>
+            </div>
+
+            <gm-footer></gm-footer>
+
+            <gm-modal-root/>
+        </div>
 
         <div v-if="$store.getters['openRequests']" class="loading-overlay">
             <div class="spinner"/>
