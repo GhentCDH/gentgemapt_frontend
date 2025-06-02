@@ -5,7 +5,6 @@ const common = require('./webpack.common.js')
 // plugins
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
 
 // config
@@ -44,13 +43,6 @@ module.exports = merge(common, {
         new MiniCssExtractPlugin({
             filename: 'styles/[name].[contenthash].css',
             chunkFilename: '[id].css',
-        }),
-
-        // dotenv
-        new Dotenv({
-            path: './.env.prod',
-            defaults: false,
-            silent: false,
         }),
 
         // partials

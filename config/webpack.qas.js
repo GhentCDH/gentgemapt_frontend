@@ -4,7 +4,6 @@ const common = require('./webpack.common.js')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const Dotenv = require("dotenv-webpack");
 
 module.exports = merge(common, {
   mode: 'production',
@@ -42,11 +41,6 @@ module.exports = merge(common, {
       filename: 'styles/[name].[contenthash].css',
       chunkFilename: '[id].css',
     }),
-
-    new Dotenv({
-        path: './.env.qas',
-    }),
-
   ],
   optimization: {
     minimize: false,

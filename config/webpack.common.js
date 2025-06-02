@@ -6,9 +6,6 @@ const paths = require('./paths')
 const webpack = require('webpack');
 const path = require('path');
 
-const Dotenv = require('dotenv-webpack');
-
-
 module.exports = {
     // Where webpack looks to start building the bundle
     entry: [paths.src + '/main.js'],
