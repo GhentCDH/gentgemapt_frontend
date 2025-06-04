@@ -4,7 +4,6 @@
 .env*
 /*.sh
 /docs
-changelog.md
 /.idea
 todo.txt
 Test.*

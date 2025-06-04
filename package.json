@@ -7,9 +7,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "./node_modules/.bin/cross-env NODE_ENV=development webpack serve --config config/webpack.dev.js --no-client-overlay",
-        "qas": "./node_modules/.bin/cross-env NODE_ENV=production webpack --config config/webpack.qas.js",
         "build": "./node_modules/.bin/cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
-        "schelde": "./node_modules/.bin/cross-env NODE_ENV=production webpack --config config/webpack.schelde.js",
         "lint": "eslint . src config || true"
     },
     "keywords": [
