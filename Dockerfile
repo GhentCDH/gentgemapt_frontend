@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # build stage
 FROM base AS build
-COPY --from=dependencies /app/node_modules /app/
+COPY --from=dependencies /app/node_modules /app/node_modules
 COPY . .
 RUN pnpm run build
 
