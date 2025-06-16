@@ -25,15 +25,16 @@ module.exports = merge(common, {
         hot: true,
         port: 8080,
         // overlay: false
-        proxy: {
-            '/config.json': {
-                selfHandleResponse: true,
-                bypass(req, resp) {
-                    resp.header("Content-Type", "application/json");
-                    fs.createReadStream(`./config.json`).pipe(resp);
-                },
+        proxy: [
+          {
+            context: ['/config.json'],
+            selfHandleResponse: true,
+            bypass(req, resp) {
+              // resp.header("Content-Type", "application/json");
+              fs.createReadStream(`./config.json`).pipe(resp);
             },
-        },
+          },
+        ],
     },
 
     module: {
