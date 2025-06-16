@@ -80,7 +80,7 @@ export default {
             }
         },
         select: function (item) {
-            this.$store.dispatch('selectPlace', item.id)
+            this.$store.dispatch('selectPlace', { placeId: item.id} )
         },
         highlight: function (item) {
             this.$store.dispatch('map/highlightFeature', {id: item.id})

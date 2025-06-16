@@ -33,7 +33,7 @@ export default {
     },
     methods: {
         setFilterStatus(checked) {
-            this.$store.dispatch('initProject', this.project )
+            this.$store.dispatch('initProject', { project: this.project} )
         },
     }
 }

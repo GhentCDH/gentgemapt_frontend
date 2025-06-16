@@ -322,7 +322,7 @@ export default {
                 return
             }
 
-            this.$store.dispatch('selectPlace', feature.properties.id)
+            this.$store.dispatch('selectPlace', { placeId: feature.properties.id })
 
             // to make sure the marker/geometry is visible after the sidebar opens,
             // we pan the map to the left by some amount
