@@ -25,7 +25,10 @@ COPY --from=build /app/dist /usr/share/nginx/html/
 # Add entrypoint scripts
 COPY scripts/build_config.sh /docker-entrypoint.d/90-build_config.sh
 COPY scripts/inject_analytics.sh /docker-entrypoint.d/91-inject_analytics.sh
+# Make the scripts executable
+RUN chmod +x /docker-entrypoint.d/90-build_config.sh \
+    && chmod +x /docker-entrypoint.d/91-inject_analytics.sh
+# Copy nginx.conf to the Nginx configuration directory \
+COPY scripts/nginx.conf /etc/nginx/conf.d/default.conf
 # Expose port 80
 EXPOSE 80
-# Start Nginx
-#CMD ["nginx", "-g", "daemon off;"]
