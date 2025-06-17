@@ -7,22 +7,37 @@ export default {
         return store.getters['config/getApiUrl']
     },
     getMapUrl() {
-        return store.getters['config/getMapUrl'] ?? '/'
+        return (store.getters['config/getMapUrl'] ?? '/')
     },
     getInfositeUrl() {
         return store.getters['config/getSiteUrl']
     },
     createProjectUrl(project) {
-        return this.createMapUrl(store.getters['project/getDefaultProject'].id === project.id ? '' : project.slug)
+      // If no project is provided, return the map URL
+      if (!project) {
+        return this.getMapUrl()
+      }
+      // If the default project is provided, return the map URL
+      if (store.getters['project/getDefaultProject'].id === project.id) {
+        return this.getMapUrl()
+      }
+      // Otherwise, return the project URL
+      return this.createMapUrl(project.slug)
     },
     createPlaceUrl(placeId, project = null, absolute = false) {
         project = project ?? store.getters['project/getActiveProject']
-        return project ? urlJoin(this.createProjectUrl(project), 'plaats', placeId) : urlJoin('plaats', placeId)
+        return project ? urlJoin(this.createProjectUrl(project), 'plaats', placeId) : urlJoin(this.getMapUrl(), 'plaats', placeId)
     },
     createSiteUrl(path) {
+        if (!path) {
+            return store.getters['config/getSiteUrl']
+        }
         return urlJoin(store.getters['config/getSiteUrl'], path)
     },
     createMapUrl(path) {
+        if (!path) {
+            return store.getters['config/getMapUrl']
+        }
         return urlJoin(store.getters['config/getMapUrl'], path)
     },
     parseUrlPath(urlPath) {
