@@ -17,6 +17,12 @@ export default {
         getProjects(state) {
             return state.projects
         },
+        getProjectBySlug: (state) => (slug) => {
+            return state.projects.find(project => project.id === slug) || null;
+        },
+        getProjectById: (state) => (id) => {
+            return state.projects.find(project => project.id === id) || null;
+        },
         isDefaultProject(state) {
             return !state.activeProject || ( state.activeProject?.isDefault ?? false );
         }
