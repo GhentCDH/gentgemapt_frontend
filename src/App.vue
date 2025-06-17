@@ -119,7 +119,8 @@ export default {
         return {
             filters: {
                 year: 2022
-            }
+            },
+          mapObject: null, // will be set by the map component
         }
     },
     computed: {
@@ -148,20 +149,28 @@ export default {
             return new Set(this.$store.getters['featureFilters/getPlaceTypes'].filter( i => i.active).map( i => i.id ))
         },
         inactivePlaceTypeIds() {
-            return new Set(this.$store.getters['featureFilters/getPlaceTypes'].filter( i => !i.active).map( i => i.id ))
+          return new Set(this.$store.getters['featureFilters/getPlaceTypes'].filter(i => !i.active).map(i => i.id))
+        },
+        focusedFeature() {
+            return this.$store.getters['map/getFocusedFeature']
         }
     },
     watch: {
-        sidebarInfoCollapsed(isCollapsed) {
-            if ( isCollapsed ) {
-                this.$store.dispatch('sidebarViewer/collapse')
-            }
-        },
-        sidebarSearchCollapsed(isCollapsed) {
-            if ( isCollapsed ) {
-                this.$store.dispatch('featureFilters/resetSearch')
-            }
-        },
+      sidebarInfoCollapsed(isCollapsed) {
+        if (isCollapsed) {
+          this.$store.dispatch('sidebarViewer/collapse')
+        }
+      },
+      sidebarSearchCollapsed(isCollapsed) {
+        if (isCollapsed) {
+          this.$store.dispatch('featureFilters/resetSearch')
+        }
+      },
+      focusedFeature(feature) {
+        if (feature) {
+          this.focusFeature(feature)
+        }
+      },
     },
     methods: {
         featureIsVisible(feature) {
@@ -282,9 +291,10 @@ export default {
             return config;
         },
         // todo: update via prop!
-        _onFeatureFocus(feature) {
+        focusFeature(feature) {
 
-            const bounds = this.getFeatureBounds(this.$store.getters['map/getFeaturesById'](feature.properties.id))
+            const layer = L.geoJSON(feature);
+            const bounds = layer.getBounds();
             const paddingBottomRight = [this.$store.getters['sidebarInfo/collapsed'] ? 0 : 550, 0 ]
             const paddingTopLeft = [this.$store.getters['sidebarSearch/collapsed'] ? 0 : 350, 0 ]
 
@@ -293,7 +303,7 @@ export default {
                 paddingTopLeft: paddingTopLeft,
                 paddingBottomRight: paddingBottomRight,
                 easeLinearity: 1,
-                maxZoom: 18,
+                maxZoom: 16,
             });
         },
 
@@ -337,11 +347,22 @@ export default {
             }
         },
         onMapReady(mapObject) {
+          this.mapObject = mapObject;
         }
     },
     created() {
-        // init application
-        this.$store.dispatch('initApplication')
-    },
+      // add a popstate event listener to handle back/forward navigation
+      window.addEventListener('popstate', (event) => {
+        this.$store.dispatch('updateStateFromUrl').then(() => {
+          const feature = this.$store.getters['map/getSelectedFeature']
+          if (feature) {
+            this.focusFeature(feature)
+          }
+        })
+      })
+
+      // init application
+      this.$store.dispatch('initApplication')
+    }
 }
 </script>
