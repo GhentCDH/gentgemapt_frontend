@@ -164,6 +164,9 @@ export default {
             if ( feature ) {
                 commit('selectFeature', feature);
             }
+            if ( payload?.focus ) {
+              commit('focusFeature', feature);
+            }
         },
         focusFeature({ commit, dispatch, getters }, payload) {
             const feature = payload?.id ? getters.getFeatureById(payload.id) : payload?.feature ?? null
