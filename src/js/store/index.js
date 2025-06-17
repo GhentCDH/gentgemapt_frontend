@@ -125,9 +125,10 @@ export default new Vuex.Store({
         return
       }
       if (pushState) {
-        window.history.pushState({}, '', UrlHelper.createPlaceUrl(placeId))
+        const placeUrl = UrlHelper.createPlaceUrl(placeId)
+        window.history.pushState({}, '', placeUrl)
       }
-      dispatch('map/selectFeature', { id: placeId })
+      dispatch('map/selectFeature', { id: placeId, focus: payload?.focus ?? false })
       dispatch('loadPlace', placeId).then(() => {
         dispatch('sidebarInfo/collapse', false)
       })
@@ -182,6 +183,47 @@ export default new Vuex.Store({
       // load project features
       return dispatch('loadPlaces')
     },
+    updateStateFromUrl({ dispatch, commit, getters }) {
+      const urlSegmentValues = UrlHelper.parseUrlPath(window.location.pathname)
+
+      // determine active project
+      let activeProject = getters['project/getActiveProject']
+      let newProject = null
+      let pushState = false
+
+      // url refers to project id?
+      if (urlSegmentValues.project_slug) {
+        newProject = getters['project/getProjectBySlug'](urlSegmentValues.project_slug)
+        if (!newProject) {
+          console.warn(`Project with slug '${urlSegmentValues.project_slug}' not found. Using default project.`)
+          newProject = getters['project/getDefaultProject']
+          pushState = true
+          urlSegmentValues.place_id = null
+        }
+      } else {
+        newProject = getters['project/getDefaultProject']
+      }
+
+      // set active project
+      if (activeProject && activeProject.id === newProject.id) {
+        // already active project, no need to change
+        if (urlSegmentValues.place_id) {
+          // select place
+          dispatch('selectPlace', { placeId: urlSegmentValues.place_id, pushState: false })
+            .then(() => dispatch('map/focusFeature', {id: urlSegmentValues.place_id}))
+            .then(() => dispatch('map/redrawFeatures', [urlSegmentValues.place_id]))
+        }
+        return Promise.resolve()
+      } else {
+        return dispatch('initProject', { project: newProject, pushState: pushState }).then((result) => {
+          if (urlSegmentValues?.place_id) {
+            // select place
+            dispatch('selectPlace', { placeId: urlSegmentValues.place_id, pushState: false, focus: true })
+              .then(() => dispatch('map/redrawFeatures', [urlSegmentValues.place_id]))
+          }
+        })
+      }
+    },
     initApplication({ dispatch, commit, getters }) {
       // collapse info window
       dispatch('sidebarInfo/collapse')
@@ -208,73 +250,15 @@ export default new Vuex.Store({
       })
 
       // parse url
-      const urlSegmentValues = UrlHelper.parseUrlPath(window.location.pathname)
-
       dispatch('loadConfig')
         .then(() => dispatch('loadProjects'))
-        .then(() => {
-          // determine active project
-          let activeProject = null
-          let projects = getters['project/getProjects']
-          let pushState = false
-
-          // url refers to project id?
-          if (urlSegmentValues.project_slug) {
-            activeProject = projects.find(project => project.slug === urlSegmentValues.project_slug)
-          }
-          if (!activeProject) {
-            activeProject = getters['project/getDefaultProject']
-            pushState = true
-            urlSegmentValues.place_id = null
-          }
-
-          // set active project
-          return dispatch('initProject', { project: activeProject, pushState: pushState }).then((result) => {
-            if (urlSegmentValues?.place_id) {
-              // select place
-              dispatch('selectPlace', { placeId: urlSegmentValues.place_id, pushState: false })
-              // update feature
-              dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
-            }
-          })
-        }).catch(error => {
-        console.error(error)
-        commit('setError', true)
-        commit('setErrorMessage', 'Failed to initialize application. Please try again later.')
-        commit('endRequest')
-      })
-
-      // // load project data
-      // dispatch('loadProjects').then( (result) => {
-      //     // determine active project
-      //     let activeProject = getters['project/getDefaultProject']
-      //     let projects = getters['project/getProjects']
-      //
-      //     // url refers to project id?
-      //     if (urlSegmentValues.project_slug) {
-      //         activeProject = projects.find( project => project.slug === urlSegmentValues.project_slug )
-      //     }
-      //
-      //     // set active project
-      //     dispatch('initProject', activeProject).then( (result) => {
-      //         if (urlSegmentValues?.place_id) {
-      //             // select place
-      //             dispatch('selectPlace', urlSegmentValues.place_id, false)
-      //             // update feature
-      //             dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
-      //         }
-      //     })
-      // }).then( (result) => {
-      //     // load project places
-      //     // dispatch('loadPlaces').then( (result) => {
-      //     //     if (urlSegmentValues?.place_id) {
-      //     //         // select place
-      //     //         dispatch('selectPlace', urlSegmentValues.place_id, false)
-      //     //         // update feature
-      //     //         dispatch('map/redrawFeatures', [urlSegmentValues.place_id])
-      //     //     }
-      //     // });
-      // });
+        .then(() => dispatch('updateStateFromUrl'))
+        .catch(error => {
+          console.error(error)
+          commit('setError', true)
+          commit('setErrorMessage', 'Failed to initialize application. Please try again later.')
+          commit('endRequest')
+        })
     },
   },
 })
