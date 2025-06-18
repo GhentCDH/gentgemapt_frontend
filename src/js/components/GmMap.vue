@@ -293,12 +293,7 @@ export default {
         },
         onMapReady(mapObject) {
             this.debug && console.log('* event: mapReady')
-            // this.mapObject = this.$refs.GmMap.mapObject
             this.mapObject = mapObject
-
-            // todo: create panes?
-            // this.mapObject.createPane('custom')
-
             this.$emit('mapReady', mapObject)
         },
         /* feature events */
