@@ -42,10 +42,10 @@ export default {
     },
     parseUrlPath(urlPath) {
         const urlPatterns = [
-            '/:project_slug(/plaats/:place_id)',
-            '/plaats/:place_id'
+            '/:projectSlug(/plaats/:placeId)',
+            '/plaats/:placeId'
         ]
-        const defaultReturn = { project_slug: null, place_id: null}
+        const defaultReturn = { projectSlug: null, placeId: null}
         const patternOptions = {segmentValueCharset: 'a-zA-Z0-9-_', segmentNameCharset: 'a-zA-Z0-9_-'}
 
         for (let pattern of urlPatterns) {
