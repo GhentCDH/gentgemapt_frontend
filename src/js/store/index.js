@@ -128,10 +128,9 @@ export default new Vuex.Store({
         const placeUrl = UrlHelper.createPlaceUrl(placeId)
         window.history.pushState({}, '', placeUrl)
       }
-      dispatch('map/selectFeature', { id: placeId, focus: payload?.focus ?? false })
-      dispatch('loadPlace', placeId).then(() => {
-        dispatch('sidebarInfo/collapse', false)
-      })
+      return dispatch('map/selectFeature', { id: placeId, focus: payload?.focus ?? false })
+        .then(() => dispatch('loadPlace', placeId))
+        .then(() => dispatch('sidebarInfo/collapse', false))
     },
     async initProject({ dispatch, commit }, payload) {
       const { project, pushState = true } = payload || {}
@@ -192,13 +191,13 @@ export default new Vuex.Store({
       let pushState = false
 
       // url refers to project id?
-      if (urlSegmentValues.project_slug) {
-        newProject = getters['project/getProjectBySlug'](urlSegmentValues.project_slug)
+      if (urlSegmentValues.projectSlug) {
+        newProject = getters['project/getProjectBySlug'](urlSegmentValues.projectSlug)
         if (!newProject) {
-          console.warn(`Project with slug '${urlSegmentValues.project_slug}' not found. Using default project.`)
+          console.warn(`Project with slug '${urlSegmentValues.projectSlug}' not found. Using default project.`)
           newProject = getters['project/getDefaultProject']
           pushState = true
-          urlSegmentValues.place_id = null
+          urlSegmentValues.placeId = null
         }
       } else {
         newProject = getters['project/getDefaultProject']
@@ -207,19 +206,17 @@ export default new Vuex.Store({
       // set active project
       if (activeProject && activeProject.id === newProject.id) {
         // already active project, no need to change
-        if (urlSegmentValues.place_id) {
+        if (urlSegmentValues.placeId) {
           // select place
-          dispatch('selectPlace', { placeId: urlSegmentValues.place_id, pushState: false })
-            .then(() => dispatch('map/focusFeature', {id: urlSegmentValues.place_id}))
-            .then(() => dispatch('map/redrawFeatures', [urlSegmentValues.place_id]))
+          dispatch('selectPlace', { placeId: urlSegmentValues.placeId, pushState: false, focus: true })
         }
         return Promise.resolve()
       } else {
         return dispatch('initProject', { project: newProject, pushState: pushState }).then((result) => {
-          if (urlSegmentValues?.place_id) {
+          console.log("Project initialized:", newProject, urlSegmentValues);
+          if (urlSegmentValues?.placeId) {
             // select place
-            dispatch('selectPlace', { placeId: urlSegmentValues.place_id, pushState: false, focus: true })
-              .then(() => dispatch('map/redrawFeatures', [urlSegmentValues.place_id]))
+            dispatch('selectPlace', { placeId: urlSegmentValues.placeId, pushState: false, focus: true })
           }
         })
       }
