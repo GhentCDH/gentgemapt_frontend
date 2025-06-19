@@ -18,7 +18,7 @@ export default {
             return state.projects
         },
         getProjectBySlug: (state) => (slug) => {
-            return state.projects.find(project => project.id === slug) || null;
+            return state.projects.find(project => project.slug === slug) || null;
         },
         getProjectById: (state) => (id) => {
             return state.projects.find(project => project.id === id) || null;
