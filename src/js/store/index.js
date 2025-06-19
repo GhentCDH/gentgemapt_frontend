@@ -213,7 +213,6 @@ export default new Vuex.Store({
         return Promise.resolve()
       } else {
         return dispatch('initProject', { project: newProject, pushState: pushState }).then((result) => {
-          console.log("Project initialized:", newProject, urlSegmentValues);
           if (urlSegmentValues?.placeId) {
             // select place
             dispatch('selectPlace', { placeId: urlSegmentValues.placeId, pushState: false, focus: true })
